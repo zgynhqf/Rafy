@@ -1693,7 +1693,7 @@ namespace RafyUnitTest
             list.Add(new Folder());
 
             Assert.AreEqual(list[0].TreeIndex, "001.");
-            Assert.AreEqual(list[1].TreeIndex, string.Empty);
+            Assert.AreEqual(list[1].TreeIndex, null);
         }
 
         private static void UpdateTreeIndex(object id, string value)
@@ -2467,7 +2467,7 @@ namespace RafyUnitTest
                 repo.Save(user);
 
                 var newUser = repo.GetWithTasks(user.Id);
-                Assert.IsTrue(newUser.GetProperty(TestUser.TestTreeTaskListProperty) != null);
+                Assert.IsTrue(newUser.GetProperty<TestTreeTaskList>(TestUser.TestTreeTaskListProperty) != null);
                 var tasks = newUser.TestTreeTaskList;
 
                 Assert.AreEqual(tasks.Count, 1);

@@ -32,8 +32,8 @@ namespace JXC
     [RootEntity]
     public partial class ClientInfo : JXCEntity
     {
-        public static readonly IRefIdProperty ClientCategoryIdProperty =
-            P<ClientInfo>.RegisterRefId(e => e.ClientCategoryId, ReferenceType.Normal);
+        public static readonly Property<int> ClientCategoryIdProperty =
+            P<ClientInfo>.Register(e => e.ClientCategoryId);
         public int ClientCategoryId
         {
             get { return (int)this.GetRefId(ClientCategoryIdProperty); }

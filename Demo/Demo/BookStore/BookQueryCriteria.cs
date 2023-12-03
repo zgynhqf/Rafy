@@ -17,8 +17,8 @@ namespace Demo
     [QueryEntity, Serializable]
     public class BookQueryCriteria : Criteria
     {
-        public static readonly IRefIdProperty BookCategoryIdProperty =
-            P<BookQueryCriteria>.RegisterRefId(e => e.BookCategoryId, ReferenceType.Normal);
+        public static readonly Property<int> BookCategoryIdProperty =
+            P<BookQueryCriteria>.Register(e => e.BookCategoryId);
         public int? BookCategoryId
         {
             get { return (int?)this.GetRefNullableId(BookCategoryIdProperty); }

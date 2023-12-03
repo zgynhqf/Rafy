@@ -38,8 +38,8 @@ namespace MP
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty MonthPlanIdProperty =
-            P<TaskOrCategory>.RegisterRefId(e => e.MonthPlanId, ReferenceType.Parent);
+        public static readonly Property<int> MonthPlanIdProperty =
+            P<TaskOrCategory>.Register(e => e.MonthPlanId, ReferenceType.Parent);
         public int MonthPlanId
         {
             get { return (int)this.GetRefId(MonthPlanIdProperty); }

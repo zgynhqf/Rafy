@@ -42,8 +42,8 @@ namespace Rafy.SystemSettings
             P<DataDictItem>.Register(e => e.DataDictId);
         public long DataDictId
         {
-            get { return (long)this.GetRefKey(DataDictIdProperty); }
-            set { this.SetRefKey(DataDictIdProperty, value); }
+            get { return this.GetProperty(DataDictIdProperty); }
+            set { this.SetProperty(DataDictIdProperty, value); }
         }
         public static readonly RefEntityProperty<DataDict> DataDictProperty =
             P<DataDictItem>.RegisterRef(e => e.DataDict, DataDictIdProperty, referenceType: ReferenceType.Parent);

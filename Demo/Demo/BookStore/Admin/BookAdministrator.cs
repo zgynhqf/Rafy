@@ -36,8 +36,8 @@ namespace Demo
             set { this.SetProperty(UserNameProperty, value); }
         }
 
-        public static readonly IRefIdProperty ProvinceIdProperty =
-            P<BookAdministrator>.RegisterRefId(e => e.ProvinceId, ReferenceType.Normal);
+        public static readonly Property<int> ProvinceIdProperty =
+            P<BookAdministrator>.Register(e => e.ProvinceId);
         public int? ProvinceId
         {
             get { return (int?)this.GetRefNullableId(ProvinceIdProperty); }
@@ -70,8 +70,8 @@ namespace Demo
             return this.Province != null ? this.Province.Name : string.Empty;
         }
 
-        public static readonly IRefIdProperty CityIdProperty =
-            P<BookAdministrator>.RegisterRefId(e => e.CityId, ReferenceType.Normal);
+        public static readonly Property<int> CityIdProperty =
+            P<BookAdministrator>.Register(e => e.CityId);
         public int? CityId
         {
             get { return (int?)this.GetRefNullableId(CityIdProperty); }
@@ -102,8 +102,8 @@ namespace Demo
             return this.Province.CityList;
         }
 
-        public static readonly IRefIdProperty CountryIdProperty =
-            P<BookAdministrator>.RegisterRefId(e => e.CountryId, ReferenceType.Normal);
+        public static readonly Property<int> CountryIdProperty =
+            P<BookAdministrator>.Register(e => e.CountryId);
         public int? CountryId
         {
             get { return (int?)this.GetRefNullableId(CountryIdProperty); }

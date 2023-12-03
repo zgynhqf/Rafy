@@ -34,15 +34,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty PBSTypeIdProperty =
-            P<PBS>.RegisterRefId(e => e.PBSTypeId, ReferenceType.Parent);
+        public static readonly Property<int> PBSTypeIdProperty =
+            P<PBS>.Register(e => e.PBSTypeId);
         public int PBSTypeId
         {
-            get { return this.GetRefId(PBSTypeIdProperty); }
-            set { this.SetRefId(PBSTypeIdProperty, value); }
+            get { return this.GetProperty(PBSTypeIdProperty); }
+            set { this.SetProperty(PBSTypeIdProperty, value); }
         }
         public static readonly RefEntityProperty<PBSType> PBSTypeProperty =
-            P<PBS>.RegisterRef(e => e.PBSType, PBSTypeIdProperty);
+            P<PBS>.RegisterRef(e => e.PBSType, PBSTypeIdProperty, referenceType: ReferenceType.Parent);
         public PBSType PBSType
         {
             get { return this.GetRefEntity(PBSTypeProperty); }
@@ -60,7 +60,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<PBS>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 

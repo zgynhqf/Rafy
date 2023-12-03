@@ -37,8 +37,8 @@ namespace JXC
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty SupplierIdProperty =
-            P<PurchaseOrder>.RegisterRefId(e => e.SupplierId, ReferenceType.Normal);
+        public static readonly Property<int> SupplierIdProperty =
+            P<PurchaseOrder>.Register(e => e.SupplierId);
         public int SupplierId
         {
             get { return (int)this.GetRefId(SupplierIdProperty); }
@@ -52,8 +52,8 @@ namespace JXC
             set { this.SetRefEntity(SupplierProperty, value); }
         }
 
-        public static readonly IRefIdProperty StorageIdProperty =
-            P<PurchaseOrder>.RegisterRefId(e => e.StorageId, ReferenceType.Normal);
+        public static readonly Property<int> StorageIdProperty =
+            P<PurchaseOrder>.Register(e => e.StorageId);
         public int? StorageId
         {
             get { return (int?)this.GetRefNullableId(StorageIdProperty); }

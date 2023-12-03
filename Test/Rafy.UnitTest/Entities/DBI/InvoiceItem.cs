@@ -39,15 +39,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty InvoiceIdProperty =
-            P<InvoiceItem>.RegisterRefId(e => e.InvoiceId, ReferenceType.Parent);
+        public static readonly Property<int> InvoiceIdProperty =
+            P<InvoiceItem>.Register(e => e.InvoiceId);
         public int InvoiceId
         {
-            get { return (int)this.GetRefId(InvoiceIdProperty); }
-            set { this.SetRefId(InvoiceIdProperty, value); }
+            get { return (int)this.GetProperty(InvoiceIdProperty); }
+            set { this.SetProperty(InvoiceIdProperty, value); }
         }
         public static readonly RefEntityProperty<Invoice> InvoiceProperty =
-            P<InvoiceItem>.RegisterRef(e => e.Invoice, InvoiceIdProperty);
+            P<InvoiceItem>.RegisterRef(e => e.Invoice, InvoiceIdProperty, referenceType: ReferenceType.Parent);
         public Invoice Invoice
         {
             get { return this.GetRefEntity(InvoiceProperty); }
@@ -68,7 +68,7 @@ namespace UT
         /// </summary>
         public double Amount
         {
-            get { return this.GetProperty(AmountProperty); }
+            get { return this.GetProperty<double>(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
         }
 
@@ -78,7 +78,7 @@ namespace UT
         /// </summary>
         public bool IsDefault
         {
-            get { return this.GetProperty(IsDefaultProperty); }
+            get { return this.GetProperty<bool>(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
 

@@ -50,7 +50,7 @@ namespace RafyUnitTest
                 Assert.AreEqual("DefaultName", entity2.Name);
                 Assert.AreEqual(10, entity2.Age);
                 Assert.AreEqual(null, entity2.NotEmptyCode);
-                Assert.AreEqual(string.Empty, entity2.LoginName);
+                Assert.AreEqual(null, entity2.LoginName);
                 Assert.AreEqual(2000, entity2.AddedTime.Year);
             }
         }

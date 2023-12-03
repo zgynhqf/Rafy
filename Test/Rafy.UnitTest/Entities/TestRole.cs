@@ -21,21 +21,21 @@ namespace UT
     {
         public bool IsLock { get; set; }
 
-        public static readonly IRefIdProperty TestUserIdProperty =
-            P<TestRole>.RegisterRefId(e => e.TestUserId, new RegisterRefIdArgs<int>
+        public static readonly Property<int> TestUserIdProperty =
+            P<TestRole>.Register(e => e.TestUserId, new PropertyMetadata<int>
             {
-                ReferenceType = ReferenceType.Parent,
                 PropertyChangingCallBack = (o, e) => (o as TestRole).OnTestUserIdChanging(e),
                 PropertyChangedCallBack = (o, e) => (o as TestRole).OnTestUserIdChanged(e)
             });
         public int TestUserId
         {
-            get { return this.GetRefId(TestUserIdProperty); }
-            set { this.SetRefId(TestUserIdProperty, value); }
+            get { return this.GetProperty(TestUserIdProperty); }
+            set { this.SetProperty(TestUserIdProperty, value); }
         }
         public static readonly RefEntityProperty<TestUser> TestUserProperty =
             P<TestRole>.RegisterRef(e => e.TestUser, new RegisterRefArgs
             {
+                ReferenceType = ReferenceType.Parent,
                 RefKeyProperty = TestUserIdProperty,
                 PropertyChangingCallBack = (o, e) => (o as TestRole).OnTestUserChanging(e),
                 PropertyChangedCallBack = (o, e) => (o as TestRole).OnTestUserChanged(e)
@@ -67,7 +67,7 @@ namespace UT
         public static Property<string> NameProperty = P<TestRole>.Register(e => e.Name);
         public string Name
         {
-            get { return GetProperty(NameProperty); }
+            get { return GetProperty<string>(NameProperty); }
             set { SetProperty(NameProperty, value); }
         }
 
@@ -77,14 +77,14 @@ namespace UT
         /// </summary>
         public RoleType RoleType
         {
-            get { return this.GetProperty(RoleTypeProperty); }
+            get { return this.GetProperty<RoleType>(RoleTypeProperty); }
             set { this.SetProperty(RoleTypeProperty, value); }
         }
 
         public static readonly Property<RoleType?> RoleType2Property = P<TestRole>.Register(e => e.RoleType2);
         public RoleType? RoleType2
         {
-            get { return this.GetProperty(RoleType2Property); }
+            get { return this.GetProperty<RoleType?>(RoleType2Property); }
             set { this.SetProperty(RoleType2Property, value); }
         }
     }

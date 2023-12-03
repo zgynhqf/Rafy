@@ -40,8 +40,8 @@ namespace Rafy.RBAC.GroupManagement
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty GroupIdProperty =
-            P<GroupUser>.RegisterRefId(e => e.GroupId, ReferenceType.Parent);
+        public static readonly Property<int> GroupIdProperty =
+            P<GroupUser>.Register(e => e.GroupId, ReferenceType.Parent);
         /// <summary>
         /// 组的主键
         /// </summary>
@@ -62,8 +62,8 @@ namespace Rafy.RBAC.GroupManagement
             set { this.SetRefEntity(GroupProperty, value); }
         }
 
-        public static readonly IRefIdProperty UserIdProperty =
-            P<GroupUser>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
+        public static readonly Property<int> UserIdProperty =
+            P<GroupUser>.Register(e => e.UserId);
         /// <summary>
         /// 用户主键
         /// </summary>

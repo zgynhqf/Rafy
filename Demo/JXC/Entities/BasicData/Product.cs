@@ -37,8 +37,8 @@ namespace JXC
     [NavigationQueryType(typeof(ProductNavigationCriteria))]
     public partial class Product : JXCEntity
     {
-        public static readonly IRefIdProperty ProductCategoryIdProperty =
-            P<Product>.RegisterRefId(e => e.ProductCategoryId, ReferenceType.Normal);
+        public static readonly Property<int> ProductCategoryIdProperty =
+            P<Product>.Register(e => e.ProductCategoryId);
         public int ProductCategoryId
         {
             get { return (int)this.GetRefId(ProductCategoryIdProperty); }
@@ -52,8 +52,8 @@ namespace JXC
             set { this.SetRefEntity(ProductCategoryProperty, value); }
         }
 
-        public static readonly IRefIdProperty SupplierIdProperty =
-            P<Product>.RegisterRefId(e => e.SupplierId, ReferenceType.Normal);
+        public static readonly Property<int> SupplierIdProperty =
+            P<Product>.Register(e => e.SupplierId);
         public int SupplierId
         {
             get { return (int)this.GetRefId(SupplierIdProperty); }
@@ -67,8 +67,8 @@ namespace JXC
             set { this.SetRefEntity(SupplierProperty, value); }
         }
 
-        public static readonly IRefIdProperty OperatorIdProperty =
-            P<Product>.RegisterRefId(e => e.OperatorId, ReferenceType.Normal);
+        public static readonly Property<int> OperatorIdProperty =
+            P<Product>.Register(e => e.OperatorId);
         public int OperatorId
         {
             get { return (int)this.GetRefId(OperatorIdProperty); }

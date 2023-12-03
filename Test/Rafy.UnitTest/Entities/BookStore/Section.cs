@@ -33,27 +33,27 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty ChapterIdProperty =
-            P<Section>.RegisterRefId(e => e.ChapterId, ReferenceType.Parent);
+        public static readonly Property<int> ChapterIdProperty =
+            P<Section>.Register(e => e.ChapterId);
         public int ChapterId
         {
-            get { return this.GetRefId(ChapterIdProperty); }
-            set { this.SetRefId(ChapterIdProperty, value); }
+            get { return this.GetProperty(ChapterIdProperty); }
+            set { this.SetProperty(ChapterIdProperty, value); }
         }
         public static readonly RefEntityProperty<Chapter> ChapterProperty =
-            P<Section>.RegisterRef(e => e.Chapter, ChapterIdProperty);
+            P<Section>.RegisterRef(e => e.Chapter, ChapterIdProperty, referenceType: ReferenceType.Parent);
         public Chapter Chapter
         {
             get { return this.GetRefEntity(ChapterProperty); }
             set { this.SetRefEntity(ChapterProperty, value); }
         }
 
-        public static readonly IRefIdProperty SectionOwnerIdProperty =
-            P<Section>.RegisterRefId(e => e.SectionOwnerId, ReferenceType.Normal);
+        public static readonly Property<int?> SectionOwnerIdProperty =
+            P<Section>.Register(e => e.SectionOwnerId);
         public int? SectionOwnerId
         {
-            get { return this.GetRefNullableId(SectionOwnerIdProperty); }
-            set { this.SetRefNullableId(SectionOwnerIdProperty, value); }
+            get { return this.GetProperty(SectionOwnerIdProperty); }
+            set { this.SetProperty(SectionOwnerIdProperty, value); }
         }
         public static readonly RefEntityProperty<SectionOwner> SectionOwnerProperty =
             P<Section>.RegisterRef(e => e.SectionOwner, SectionOwnerIdProperty);
@@ -74,7 +74,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<Section>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 

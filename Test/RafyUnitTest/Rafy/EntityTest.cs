@@ -808,7 +808,7 @@ namespace RafyUnitTest
 
                 var book2 = repo.GetById(book.Id);
                 Assert.IsTrue(!book2.HasLocalValue(Book.ChapterListProperty));
-                Assert.IsTrue(book2.GetProperty(Book.ChapterListProperty) == null);
+                Assert.IsTrue(book2.GetProperty<ChapterList>(Book.ChapterListProperty) == null);
                 Assert.IsTrue(book2.ChapterList.Count == 2);
             }
         }
@@ -1268,7 +1268,7 @@ namespace RafyUnitTest
 
                 dbUser.Disable(TestUser.LoginNameProperty, false);
                 dbUser.Disable(TestUser.AgeProperty, false);
-                Assert.AreEqual(string.Empty, dbUser.LoginName);
+                Assert.AreEqual(null, dbUser.LoginName);
                 Assert.AreEqual(10, dbUser.Age);
             }
         }
@@ -2752,7 +2752,7 @@ namespace RafyUnitTest
             Assert.AreEqual("b1", b2.Name);
             Assert.AreEqual(1, b2.Id);
             Assert.AreEqual("a1", b2.ANameRef);
-            Assert.IsNull(b2.GetProperty(B.AProperty));
+            Assert.IsNull(b2.GetProperty<Entity>(B.AProperty));
         }
 
         [TestMethod]
@@ -2766,7 +2766,7 @@ namespace RafyUnitTest
             Assert.AreEqual("b1", b2.Name);
             Assert.AreEqual(0, b2.Id);
             Assert.AreEqual("a1", b2.ANameRef);
-            Assert.IsNotNull(b2.GetProperty(B.AProperty));
+            Assert.IsNotNull(b2.GetProperty<Entity>(B.AProperty));
         }
 
         [TestMethod]
@@ -2778,7 +2778,7 @@ namespace RafyUnitTest
             var pbs2 = new PBS();
             pbs2.Clone(pbs);
 
-            Assert.IsNotNull(pbs2.GetProperty(PBS.PBSTypeProperty));
+            Assert.IsNotNull(pbs2.GetProperty<Entity>(PBS.PBSTypeProperty));
         }
 
         [TestMethod]

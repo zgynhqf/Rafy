@@ -32,8 +32,8 @@ namespace Rafy.RBAC.RoleManagement
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty ResourceIdProperty =
-            P<ResourceOperation>.RegisterRefId(e => e.ResourceId, ReferenceType.Parent);
+        public static readonly Property<int> ResourceIdProperty =
+            P<ResourceOperation>.Register(e => e.ResourceId, ReferenceType.Parent);
         public long ResourceId
         {
             get { return (long)GetRefId(ResourceIdProperty); }

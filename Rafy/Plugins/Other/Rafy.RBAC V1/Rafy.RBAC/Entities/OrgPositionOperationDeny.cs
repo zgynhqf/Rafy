@@ -32,8 +32,8 @@ namespace Rafy.RBAC.Old
     [ChildEntity]
     public partial class OrgPositionOperationDeny : IntEntity
     {
-        public static readonly IRefIdProperty OrgPositionIdProperty =
-            P<OrgPositionOperationDeny>.RegisterRefId(e => e.OrgPositionId, ReferenceType.Parent);
+        public static readonly Property<int> OrgPositionIdProperty =
+            P<OrgPositionOperationDeny>.Register(e => e.OrgPositionId, ReferenceType.Parent);
         public int OrgPositionId
         {
             get { return (int)this.GetRefId(OrgPositionIdProperty); }

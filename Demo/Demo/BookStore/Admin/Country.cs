@@ -16,8 +16,8 @@ namespace Demo
     [ChildEntity]
     public partial class Country : DemoEntity
     {
-        public static readonly IRefIdProperty CityIdProperty =
-            P<Country>.RegisterRefId(e => e.CityId, ReferenceType.Parent);
+        public static readonly Property<int> CityIdProperty =
+            P<Country>.Register(e => e.CityId, ReferenceType.Parent);
         public int CityId
         {
             get { return (int)this.GetRefId(CityIdProperty); }

@@ -31,8 +31,8 @@ namespace Rafy.RBAC.RoleManagement
     public class RoleOperation : RoleManagementEntity
     {
         #region 引用属性
-        public static readonly IRefIdProperty RoleIdProperty =
-            P<RoleOperation>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
+        public static readonly Property<int> RoleIdProperty =
+            P<RoleOperation>.Register(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
         {
             get { return (long)GetRefId(RoleIdProperty); }
@@ -45,8 +45,8 @@ namespace Rafy.RBAC.RoleManagement
             get { return GetRefEntity(RoleProperty); }
             set { SetRefEntity(RoleProperty, value); }
         }
-        public static readonly IRefIdProperty OperationIdProperty =
-            P<RoleOperation>.RegisterRefId(e => e.OperationId, ReferenceType.Normal);
+        public static readonly Property<int> OperationIdProperty =
+            P<RoleOperation>.Register(e => e.OperationId);
         public long OperationId
         {
             get { return (long)GetRefId(OperationIdProperty); }

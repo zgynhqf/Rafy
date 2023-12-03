@@ -26,12 +26,12 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty BookIdProperty =
-            P<Favorate>.RegisterRefId(e => e.BookId, ReferenceType.Normal);
+        public static readonly Property<int?> BookIdProperty =
+            P<Favorate>.Register(e => e.BookId);
         public int? BookId
         {
-            get { return (int?)this.GetRefNullableId(BookIdProperty); }
-            set { this.SetRefNullableId(BookIdProperty, value); }
+            get { return (int?)this.GetProperty(BookIdProperty); }
+            set { this.SetProperty(BookIdProperty, value); }
         }
         public static readonly RefEntityProperty<Book> BookProperty =
             P<Favorate>.RegisterRef(e => e.Book, BookIdProperty);
@@ -55,49 +55,49 @@ namespace UT
         public static readonly Property<string> NameProperty = P<Favorate>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
         public static readonly Property<int[]> ArrayValueProperty = P<Favorate>.Register(e => e.ArrayValue);
         public int[] ArrayValue
         {
-            get { return this.GetProperty(ArrayValueProperty); }
+            get { return this.GetProperty<int[]>(ArrayValueProperty); }
             set { this.SetProperty(ArrayValueProperty, value); }
         }
 
         public static readonly Property<List<string>> ListValueProperty = P<Favorate>.Register(e => e.ListValue);
         public List<string> ListValue
         {
-            get { return this.GetProperty(ListValueProperty); }
+            get { return this.GetProperty<List<string>>(ListValueProperty); }
             set { this.SetProperty(ListValueProperty, value); }
         }
 
         public static readonly Property<byte[]> BytesContentProperty = P<Favorate>.Register(e => e.BytesContent);
         public byte[] BytesContent
         {
-            get { return this.GetProperty(BytesContentProperty); }
+            get { return this.GetProperty<byte[]>(BytesContentProperty); }
             set { this.SetProperty(BytesContentProperty, value); }
         }
 
         public static readonly Property<FavorateType> FavorateTypeProperty = P<Favorate>.Register(e => e.FavorateType);
         public FavorateType FavorateType
         {
-            get { return this.GetProperty(FavorateTypeProperty); }
+            get { return this.GetProperty<FavorateType>(FavorateTypeProperty); }
             set { this.SetProperty(FavorateTypeProperty, value); }
         }
 
         public static readonly Property<FavorateType?> NullableFavorateTypeProperty = P<Favorate>.Register(e => e.NullableFavorateType);
         public FavorateType? NullableFavorateType
         {
-            get { return this.GetProperty(NullableFavorateTypeProperty); }
+            get { return this.GetProperty<FavorateType?>(NullableFavorateTypeProperty); }
             set { this.SetProperty(NullableFavorateTypeProperty, value); }
         }
 
         public static readonly Property<FavorateTypeWithLabel> FavorateTypeWithLabelProperty = P<Favorate>.Register(e => e.FavorateTypeWithLabel);
         public FavorateTypeWithLabel FavorateTypeWithLabel
         {
-            get { return this.GetProperty(FavorateTypeWithLabelProperty); }
+            get { return this.GetProperty<FavorateTypeWithLabel>(FavorateTypeWithLabelProperty); }
             set { this.SetProperty(FavorateTypeWithLabelProperty, value); }
         }
 
@@ -109,7 +109,7 @@ namespace UT
             e => e.RO_FavorateTypeString, e => e.GetRO_FavorateTypeString(), FavorateTypeProperty);
         public string RO_FavorateTypeString
         {
-            get { return this.GetProperty(RO_FavorateTypeStringProperty); }
+            get { return this.GetProperty<string>(RO_FavorateTypeStringProperty); }
         }
         private string GetRO_FavorateTypeString()
         {

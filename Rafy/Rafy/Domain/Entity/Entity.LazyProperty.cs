@@ -104,7 +104,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="refProperty"></param>
         /// <returns></returns>
-        public object GetRefNullableKey(IManagedProperty refProperty)
+        internal object GetRefNullableKey(IManagedProperty refProperty)
         {
             var value = this.GetRefKey(refProperty);
             return value;
@@ -117,7 +117,7 @@ namespace Rafy.Domain
         /// <param name="refProperty"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public object SetRefNullableKey(IManagedProperty refProperty, object value)
+        internal object SetRefNullableKey(IManagedProperty refProperty, object value)
         {
             return this.SetRefKey(refProperty, value, true);
             //允许

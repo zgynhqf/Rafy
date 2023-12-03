@@ -29,8 +29,8 @@ namespace JXC
     [QueryEntity, Serializable]
     public class ClientTimeSpanCriteria : TimeSpanCriteria
     {
-        public static readonly IRefIdProperty ClientInfoIdProperty =
-            P<ClientTimeSpanCriteria>.RegisterRefId(e => e.ClientInfoId, ReferenceType.Normal);
+        public static readonly Property<int> ClientInfoIdProperty =
+            P<ClientTimeSpanCriteria>.Register(e => e.ClientInfoId);
         public int? ClientInfoId
         {
             get { return (int?)this.GetRefNullableId(ClientInfoIdProperty); }

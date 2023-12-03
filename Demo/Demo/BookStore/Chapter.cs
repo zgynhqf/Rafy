@@ -16,8 +16,8 @@ namespace Demo
     [ChildEntity]
     public partial class Chapter : DemoEntity
     {
-        public static readonly IRefIdProperty BookIdProperty =
-            P<Chapter>.RegisterRefId(e => e.BookId, ReferenceType.Parent);
+        public static readonly Property<int> BookIdProperty =
+            P<Chapter>.Register(e => e.BookId, ReferenceType.Parent);
         public int BookId
         {
             get { return (int)this.GetRefId(BookIdProperty); }

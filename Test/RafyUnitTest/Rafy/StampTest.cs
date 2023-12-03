@@ -39,8 +39,8 @@ namespace RafyUnitTest
             var inv = new Invoice();
             Assert.IsNotNull(inv.GetCreatedTime(), "属性可以正常的获取到，说明已经注册在实体上了。");
             Assert.IsNotNull(inv.GetUpdatedTime(), "属性可以正常的获取到，说明已经注册在实体上了。");
-            Assert.AreEqual(inv.GetCreatedUser(), string.Empty, "属性可以正常的获取到，说明已经注册在实体上了。");
-            Assert.AreEqual(inv.GetUpdatedUser(), string.Empty, "属性可以正常的获取到，说明已经注册在实体上了。");
+            Assert.AreEqual(inv.GetCreatedUser(), null, "属性可以正常的获取到，说明已经注册在实体上了。");
+            Assert.AreEqual(inv.GetUpdatedUser(), null, "属性可以正常的获取到，说明已经注册在实体上了。");
         }
 
         [TestMethod]
@@ -70,10 +70,10 @@ namespace RafyUnitTest
                 var inv = new Invoice();
 
                 repo.Save(inv);
-                Assert.AreEqual(inv.GetCreatedUser(), string.Empty, "还没有登录时，创建人属性应该是空的。");
+                Assert.AreEqual(inv.GetCreatedUser(), null, "还没有登录时，创建人属性应该是空的。");
 
                 inv = repo.GetById(inv.Id);
-                Assert.AreEqual(inv.GetCreatedUser(), string.Empty, "还没有登录时，创建人属性应该是空的。");
+                Assert.AreEqual(inv.GetCreatedUser(), null, "还没有登录时，创建人属性应该是空的。");
             }
         }
 
@@ -141,9 +141,9 @@ namespace RafyUnitTest
                 inv.Code = "Code Modified";
                 repo.Save(inv);
 
-                Assert.AreEqual(inv.GetUpdatedUser(), string.Empty, "还没有登录时，最后更新人属性应该是空的。");
+                Assert.AreEqual(inv.GetUpdatedUser(), null, "还没有登录时，最后更新人属性应该是空的。");
                 inv = repo.GetById(inv.Id);
-                Assert.AreEqual(inv.GetUpdatedUser(), string.Empty, "还没有登录时，最后更新人属性应该是空的。");
+                Assert.AreEqual(inv.GetUpdatedUser(), null, "还没有登录时，最后更新人属性应该是空的。");
             }
         }
 

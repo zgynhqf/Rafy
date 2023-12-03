@@ -26,7 +26,7 @@ namespace UT
         /// </summary>
         public string ANameRef
         {
-            get { return this.GetProperty(ANameRefProperty); }
+            get { return this.GetProperty<string>(ANameRefProperty); }
             set { this.SetProperty(ANameRefProperty, value); }
         }
         public static readonly RefEntityProperty<A> AProperty =
@@ -44,7 +44,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<B>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -56,14 +56,14 @@ namespace UT
             e => e.AName, new RedundantPath(AProperty, A.NameProperty));
         public string AName
         {
-            get { return this.GetProperty(ANameProperty); }
+            get { return this.GetProperty<string>(ANameProperty); }
         }
 
         public static readonly Property<AType> ATypeProperty = P<B>.RegisterRedundancy(e => e.AType,
             new RedundantPath(AProperty, A.TypeProperty));
         public AType AType
         {
-            get { return this.GetProperty(ATypeProperty); }
+            get { return this.GetProperty<AType>(ATypeProperty); }
         }
 
         #endregion
@@ -81,6 +81,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+            //Meta.Property(B.ANameRefProperty).MapColumn().IsForeignKey();
         }
     }
 }

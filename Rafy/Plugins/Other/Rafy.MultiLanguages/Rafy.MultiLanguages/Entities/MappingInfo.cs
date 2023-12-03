@@ -37,8 +37,8 @@ namespace Rafy.MultiLanguages
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty LanguageIdProperty =
-            P<MappingInfo>.RegisterRefId(e => e.LanguageId, ReferenceType.Parent);
+        public static readonly Property<int> LanguageIdProperty =
+            P<MappingInfo>.Register(e => e.LanguageId, ReferenceType.Parent);
         public int LanguageId
         {
             get { return (int)this.GetRefId(LanguageIdProperty); }
@@ -52,8 +52,8 @@ namespace Rafy.MultiLanguages
             set { this.SetRefEntity(LanguageProperty, value); }
         }
 
-        public static readonly IRefIdProperty DevLanguageItemIdProperty =
-            P<MappingInfo>.RegisterRefId(e => e.DevLanguageItemId, ReferenceType.Normal);
+        public static readonly Property<int> DevLanguageItemIdProperty =
+            P<MappingInfo>.Register(e => e.DevLanguageItemId);
         public int DevLanguageItemId
         {
             get { return (int)this.GetRefId(DevLanguageItemIdProperty); }

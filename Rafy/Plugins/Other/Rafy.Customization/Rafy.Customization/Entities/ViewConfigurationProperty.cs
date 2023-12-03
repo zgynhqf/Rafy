@@ -18,15 +18,15 @@ namespace Rafy.Customization
     [ChildEntity]
     public partial class ViewConfigurationProperty : IntEntity
     {
-        public static readonly IRefIdProperty ViewConfigurationModelIdProperty =
-            P<ViewConfigurationProperty>.RegisterRefId(e => e.ViewConfigurationModelId, ReferenceType.Parent);
+        public static readonly Property<int> ViewConfigurationModelIdProperty =
+            P<ViewConfigurationProperty>.Register(e => e.ViewConfigurationModelId);
         public int ViewConfigurationModelId
         {
-            get { return (int)this.GetRefId(ViewConfigurationModelIdProperty); }
-            set { this.SetRefId(ViewConfigurationModelIdProperty, value); }
+            get { return this.GetProperty(ViewConfigurationModelIdProperty); }
+            set { this.SetProperty(ViewConfigurationModelIdProperty, value); }
         }
         public static readonly RefEntityProperty<ViewConfigurationModel> ViewConfigurationModelProperty =
-            P<ViewConfigurationProperty>.RegisterRef(e => e.ViewConfigurationModel, ViewConfigurationModelIdProperty);
+            P<ViewConfigurationProperty>.RegisterRef(e => e.ViewConfigurationModel, ViewConfigurationModelIdProperty, referenceType: ReferenceType.Parent);
         public ViewConfigurationModel ViewConfigurationModel
         {
             get { return this.GetRefEntity(ViewConfigurationModelProperty); }

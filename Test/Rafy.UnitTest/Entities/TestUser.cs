@@ -27,7 +27,7 @@ namespace UT
         });
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
         private string CoerceGetName(string value)
@@ -45,7 +45,7 @@ namespace UT
         [Column]
         public int Age
         {
-            get { return this.GetProperty(AgeProperty); }
+            get { return this.GetProperty<int>(AgeProperty); }
             set { this.SetProperty(AgeProperty, value); }
         }
         protected virtual void OnAgeChanging(ManagedPropertyChangingEventArgs<int> e)
@@ -73,7 +73,7 @@ namespace UT
         public static Property<string> NotEmptyCodeProperty = P<TestUser>.Register(e => e.NotEmptyCode, OnNotEmptyCodeChanged, null);
         public string NotEmptyCode
         {
-            get { return this.GetProperty(NotEmptyCodeProperty); }
+            get { return this.GetProperty<string>(NotEmptyCodeProperty); }
             set { this.SetProperty(NotEmptyCodeProperty, value); }
         }
         private static void OnNotEmptyCodeChanged(ManagedPropertyObject sender, ManagedPropertyChangedEventArgs e)
@@ -90,7 +90,7 @@ namespace UT
         public static Property<string> ReadOnlyNameAgeProperty = P<TestUser>.RegisterReadOnly(e => e.ReadOnlyNameAge, ReadOnlyNameAgeProperty_GetValue, NameProperty, AgeProperty);
         public string ReadOnlyNameAge
         {
-            get { return this.GetProperty(ReadOnlyNameAgeProperty); }
+            get { return this.GetProperty<string>(ReadOnlyNameAgeProperty); }
         }
         private static string ReadOnlyNameAgeProperty_GetValue(TestUser user)
         {
@@ -122,7 +122,7 @@ namespace UT
         [Column]
         public int TasksTime
         {
-            get { return this.GetProperty(TasksTimeProperty); }
+            get { return this.GetProperty<int>(TasksTimeProperty); }
             set { this.SetProperty(TasksTimeProperty, value); }
         }
 
@@ -143,7 +143,7 @@ namespace UT
         public static Property<int> TasksTimeByAutoCollectProperty = P<TestUser>.Register(e => e.TasksTimeByAutoCollect);
         public int TasksTimeByAutoCollect
         {
-            get { return this.GetProperty(TasksTimeByAutoCollectProperty); }
+            get { return this.GetProperty<int>(TasksTimeByAutoCollectProperty); }
         }
 
         [NonSerialized]
@@ -158,20 +158,20 @@ namespace UT
         });
         public string TemporaryName
         {
-            get { return this.GetProperty(TemporaryNameProperty); }
+            get { return this.GetProperty<string>(TemporaryNameProperty); }
             set { this.SetProperty(TemporaryNameProperty, value); }
         }
 
         public static readonly Property<string> LoginNameProperty = P<TestUser>.Register(e => e.LoginName);
         public string LoginName
         {
-            get { return this.GetProperty(LoginNameProperty); }
+            get { return this.GetProperty<string>(LoginNameProperty); }
             set { this.SetProperty(LoginNameProperty, value); }
         }
         public static readonly Property<DateTime> AddedTimeProperty = P<TestUser>.Register(e => e.AddedTime);
         public DateTime AddedTime
         {
-            get { return this.GetProperty(AddedTimeProperty); }
+            get { return this.GetProperty<DateTime>(AddedTimeProperty); }
             set { this.SetProperty(AddedTimeProperty, value); }
         }
     }

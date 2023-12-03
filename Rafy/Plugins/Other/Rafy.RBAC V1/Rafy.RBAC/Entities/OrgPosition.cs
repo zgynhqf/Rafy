@@ -34,8 +34,8 @@ namespace Rafy.RBAC.Old
     [ChildEntity]
     public partial class OrgPosition : IntEntity
     {
-        public static readonly IRefIdProperty OrgIdProperty =
-            P<OrgPosition>.RegisterRefId(e => e.OrgId, ReferenceType.Parent);
+        public static readonly Property<int> OrgIdProperty =
+            P<OrgPosition>.Register(e => e.OrgId, ReferenceType.Parent);
         public int OrgId
         {
             get { return (int)this.GetRefId(OrgIdProperty); }
@@ -49,8 +49,8 @@ namespace Rafy.RBAC.Old
             set { this.SetRefEntity(OrgProperty, value); }
         }
 
-        public static readonly IRefIdProperty PositionIdProperty =
-            P<OrgPosition>.RegisterRefId(e => e.PositionId, ReferenceType.Normal);
+        public static readonly Property<int> PositionIdProperty =
+            P<OrgPosition>.Register(e => e.PositionId);
         public int PositionId
         {
             get { return (int)this.GetRefId(PositionIdProperty); }

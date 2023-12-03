@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20110414
@@ -88,8 +88,8 @@ namespace Rafy.RBAC.Old.Audit
         /// <summary>
         /// 模块名
         /// </summary>
-        public static readonly IRefIdProperty ModuleACIdProperty =
-            P<AuditItemConditionCriteria>.RegisterRefId(e => e.ModuleACId, ReferenceType.Normal);
+        public static readonly Property<int> ModuleACIdProperty =
+            P<AuditItemConditionCriteria>.Register(e => e.ModuleACId);
         public int? ModuleACId
         {
             get { return (int?)this.GetRefNullableId(ModuleACIdProperty); }

@@ -19,8 +19,8 @@ namespace JXC
     [RootEntity]
     public abstract class StorageInBill : JXCEntity
     {
-        public static readonly IRefIdProperty StorageIdProperty =
-            P<StorageInBill>.RegisterRefId(e => e.StorageId, ReferenceType.Normal);
+        public static readonly Property<int> StorageIdProperty =
+            P<StorageInBill>.Register(e => e.StorageId);
         public int StorageId
         {
             get { return (int)this.GetRefId(StorageIdProperty); }

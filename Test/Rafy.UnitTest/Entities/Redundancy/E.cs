@@ -18,12 +18,12 @@ namespace UT
     [RootEntity]
     public partial class E : UnitTestEntity
     {
-        public static readonly IRefIdProperty DIdProperty =
-            P<E>.RegisterRefId(e => e.DId, ReferenceType.Normal);
+        public static readonly Property<int?> DIdProperty =
+            P<E>.Register(e => e.DId);
         public int? DId
         {
-            get { return this.GetRefNullableId(DIdProperty); }
-            set { this.SetRefNullableId(DIdProperty, value); }
+            get { return this.GetProperty(DIdProperty); }
+            set { this.SetProperty(DIdProperty, value); }
         }
         public static readonly RefEntityProperty<D> DProperty =
             P<E>.RegisterRef(e => e.D, DIdProperty);
@@ -37,15 +37,15 @@ namespace UT
             new RedundantPath(DProperty, D.CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string ANameFromDCBA
         {
-            get { return this.GetProperty(ANameFromDCBAProperty); }
+            get { return this.GetProperty<string>(ANameFromDCBAProperty); }
         }
 
-        public static readonly IRefIdProperty CIdProperty =
-            P<E>.RegisterRefId(e => e.CId, ReferenceType.Normal);
+        public static readonly Property<int> CIdProperty =
+            P<E>.Register(e => e.CId);
         public int CId
         {
-            get { return this.GetRefId(CIdProperty); }
-            set { this.SetRefId(CIdProperty, value); }
+            get { return this.GetProperty(CIdProperty); }
+            set { this.SetProperty(CIdProperty, value); }
         }
         public static readonly RefEntityProperty<C> CProperty =
             P<E>.RegisterRef(e => e.C, CIdProperty);
@@ -59,7 +59,7 @@ namespace UT
             new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string ANameFromCBA
         {
-            get { return this.GetProperty(ANameFromCBAProperty); }
+            get { return this.GetProperty<string>(ANameFromCBAProperty); }
         }
     }
 

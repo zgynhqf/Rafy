@@ -38,12 +38,12 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty UserIdProperty =
-            P<Article>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
+        public static readonly Property<int> UserIdProperty =
+            P<Article>.Register(e => e.UserId);
         public int UserId
         {
-            get { return this.GetRefId(UserIdProperty); }
-            set { this.SetRefId(UserIdProperty, value); }
+            get { return this.GetProperty(UserIdProperty); }
+            set { this.SetProperty(UserIdProperty, value); }
         }
         public static readonly RefEntityProperty<BlogUser> UserProperty =
             P<Article>.RegisterRef(e => e.User, UserIdProperty);
@@ -56,12 +56,12 @@ namespace UT
             set { this.SetRefEntity(UserProperty, value); }
         }
 
-        public static readonly IRefIdProperty AdministratorIdProperty =
-            P<Article>.RegisterRefId(e => e.AdministratorId, ReferenceType.Normal);
+        public static readonly Property<int?> AdministratorIdProperty =
+            P<Article>.Register(e => e.AdministratorId);
         public int? AdministratorId
         {
-            get { return this.GetRefNullableId(AdministratorIdProperty); }
-            set { this.SetRefNullableId(AdministratorIdProperty, value); }
+            get { return this.GetProperty(AdministratorIdProperty); }
+            set { this.SetProperty(AdministratorIdProperty, value); }
         }
         public static readonly RefEntityProperty<BlogUser> AdministratorProperty =
             P<Article>.RegisterRef(e => e.Administrator, AdministratorIdProperty);
@@ -74,12 +74,12 @@ namespace UT
             set { this.SetRefEntity(AdministratorProperty, value); }
         }
 
-        public static readonly IRefIdProperty ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty =
-            P<Article>.RegisterRefId(e => e.ToTestExtremeLongReferencePropertyMapToDataBaseColumnId, ReferenceType.Normal);
+        public static readonly Property<int?> ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty =
+            P<Article>.Register(e => e.ToTestExtremeLongReferencePropertyMapToDataBaseColumnId);
         public int? ToTestExtremeLongReferencePropertyMapToDataBaseColumnId
         {
-            get { return (int?)this.GetRefNullableId(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty); }
-            set { this.SetRefNullableId(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty, value); }
+            get { return (int?)this.GetProperty(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty); }
+            set { this.SetProperty(ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty, value); }
         }
         public static readonly RefEntityProperty<BlogUser> ToTestExtremeLongReferencePropertyMapToDataBaseColumnProperty =
             P<Article>.RegisterRef(e => e.ToTestExtremeLongReferencePropertyMapToDataBaseColumn, ToTestExtremeLongReferencePropertyMapToDataBaseColumnIdProperty);
@@ -106,7 +106,7 @@ namespace UT
         /// </summary>
         public string Code
         {
-            get { return this.GetProperty(CodeProperty); }
+            get { return this.GetProperty<string>(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
@@ -116,7 +116,7 @@ namespace UT
         /// </summary>
         public DateTime CreateDate
         {
-            get { return this.GetProperty(CreateDateProperty); }
+            get { return this.GetProperty<DateTime>(CreateDateProperty); }
             set { this.SetProperty(CreateDateProperty, value); }
         }
 

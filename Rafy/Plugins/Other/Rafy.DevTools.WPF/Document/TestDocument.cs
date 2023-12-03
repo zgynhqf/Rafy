@@ -38,7 +38,7 @@ namespace Rafy.DevTools
         #region 子属性
 
         //public static readonly RefProperty<TestDocument> TestDocumentProperty =
-        //    P<TestDocument>.RegisterRef(e => e.TestDocument, ReferenceType.Normal);
+        //    P<TestDocument>.RegisterRef(e => e.TestDocument);
         //public int TestDocumentId
         //{
         //    get { return (int)this.GetRefId(TestDocumentProperty); }

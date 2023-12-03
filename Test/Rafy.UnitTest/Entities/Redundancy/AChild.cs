@@ -38,15 +38,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty AIdProperty =
-            P<AChild>.RegisterRefId(e => e.AId, ReferenceType.Parent);
+        public static readonly Property<int> AIdProperty =
+            P<AChild>.Register(e => e.AId);
         public int AId
         {
-            get { return (int)this.GetRefId(AIdProperty); }
-            set { this.SetRefId(AIdProperty, value); }
+            get { return (int)this.GetProperty(AIdProperty); }
+            set { this.SetProperty(AIdProperty, value); }
         }
         public static readonly RefEntityProperty<A> AProperty =
-            P<AChild>.RegisterRef(e => e.A, AIdProperty);
+            P<AChild>.RegisterRef(e => e.A, AIdProperty, referenceType: ReferenceType.Parent);
         public A A
         {
             get { return this.GetRefEntity(AProperty); }
@@ -67,7 +67,7 @@ namespace UT
         /// </summary>
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -79,7 +79,7 @@ namespace UT
             new RedundantPath(AProperty, A.NameProperty));
         public string RD_AName
         {
-            get { return this.GetProperty(RD_ANameProperty); }
+            get { return this.GetProperty<string>(RD_ANameProperty); }
         }
 
         #endregion

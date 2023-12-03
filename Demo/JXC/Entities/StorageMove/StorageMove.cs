@@ -19,8 +19,8 @@ namespace JXC
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class StorageMove : JXCEntity
     {
-        public static readonly IRefIdProperty StorageFromIdProperty =
-            P<StorageMove>.RegisterRefId(e => e.StorageFromId, ReferenceType.Normal);
+        public static readonly Property<int> StorageFromIdProperty =
+            P<StorageMove>.Register(e => e.StorageFromId);
         public int StorageFromId
         {
             get { return (int)this.GetRefId(StorageFromIdProperty); }
@@ -34,8 +34,8 @@ namespace JXC
             set { this.SetRefEntity(StorageFromProperty, value); }
         }
 
-        public static readonly IRefIdProperty StorageToIdProperty =
-            P<StorageMove>.RegisterRefId(e => e.StorageToId, ReferenceType.Normal);
+        public static readonly Property<int> StorageToIdProperty =
+            P<StorageMove>.Register(e => e.StorageToId);
         public int StorageToId
         {
             get { return (int)this.GetRefId(StorageToIdProperty); }

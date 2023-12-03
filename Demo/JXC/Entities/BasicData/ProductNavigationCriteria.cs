@@ -29,8 +29,8 @@ namespace JXC
     [QueryEntity, Serializable]
     public class ProductNavigationCriteria : Criteria
     {
-        public static readonly IRefIdProperty ProductCategoryIdProperty =
-            P<ProductNavigationCriteria>.RegisterRefId(e => e.ProductCategoryId, ReferenceType.Normal);
+        public static readonly Property<int> ProductCategoryIdProperty =
+            P<ProductNavigationCriteria>.Register(e => e.ProductCategoryId);
         public int ProductCategoryId
         {
             get { return (int)this.GetRefId(ProductCategoryIdProperty); }

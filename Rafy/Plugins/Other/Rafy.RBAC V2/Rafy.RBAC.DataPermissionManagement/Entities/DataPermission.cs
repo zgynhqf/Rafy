@@ -30,8 +30,8 @@ namespace Rafy.RBAC.DataPermissionManagement
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty RoleIdProperty =
-         P<DataPermission>.RegisterRefId(e => e.RoleId, ReferenceType.Parent);
+        public static readonly Property<int> RoleIdProperty =
+         P<DataPermission>.Register(e => e.RoleId, ReferenceType.Parent);
         public long RoleId
         {
             get { return (long)this.GetRefId(RoleIdProperty); }
@@ -49,8 +49,8 @@ namespace Rafy.RBAC.DataPermissionManagement
             set { this.SetRefEntity(RoleProperty, value); }
         }
 
-        public static readonly IRefIdProperty ResourceIdProperty =
-            P<DataPermission>.RegisterRefId(e => e.ResourceId, ReferenceType.Normal);
+        public static readonly Property<int> ResourceIdProperty =
+            P<DataPermission>.Register(e => e.ResourceId);
         public long ResourceId
         {
             get { return (long)this.GetRefId(ResourceIdProperty); }

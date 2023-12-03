@@ -59,7 +59,7 @@ namespace UT
         /// </summary>
         public string Code
         {
-            get { return this.GetProperty(CodeProperty); }
+            get { return this.GetProperty<string>(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
@@ -69,7 +69,7 @@ namespace UT
         /// </summary>
         public bool IsDefault
         {
-            get { return this.GetProperty(IsDefaultProperty); }
+            get { return this.GetProperty<bool>(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
 

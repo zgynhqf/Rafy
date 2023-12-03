@@ -32,8 +32,8 @@ namespace JXC
     [Serializable]
     public abstract class ProductRefItem : JXCEntity
     {
-        public static readonly IRefIdProperty ProductIdProperty =
-            P<ProductRefItem>.RegisterRefId(e => e.ProductId, ReferenceType.Normal);
+        public static readonly Property<int> ProductIdProperty =
+            P<ProductRefItem>.Register(e => e.ProductId);
         public int ProductId
         {
             get { return (int)this.GetRefId(ProductIdProperty); }

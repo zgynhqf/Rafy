@@ -179,9 +179,9 @@ namespace RafyUnitTest
             var model2 = BinarySerializer.Clone(model);
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
-            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
-            Assert.AreSame(model2, model2.ChapterList[0].GetProperty(Chapter.BookProperty));
-            Assert.AreSame(model2, model2.ChapterList[1].GetProperty(Chapter.BookProperty));
+            Assert.IsNotNull(model2.GetProperty<ChapterList>(Book.ChapterListProperty));
+            Assert.AreSame(model2, model2.ChapterList[0].GetProperty<Entity>(Chapter.BookProperty));
+            Assert.AreSame(model2, model2.ChapterList[1].GetProperty<Entity>(Chapter.BookProperty));
 
             Assert.AreEqual(2, model2.ChapterList.Count);
             Assert.AreEqual(111, model2.ChapterList[0].Id);
@@ -213,8 +213,8 @@ namespace RafyUnitTest
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
             Assert.IsTrue(model2.IsChanged(Book.ChapterListProperty));
-            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
-            Assert.AreEqual(2, model2.GetProperty(Book.ChapterListProperty).Count);
+            Assert.IsNotNull(model2.GetProperty<ChapterList>(Book.ChapterListProperty));
+            Assert.AreEqual(2, model2.GetProperty<ChapterList>(Book.ChapterListProperty).Count);
         }
 
         [TestMethod]
@@ -501,7 +501,7 @@ namespace RafyUnitTest
             Assert.IsTrue(content.Contains("HuQingFang"));
 
             Assert.IsTrue(model2.UserId == 111);
-            Assert.IsTrue(model2.GetProperty(Article.UserProperty) != null);
+            Assert.IsTrue(model2.GetProperty<Entity>(Article.UserProperty) != null);
             Assert.IsTrue(model2.User.UserName == "HuQingFang");
         }
 
@@ -532,7 +532,7 @@ namespace RafyUnitTest
             Assert.IsTrue(content.Contains("<Name"));
             Assert.IsTrue(content.Contains("Chapter1"));
 
-            Assert.IsTrue(model2.GetProperty(Book.ChapterListProperty) != null);
+            Assert.IsTrue(model2.GetProperty<ChapterList>(Book.ChapterListProperty) != null);
             Assert.IsTrue(model2.ChapterList.Count == 2);
             Assert.IsTrue(model2.ChapterList[0].Id == 111);
             Assert.IsTrue(model2.ChapterList[0].Name == "Chapter1");
@@ -961,8 +961,8 @@ namespace RafyUnitTest
     @"{
   ""createdTime"": ""2000-01-01T00:00:00"",
   ""updatedTime"": ""2000-01-01T00:00:00"",
-  ""createdUser"": """",
-  ""updatedUser"": """",
+  ""createdUser"": null,
+  ""updatedUser"": null,
   ""id"": 0,
   ""bookId"": null,
   ""name"": ""name"",

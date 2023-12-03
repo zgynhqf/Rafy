@@ -32,7 +32,7 @@ namespace Rafy.RBAC.UserRoleManagement
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty UserIdProperty = P<UserRole>.RegisterRefId(e => e.UserId, ReferenceType.Parent);
+        public static readonly Property<int> UserIdProperty = P<UserRole>.Register(e => e.UserId, ReferenceType.Parent);
         public long UserId
         {
             get { return (long) GetRefId(UserIdProperty); }
@@ -44,7 +44,7 @@ namespace Rafy.RBAC.UserRoleManagement
             get { return GetRefEntity(UserProperty); }
             set { SetRefEntity(UserProperty, value); }
         }
-        public static readonly IRefIdProperty RoleIdProperty = P<UserRole>.RegisterRefId(e => e.RoleId, ReferenceType.Normal);
+        public static readonly Property<int> RoleIdProperty = P<UserRole>.Register(e => e.RoleId);
         public long RoleId
         {
             get { return (long) GetRefId(RoleIdProperty); }
