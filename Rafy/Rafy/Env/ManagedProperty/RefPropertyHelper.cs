@@ -34,7 +34,6 @@ namespace Rafy.ManagedProperty
 
         /// <summary>
         /// 判断指定的属性是否是一个引用键属性。
-        /// 目前，一般属性、<see cref="IRefIdProperty"/> 都可以作为引用键属性。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="refEntityProperty">如果是，则返回对应的引用实体属性。</param>

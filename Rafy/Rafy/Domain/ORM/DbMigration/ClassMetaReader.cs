@@ -215,58 +215,48 @@ namespace Rafy.Domain.ORM.DbMigration
                     var propertyName = property.Name;
                     var columnName = columnMeta.ColumnName;
 
-                    //类型
-                    var propertyType = property.PropertyType;
-                    bool isNullableRef = false;
-
                     #region 引用关系
 
-                    if (columnMeta.HasFKConstraint)
+                    //是否生成外键
+                    if (IsGeneratingForeignKey && columnMeta.HasFKConstraint)
                     {
                         var refProperty = RefPropertyHelper.Find(mp);
                         if (refProperty != null)
                         {
-                            isNullableRef = refProperty.Nullable;
+                            var refMeta = em.Property(refProperty.RefEntityProperty);
+                            if (refMeta.ReferenceInfo == null)
+                                throw new InvalidOperationException("refMeta.ReferenceInfo == null");
 
-                            //是否生成外键
-                            // 默认 IsGeneratingForeignKey 为 true
-                            if (IsGeneratingForeignKey)
+                            //引用实体的类型。
+                            var refTypeMeta = refMeta.ReferenceInfo.RefTypeMeta;
+                            if (refTypeMeta != null)
                             {
-                                var refMeta = em.Property(refProperty.RefEntityProperty);
-                                if (refMeta.ReferenceInfo == null)
-                                    throw new InvalidOperationException("refMeta.ReferenceInfo == null");
-
-                                //引用实体的类型。
-                                var refTypeMeta = refMeta.ReferenceInfo.RefTypeMeta;
-                                if (refTypeMeta != null)
+                                var refTableMeta = refTypeMeta.TableMeta;
+                                if (refTableMeta != null)
                                 {
-                                    var refTableMeta = refTypeMeta.TableMeta;
-                                    if (refTableMeta != null)
+                                    //如果主键表已经被忽略，那么到这个表上的外键也不能建立了。
+                                    //这是因为被忽略的表的结构是未知的，不一定是以这个字段为主键。
+                                    if (!this.Database.IsIgnored(refTableMeta.TableName))
                                     {
-                                        //如果主键表已经被忽略，那么到这个表上的外键也不能建立了。
-                                        //这是因为被忽略的表的结构是未知的，不一定是以这个字段为主键。
-                                        if (!this.Database.IsIgnored(refTableMeta.TableName))
+                                        var id = refTypeMeta.Property(Entity.IdProperty);
+                                        //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
+                                        if (id.ColumnMeta.IsPrimaryKey)
                                         {
-                                            var id = refTypeMeta.Property(Entity.IdProperty);
-                                            //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
-                                            if (id.ColumnMeta.IsPrimaryKey)
+                                            this._foreigns.Add(new ForeignConstraintInfo()
                                             {
-                                                this._foreigns.Add(new ForeignConstraintInfo()
-                                                {
-                                                    FkTableName = tableMeta.TableName,
-                                                    PkTableName = refTableMeta.TableName,
-                                                    FkColumn = columnName,
-                                                    PkColumn = id.ColumnMeta.ColumnName,
-                                                    NeedDeleteCascade =
-                                                        refProperty.ReferenceType == ReferenceType.Parent
-                                                });
-                                            }
+                                                FkTableName = tableMeta.TableName,
+                                                PkTableName = refTableMeta.TableName,
+                                                FkColumn = columnName,
+                                                PkColumn = id.ColumnMeta.ColumnName,
+                                                NeedDeleteCascade =
+                                                    refProperty.ReferenceType == ReferenceType.Parent
+                                            });
                                         }
                                     }
                                 }
                             }
                         }
-                        else if (IsGeneratingForeignKey && mp == Entity.TreePIdProperty)
+                        else if (mp == Entity.TreePIdProperty)
                         {
                             var id = em.Property(Entity.IdProperty);
                             //有时一些表的 Id 只是自增长，但并不是主键，不能创建外键。
@@ -286,6 +276,8 @@ namespace Rafy.Domain.ORM.DbMigration
 
                     #endregion
 
+                    //类型
+                    var propertyType = property.PropertyType;
                     var dbType = columnMeta.DbType.GetValueOrDefault(_dbTypeConverter.FromClrType(propertyType));
                     var column = new Column(columnName, dbType, columnMeta.DbTypeLength, table);
                     if (columnMeta.IsRequired.HasValue)
@@ -294,7 +286,14 @@ namespace Rafy.Domain.ORM.DbMigration
                     }
                     else
                     {
-                        column.IsRequired = !isNullableRef && !propertyType.IsClass && !TypeHelper.IsNullable(propertyType);
+                        if (RefPropertyHelper.IsRefKeyProperty(mp, out var refP))
+                        {
+                            column.IsRequired = !refP.Nullable;
+                        }
+                        else
+                        {
+                            column.IsRequired = !TypeHelper.IsNullableOrClass(propertyType);
+                        }
                     }
                     //IsPrimaryKey 的设置放在 IsRequired 之后，可以防止在设置可空的同时把列调整为非主键。
                     column.IsPrimaryKey = columnMeta.IsPrimaryKey;
@@ -384,16 +383,10 @@ namespace Rafy.Domain.ORM.DbMigration
                 public bool NeedDeleteCascade;
             }
 
-            private bool _isGeneratingForeignKey = true;
-
             /// <summary>
             /// 是否生成外键，默认true 
             /// </summary>
-            internal bool IsGeneratingForeignKey
-            {
-                get { return _isGeneratingForeignKey; }
-                set { _isGeneratingForeignKey = value; }
-            }
+            internal bool IsGeneratingForeignKey = true;
         }
 
         /// <summary>
@@ -403,15 +396,9 @@ namespace Rafy.Domain.ORM.DbMigration
         /// </summary>
         public string EntityDbSettingName { get; set; }
 
-        private bool _isGeneratingForeignKey = true;
-
         /// <summary>
         /// 是否生成外键，默认true 
         /// </summary>
-        public bool IsGeneratingForeignKey
-        {
-            get { return _isGeneratingForeignKey; }
-            set { _isGeneratingForeignKey = value; }
-        }
+        public bool IsGeneratingForeignKey { get; set; } = true;
     }
 }

@@ -131,6 +131,16 @@ namespace Rafy.Reflection
         }
 
         /// <summary>
+        /// 判断某个类型是否为 Nullable 泛型类型或者引用类型。
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static bool IsNullableOrClass(Type targetType)
+        {
+            return targetType.IsClass || IsNullable(targetType);
+        }
+
+        /// <summary>
         /// 判断指定的类型是否是一个指定的泛型类型。
         /// </summary>
         /// <param name="targetType">需要判断的目标类型。</param>

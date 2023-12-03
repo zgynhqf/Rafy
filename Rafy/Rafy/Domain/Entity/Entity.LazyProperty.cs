@@ -100,34 +100,13 @@ namespace Rafy.Domain
         #region 考虑到未来可能会还需要获取可空值，这些方法暂时不能删除。
 
         /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的可空类型返回值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns>本方法为兼容值类型而使用。不论 Id 是值类型、还是引用类型，都可能返回 null。</returns>
-        public object GetRefNullableId(IRefIdProperty property)
-        {
-            return this.GetRefNullableKey(property);
-        }
-
-        /// <summary>
-        /// 设置指定引用 id 属性对应的 id 的可空类型值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="value">本方法为兼容值类型而使用。不论外键是否为值类型，都可以传入 null。</param>
-        /// <returns></returns>
-        public object SetRefNullableId(IRefIdProperty property, object value)
-        {
-            return this.SetRefNullableKey(property, value);
-        }
-
-        /// <summary>
         /// 获取引用键属性的可空值。
         /// </summary>
         /// <param name="refProperty"></param>
         /// <returns></returns>
-        internal object GetRefNullableKey(IRefProperty refProperty)
+        public object GetRefNullableKey(IManagedProperty refProperty)
         {
-            var value = this.GetProperty(refProperty.RefKeyProperty);
+            var value = this.GetRefKey(refProperty);
             return value;
             //return refProperty.KeyProvider.ToNullableValue(value);
         }
@@ -138,7 +117,7 @@ namespace Rafy.Domain
         /// <param name="refProperty"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal object SetRefNullableKey(IRefProperty refProperty, object value)
+        public object SetRefNullableKey(IManagedProperty refProperty, object value)
         {
             return this.SetRefKey(refProperty, value, true);
             //允许
@@ -150,36 +129,14 @@ namespace Rafy.Domain
         #endregion
 
         /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的返回值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns>如果 Id 是值类型，则这个函数的返回值不会是 null；如果是引用类型，则可能返回 null。</returns>
-        public object GetRefId(IRefIdProperty property)
-        {
-            return this.GetProperty(property);
-        }
-
-        /// <summary>
-        /// 设置指定引用 id 属性对应的 id 的值。
-        /// 
-        /// 在引用 id 变化时，会同步相应的引用实体属性。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="value">外键如果是值类型，则不能传入 null。</param>
-        /// <returns></returns>
-        public object SetRefId(IRefIdProperty property, object value)
-        {
-            return this.SetRefKey(property, value, true);
-        }
-
-        /// <summary>
         /// 获取指定引用属性对应的键的值。
         /// </summary>
-        /// <param name="property"></param>
+        /// <param name="refProperty"></param>
         /// <returns></returns>
-        public object GetRefKey(IRefProperty property)
+        public object GetRefKey(IManagedProperty refProperty)
         {
-            return this.GetProperty(property.RefKeyProperty);
+            var value = this.GetProperty((refProperty as IRefProperty)?.RefKeyProperty ?? refProperty);
+            return value;
         }
 
         /// <summary>
@@ -190,7 +147,7 @@ namespace Rafy.Domain
         /// <param name="refProperty">引用属性。</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public object SetRefKey(IRefProperty refProperty, object value)
+        public object SetRefKey(IManagedProperty refProperty, object value)
         {
             return this.SetRefKey(refProperty, value, true);
         }
@@ -204,9 +161,10 @@ namespace Rafy.Domain
         /// <param name="value"></param>
         /// <param name="resetDisabledStatus"></param>
         /// <returns></returns>
-        public object SetRefKey(IRefProperty refProperty, object value, bool resetDisabledStatus)
+        public object SetRefKey(IManagedProperty refProperty, object value, bool resetDisabledStatus)
         {
-            return this.SetRefKey(refProperty.RefKeyProperty as IManagedPropertyInternal, value, resetDisabledStatus);
+            var keyP = (refProperty as IRefProperty)?.RefKeyProperty ?? refProperty;
+            return this.SetRefKey(keyP as IManagedPropertyInternal, value, resetDisabledStatus);
         }
 
         private object SetRefKey(IManagedPropertyInternal keyProperty, object value, bool resetDisabledStatus)

@@ -179,12 +179,6 @@ namespace Rafy.MongoDb
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
                     return this.CreatePropertyElement(property.Name, BsonValue.Create(value));
-                case PropertyCategory.ReferenceId:
-                    if (value != null && (property as IRefIdProperty).ReferenceType != ReferenceType.Parent)
-                    {
-                        return this.CreatePropertyElement(property.Name, BsonValue.Create(value));
-                    }
-                    break;
                 case PropertyCategory.ReferenceEntity:
                     if (value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
                     {

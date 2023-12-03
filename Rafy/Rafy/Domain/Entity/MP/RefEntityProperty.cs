@@ -52,7 +52,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 实体引用的类型
         /// </summary>
-        public ReferenceType ReferenceType => _refKeyProperty is IRefIdProperty ? (_refKeyProperty as IRefIdProperty).ReferenceType : ReferenceType.Normal;//如果是一般值属性，则肯定是一般引用。（因为父引用必须是使用 Id 作为引用值属性）
+        public ReferenceType ReferenceType { get; internal set; }
 
         /// <summary>
         /// 引用实体的键对应的托管属性。
@@ -96,6 +96,19 @@ namespace Rafy.Domain
         public Type RefEntityType => typeof(TRefEntity);
 
         public bool Nullable { get; internal set; }
+
+        internal void ResetNullable(bool? isNullable)
+        {
+            if (isNullable.HasValue)
+            {
+                this.Nullable = isNullable.Value;
+            }
+            else
+            {
+                this.Nullable = this.ReferenceType != ReferenceType.Parent &&
+                    TypeHelper.IsNullableOrClass(_refKeyProperty.PropertyType);
+            }
+        }
 
         IRefEntityProperty IRefProperty.RefEntityProperty => this;
 

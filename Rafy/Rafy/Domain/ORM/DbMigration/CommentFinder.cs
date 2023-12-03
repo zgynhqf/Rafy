@@ -94,15 +94,8 @@ namespace Rafy.Domain.ORM.DbMigration
                 var xmlDocPath = Path.Combine(Path.GetDirectoryName(assemblyCodeBase), Path.GetFileNameWithoutExtension(assemblyCodeBase) + ".xml");
                 if (File.Exists(xmlDocPath))
                 {
-                    try
-                    {
-                        xdoc = XDocument.Load(xmlDocPath);
-                        _store.Add(assembly, xdoc);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+                    xdoc = XDocument.Load(xmlDocPath);
+                    _store.Add(assembly, xdoc);
                 }
             }
 

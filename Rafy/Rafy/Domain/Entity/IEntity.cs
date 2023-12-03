@@ -89,7 +89,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        object GetRefKey(IRefProperty property);
+        object GetRefKey(IManagedProperty property);
 
         /// <summary>
         /// 设置指定引用属性对应的键属性的值。
@@ -99,7 +99,7 @@ namespace Rafy.Domain
         /// <param name="refProperty">引用属性。</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        object SetRefKey(IRefProperty refProperty, object value);
+        object SetRefKey(IManagedProperty refProperty, object value);
 
         /// <summary>
         /// 以懒加载的方式获取某个引用实体的值。

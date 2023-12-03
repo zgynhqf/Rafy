@@ -35,6 +35,11 @@ namespace Rafy.Domain
         #region Args
 
         /// <summary>
+        /// 实体引用的类型
+        /// </summary>
+        public ReferenceType ReferenceType { get; set; } = ReferenceType.Normal;
+
+        /// <summary>
         /// 对应的引用 Id 属性
         /// </summary>
         public IManagedProperty RefKeyProperty { get; set; }

@@ -38,15 +38,15 @@ namespace Rafy.SystemSettings
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty DataDictIdProperty =
-            P<DataDictItem>.RegisterRefId(e => e.DataDictId, ReferenceType.Parent);
+        public static readonly Property<long> DataDictIdProperty =
+            P<DataDictItem>.Register(e => e.DataDictId);
         public long DataDictId
         {
-            get { return (long)this.GetRefId(DataDictIdProperty); }
-            set { this.SetRefId(DataDictIdProperty, value); }
+            get { return (long)this.GetRefKey(DataDictIdProperty); }
+            set { this.SetRefKey(DataDictIdProperty, value); }
         }
         public static readonly RefEntityProperty<DataDict> DataDictProperty =
-            P<DataDictItem>.RegisterRef(e => e.DataDict, DataDictIdProperty);
+            P<DataDictItem>.RegisterRef(e => e.DataDict, DataDictIdProperty, referenceType: ReferenceType.Parent);
         public DataDict DataDict
         {
             get { return this.GetRefEntity(DataDictProperty); }

@@ -63,11 +63,6 @@ namespace Rafy.ManagedProperty
     }
 
     /// <summary>
-    /// 引用实体属性的静态属性 Id 标记
-    /// </summary>
-    public interface IRefIdProperty : IRefProperty { }
-
-    /// <summary>
     /// 引用实体属性的静态属性实体标记
     /// </summary>
     public interface IRefEntityProperty : IRefProperty { }

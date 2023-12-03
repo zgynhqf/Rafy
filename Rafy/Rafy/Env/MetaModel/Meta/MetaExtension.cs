@@ -308,45 +308,6 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
-        /// 指定某个属性映射字段时是否为主键。
-        /// 
-        /// 一般情况下，直接使用 Id 为主键。
-        /// 但是在映射一些旧数据库的表时，可以保留原来的主键。而只让 Id 映射的字段保持自增长即可。
-        /// </summary>
-        /// <param name="meta"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ColumnMeta IsPrimaryKey(this ColumnMeta meta, bool value)
-        {
-            meta.IsPrimaryKey = value;
-            return meta;
-        }
-
-        /// <summary>
-        /// 指定某个属性映射字段时是否为自增列。
-        /// </summary>
-        /// <param name="meta"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ColumnMeta IsIdentity(this ColumnMeta meta, bool value)
-        {
-            meta.IsIdentity = value;
-            return meta;
-        }
-
-        /// <summary>
-        /// 指定某个属性映射字段时是否拥有索引。
-        /// </summary>
-        /// <param name="meta"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static ColumnMeta HasIndex(this ColumnMeta meta, bool value)
-        {
-            meta.HasIndex = value;
-            return meta;
-        }
-
-        /// <summary>
         /// 指定某个属性映射字段时的是否为必需的
         /// </summary>
         /// <param name="meta"></param>
@@ -358,13 +319,54 @@ namespace Rafy.MetaModel
         }
 
         /// <summary>
+        /// 指定某个属性映射字段时是否为主键。
+        /// 
+        /// 一般情况下，直接使用 Id 为主键。
+        /// 但是在映射一些旧数据库的表时，可以保留原来的主键。而只让 Id 映射的字段保持自增长即可。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ColumnMeta IsPrimaryKey(this ColumnMeta meta, bool value = true)
+        {
+            meta.IsPrimaryKey = value;
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某个属性映射字段时是否为自增列。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ColumnMeta IsIdentity(this ColumnMeta meta, bool value = true)
+        {
+            meta.IsIdentity = value;
+            return meta;
+        }
+
+        /// <summary>
+        /// 指定某个属性映射字段时是否拥有索引。
+        /// </summary>
+        /// <param name="meta"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ColumnMeta HasIndex(this ColumnMeta meta, bool value = true)
+        {
+            meta.HasIndex = value;
+            return meta;
+        }
+
+        /// <summary>
+        /// 设置某个列是否需要映射外键。
         /// 如果出现循环引用的外键，则可以使用此方法来忽略某个列的外键，使得数据库生成时不生成该外键引用。
         /// </summary>
         /// <param name="meta"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static ColumnMeta IgnoreFK(this ColumnMeta meta)
+        public static ColumnMeta IsForeignKey(this ColumnMeta meta, bool value = true)
         {
-            meta.HasFKConstraint = false;
+            meta.HasFKConstraint = value;
             return meta;
         }
     }

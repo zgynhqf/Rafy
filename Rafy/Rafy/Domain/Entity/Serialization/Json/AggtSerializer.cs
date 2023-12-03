@@ -289,7 +289,6 @@ namespace Rafy.Domain.Serialization.Json
                 case PropertyCategory.Normal:
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
-                case PropertyCategory.ReferenceId:
                     this.WritePropertyName(property.Name);
                     this.SerializeValue(value);
                     break;
