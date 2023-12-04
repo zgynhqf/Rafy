@@ -45,6 +45,7 @@ namespace Rafy.Domain
         internal void SetQueryType(RepositoryQueryType value)
         {
             _queryType = value;
+            this.MergePagingAndFirst();
         }
 
         bool IEntityQueryArgs.FetchingFirst
@@ -89,7 +90,30 @@ namespace Rafy.Domain
         public PagingInfo PagingInfo
         {
             get { return _pagingInfo; }
-            set { _pagingInfo = value; }
+            set
+            {
+                _pagingInfo = value;
+                this.MergePagingAndFirst();
+            }
+        }
+
+        /// <summary>
+        /// 如果 <see cref="IEntityQueryArgs.FetchingFirst"/> 为真，则重新修改 <see cref="PagingInfo"/>。
+        /// </summary>
+        private void MergePagingAndFirst()
+        {
+            if (this.QueryType == RepositoryQueryType.First)
+            {
+                if (PagingInfo.IsNullOrEmpty(_pagingInfo))
+                {
+                    _pagingInfo = new PagingInfo(1, 1);
+                }
+                else
+                {
+                    _pagingInfo.PageNumber = 1;
+                    _pagingInfo.PageSize = 1;
+                }
+            }
         }
 
         IList<Entity> IEntityQueryArgs.List

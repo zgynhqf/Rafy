@@ -452,7 +452,6 @@ namespace Rafy.Domain.ORM
         /// <returns></returns>
         protected bool IsDbPaging(PagingInfo pagingInfo)
         {
-            //最后，如果需要，则统计一下总行数。
             return !PagingInfo.IsNullOrEmpty(pagingInfo) &&
                 this.GetPagingLocation(pagingInfo) == PagingLocation.Database &&
                 !Repository.SupportTree;

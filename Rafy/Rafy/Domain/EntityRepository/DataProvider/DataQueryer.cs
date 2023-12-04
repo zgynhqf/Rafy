@@ -355,8 +355,6 @@ namespace Rafy.Domain
 
             args.Invocation = IEQC.Current;
 
-            args.SetQueryType(args.Invocation.QueryType);
-
             var pList = args.Invocation.Parameters;
             if (pList.Count == 1)
             {
@@ -370,6 +368,8 @@ namespace Rafy.Domain
                     args.LoadOptions = userCriteria.LoadOptions;
                 }
             }
+
+            args.SetQueryType(args.Invocation.QueryType);
         }
 
         internal void LoadByFilter(EntityQueryArgs args)

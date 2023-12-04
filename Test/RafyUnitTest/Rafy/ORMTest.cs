@@ -670,6 +670,23 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ORM_Query_GetFirst_SqlTop()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            var dp = RdbDataProvider.Get(repo);
+            if (dp.DbSetting.ProviderName == DbSetting.Provider_SqlClient)
+            {
+                var sql = string.Empty;
+                EventHandler<DbAccessedEventArgs> handler = (o, e) => { sql = e.Sql; };
+                DbAccesserInterceptor.DbAccessed += handler;
+                repo.GetFirst();
+                DbAccesserInterceptor.DbAccessed -= handler;
+
+                Assert.IsTrue(sql.Contains(" TOP 1 "));
+            }
+        }
+
+        [TestMethod]
         public void ORM_Query_GetAll()
         {
             var repo = RF.ResolveInstance<BookRepository>();
