@@ -220,10 +220,9 @@ namespace Rafy.Domain.ORM.DbMigration
                     //是否生成外键
                     if (IsGeneratingForeignKey && columnMeta.HasFKConstraint)
                     {
-                        var refProperty = RefPropertyHelper.Find(mp);
-                        if (refProperty != null)
+                        if (RefPropertyHelper.IsRefKeyProperty(mp, out var refProperty))
                         {
-                            var refMeta = em.Property(refProperty.RefEntityProperty);
+                            var refMeta = em.Property(refProperty);
                             if (refMeta.ReferenceInfo == null)
                                 throw new InvalidOperationException("refMeta.ReferenceInfo == null");
 
@@ -304,12 +303,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     //读取属性的注释。
                     if (_readComment)
                     {
-                        var commentProperty = mp;
-                        var refProperty = RefPropertyHelper.Find(commentProperty);
-                        if (refProperty != null)
-                        {
-                            commentProperty = refProperty.RefEntityProperty;
-                        }
+                        var commentProperty = RefPropertyHelper.Find(mp) ?? mp;
 
                         column.Comment = _commentFinder.TryFindComment(commentProperty);
                     }

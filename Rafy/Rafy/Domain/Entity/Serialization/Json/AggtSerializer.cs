@@ -309,7 +309,7 @@ namespace Rafy.Domain.Serialization.Json
                 //    }
                 //    break;
                 case PropertyCategory.ReferenceEntity:
-                    if (this.SerializeReference && value != null && (property as IRefEntityProperty).ReferenceType != ReferenceType.Parent)
+                    if (this.SerializeReference && value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
                     {
                         this.WritePropertyName(property.Name);
                         this.SerializeEntity(value as Entity);

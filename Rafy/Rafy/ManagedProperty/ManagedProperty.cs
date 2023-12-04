@@ -120,7 +120,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 如果当前的属性被一个引用实体属性作为引用的键来使用，那么这里返回该引用实体属性。
         /// </summary>
-        IRefEntityProperty RefEntityProperty { get; set; }
+        IRefProperty RefEntityProperty { get; set; }
 
         object ProvideReadOnlyValue(ManagedPropertyObject component);
 
@@ -214,7 +214,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 如果当前的属性被一个引用实体属性作为引用的键来使用，那么这里返回该引用实体属性。
         /// </summary>
-        IRefEntityProperty IManagedPropertyInternal.RefEntityProperty { get; set; }
+        IRefProperty IManagedPropertyInternal.RefEntityProperty { get; set; }
 
         #region IsReadOnly
 

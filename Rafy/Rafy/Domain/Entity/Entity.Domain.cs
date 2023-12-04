@@ -300,7 +300,7 @@ namespace Rafy.Domain
                 return;
             }
 
-            var refProperty = property as IRefEntityProperty;
+            var refProperty = property as IRefProperty;
             if (refProperty != null && refProperty.ReferenceType == ReferenceType.Child)
             {
                 component.SetParent(this);

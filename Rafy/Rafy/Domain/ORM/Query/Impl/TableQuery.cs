@@ -175,7 +175,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <param name="propertyOwner">引用属性所在的实体对应的表。也是外键关系中外键列所在的表。</param>
         /// <param name="refProperty">指定的引用属性。</param>
         /// <returns></returns>
-        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IRefEntityProperty refProperty)
+        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IRefProperty refProperty)
         {
             var refTableSource = _allJoinTables.FirstOrDefault(
                 ts => ts.ForeignKeyTable == propertyOwner && ts.RefProperty == refProperty

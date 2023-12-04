@@ -69,7 +69,7 @@ namespace Rafy.Web
                 }
 
                 //引用属性在客户端输出一个引用 Id 属性和一个 Display 属性，而引用实体属性不显示在客户端。
-                if (mp is IRefEntityProperty) continue;
+                if (mp is IRefProperty) continue;
 
                 var propertyType = mp.PropertyType;
                 var isRefKey = RefPropertyHelper.IsRefKeyProperty(mp, out var refProperty);
@@ -119,12 +119,11 @@ namespace Rafy.Web
             for (int i = 0, c = properties.Count; i < c; i++)
             {
                 var property = properties[i];
-                var refProperty = property.ManagedProperty as IRefEntityProperty;
-                if (refProperty != null)
+                if (property.ManagedProperty is IRefProperty refProperty)
                 {
                     var association = new BelongsToAssociation
                     {
-                        associationKey = refProperty.RefEntityProperty.Name,
+                        associationKey = refProperty.Name,
                         foreignKey = refProperty.RefKeyProperty.Name,
                         model = ClientEntities.GetClientName(refProperty.RefEntityType),
                     };

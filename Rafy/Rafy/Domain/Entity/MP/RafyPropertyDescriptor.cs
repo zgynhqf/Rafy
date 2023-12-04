@@ -81,9 +81,9 @@ namespace Rafy.Domain
                 return entity.GetRefNullableKey(refP);
             }
 
-            if (mp is IRefEntityProperty)
+            if (mp is IRefProperty)
             {
-                return entity.GetRefEntity(mp as IRefEntityProperty);
+                return entity.GetRefEntity(mp as IRefProperty);
             }
 
             if (mp is IListProperty)

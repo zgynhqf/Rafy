@@ -59,7 +59,7 @@ namespace Rafy.WPF.Command
                     bool eixst = false;
                     foreach (var item in view.Data)
                     {
-                        var entity = item.GetRefEntity(this.RefProperty.RefEntityProperty);
+                        var entity = item.GetRefEntity(this.RefProperty);
                         if (entity.Id == src.Id)
                         {
                             eixst = true;
@@ -112,7 +112,7 @@ namespace Rafy.WPF.Command
         {
             //把选中对象赋值到新增对象的引用属性上
             var newEntity = view.AddNew(false);
-            newEntity.SetRefEntity(this.RefProperty.RefEntityProperty, selected);
+            newEntity.SetRefEntity(this.RefProperty, selected);
             return newEntity;
         }
 

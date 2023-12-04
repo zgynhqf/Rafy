@@ -242,18 +242,16 @@ namespace Rafy.Domain
         public TRefEntity GetRefEntity<TRefEntity>(RefEntityProperty<TRefEntity> entityProperty)
             where TRefEntity : Entity
         {
-            return this.GetRefEntity(entityProperty as IRefEntityProperty) as TRefEntity;
+            return this.GetRefEntity(entityProperty as IRefProperty) as TRefEntity;
         }
 
         /// <summary>
         /// 以懒加载的方式获取某个引用实体的值。
         /// </summary>
-        /// <param name="refProperty"></param>
+        /// <param name="entityProperty"></param>
         /// <returns></returns>
-        public Entity GetRefEntity(IRefProperty refProperty)
+        public Entity GetRefEntity(IRefProperty entityProperty)
         {
-            var entityProperty = refProperty.RefEntityProperty;
-
             var value = base.GetProperty(entityProperty) as Entity;
 
             if (!this._settingEntity && value == null)
@@ -284,13 +282,11 @@ namespace Rafy.Domain
         /// 设置指定引用实体属性的值。
         /// 在实体属性变化时，会同步相应的引用 Id 属性。
         /// </summary>
-        /// <param name="refProperty">The entity property.</param>
+        /// <param name="entityProperty">The entity property.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public Entity SetRefEntity(IRefProperty refProperty, Entity value)
+        public Entity SetRefEntity(IRefProperty entityProperty, Entity value)
         {
-            var entityProperty = refProperty.RefEntityProperty;
-
             var oldEntity = base.GetProperty(entityProperty) as Entity;
             Entity finalEntity = oldEntity;
 
@@ -394,7 +390,7 @@ namespace Rafy.Domain
             return base.SetProperty(property, value, resetDisabledStatus);
         }
 
-        private static void ThrowRefPropertyChangingConflict(IManagedProperty keyProperty, IRefEntityProperty entityProperty)
+        private static void ThrowRefPropertyChangingConflict(IManagedProperty keyProperty, IRefProperty entityProperty)
         {
             throw new InvalidOperationException(
                 string.Format(@"{0} 属性的变更前事件与引用实体属性 {1} 的变更前事件设置的值冲突！",
@@ -476,11 +472,11 @@ namespace Rafy.Domain
         public virtual void SetParentEntity(Entity parent)
         {
             var property = this.GetRepository().EntityMeta
-                .FindParentReferenceProperty(true).ManagedProperty as IRefEntityProperty;
+                .FindParentReferenceProperty(true).ManagedProperty as IRefProperty;
             this.SetParentEntity(parent, property);
         }
 
-        internal void SetParentEntity(Entity parent, IRefEntityProperty parentRefProperty)
+        internal void SetParentEntity(Entity parent, IRefProperty parentRefProperty)
         {
             //由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时也可以调用此方法同步二者的 Id。
             //例如：保存父实体后，它的 Id 生成了。这时会调用此方法来同步 Id。
@@ -501,7 +497,7 @@ namespace Rafy.Domain
         Entity IEntity.FindParentEntity()
         {
             var pMeta = this.GetRepository().EntityMeta.FindParentReferenceProperty();
-            if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefEntityProperty); }
+            if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefProperty); }
             return null;
         }
 

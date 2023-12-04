@@ -358,9 +358,9 @@ namespace Rafy.Domain
                         }
                     }
                 }
-                else if (property is IRefEntityProperty)
+                else if (property is IRefProperty)
                 {
-                    bool copyEntity = (property as IRefEntityProperty).ReferenceType == ReferenceType.Parent ? cloneParentRef : cloneRef;
+                    bool copyEntity = (property as IRefProperty).ReferenceType == ReferenceType.Parent ? cloneParentRef : cloneRef;
                     if (copyEntity && source.GetProperty(property) != null)
                     {
                         this.CopyProperty(source, property, options);

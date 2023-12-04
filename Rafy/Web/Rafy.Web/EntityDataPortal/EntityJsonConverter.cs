@@ -71,9 +71,8 @@ namespace Rafy.Web.EntityDataPortal
                     if (!isTree && (mp == Entity.TreeIndexProperty || mp == Entity.TreePIdProperty)) { continue; }
 
                     //引用属性
-                    if (mp is IRefEntityProperty)
+                    if (mp is IRefProperty refMp)
                     {
-                        var refMp = mp as IRefEntityProperty;
                         var key = entity.GetRefNullableKey(refMp);
                         if (key != null)
                         {
@@ -83,7 +82,7 @@ namespace Rafy.Web.EntityDataPortal
                             var titleProperty = propertyVM.SelectionViewMeta?.RefTypeDefaultView?.TitleProperty;
                             if (titleProperty != null)
                             {
-                                var lazyRefEntity = entity.GetRefEntity(refMp.RefEntityProperty);
+                                var lazyRefEntity = entity.GetRefEntity(refMp);
                                 var titleMp = titleProperty.PropertyMeta.ManagedProperty;
 
                                 object value;

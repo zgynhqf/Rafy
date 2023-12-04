@@ -74,7 +74,7 @@ namespace Rafy.MongoDb
                     {
                         this.LoadChildren(entity, mp as IListProperty, bsonValue as BsonArray);
                     }
-                    else if (mp is IRefEntityProperty)
+                    else if (mp is IRefProperty)
                     {
                         //一般引用属性不支持反序列化。
                     }

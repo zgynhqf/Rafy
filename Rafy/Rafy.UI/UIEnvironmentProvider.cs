@@ -45,7 +45,7 @@ namespace Rafy.UI
             {
                 if (RefPropertyHelper.IsRefKeyProperty(property, out var refMP))
                 {
-                    pvm = safeView.Property(refMP.RefEntityProperty);
+                    pvm = safeView.Property(refMP);
                     if (pvm != null) res = pvm.Label;
                 }
             }

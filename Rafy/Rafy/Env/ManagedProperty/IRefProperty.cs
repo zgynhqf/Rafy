@@ -55,15 +55,5 @@ namespace Rafy.ManagedProperty
         /// 引用实体的键对应的托管属性。
         /// </summary>
         IManagedProperty KeyPropertyOfRefEntity { get; }
-
-        /// <summary>
-        /// 返回对应的引用实体属性。
-        /// </summary>
-        IRefEntityProperty RefEntityProperty { get; }
     }
-
-    /// <summary>
-    /// 引用实体属性的静态属性实体标记
-    /// </summary>
-    public interface IRefEntityProperty : IRefProperty { }
 }

@@ -460,7 +460,7 @@ namespace Rafy.WPF.Editors
             var mp = meta.PropertyMeta.ManagedProperty;
 
             //如果是引用实体属性，则使用对应的引用 Id 属性作为验证的参数。
-            if (mp is IRefEntityProperty) { mp = (mp as IRefEntityProperty).RefKeyProperty; }
+            if (mp is IRefProperty) { mp = (mp as IRefProperty).RefKeyProperty; }
 
             var binding = new Binding()
             {

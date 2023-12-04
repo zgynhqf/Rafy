@@ -125,7 +125,7 @@ namespace Rafy.Domain
                         var mp = lastTable.EntityRepository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties().Find(property);
                         if (mp == null) throw new InvalidProgramException(string.Format("查询条件解析出错，没有找到名称为 {0} 的属性。", property));
 
-                        var refProperty = mp as IRefEntityProperty;
+                        var refProperty = mp as IRefProperty;
                         if (refProperty != null)
                         {
                             lastTable = _f.FindOrCreateJoinTable(_query, lastTable, refProperty);

@@ -50,7 +50,7 @@ namespace Rafy.MetaModel
         public static EntityMeta MapAllPropertiesExcept(this EntityMeta meta, params IManagedProperty[] exceptProperties)
         {
             IEnumerable<IManagedProperty> properties = meta.ManagedProperties.GetNonReadOnlyCompiledProperties()
-                .Where(p => !(p is IListProperty) && !(p is IRefEntityProperty)
+                .Where(p => !(p is IListProperty) && !(p is IRefProperty)
                     && p != EntityConvention.Property_TreeIndex
                     && p != EntityConvention.Property_TreePId
                     && p != EntityConvention.Property_IsPhantom
@@ -232,7 +232,7 @@ namespace Rafy.MetaModel
         /// <returns></returns>
         public static ColumnMeta MapColumn(this EntityPropertyMeta meta)
         {
-            if (meta.ManagedProperty is IRefEntityProperty)
+            if (meta.ManagedProperty is IRefProperty)
             {
                 throw new InvalidOperationException(string.Format(
                     "引用实体属性 {0} 不能映射数据库，请使用相应的 id 属性。", meta.Name

@@ -38,7 +38,7 @@ namespace Rafy.ManagedProperty
         /// <param name="property"></param>
         /// <param name="refEntityProperty">如果是，则返回对应的引用实体属性。</param>
         /// <returns></returns>
-        public static bool IsRefKeyProperty(IManagedProperty property, out IRefEntityProperty refEntityProperty)
+        public static bool IsRefKeyProperty(IManagedProperty property, out IRefProperty refEntityProperty)
         {
             refEntityProperty = (property as IManagedPropertyInternal).RefEntityProperty;
             return refEntityProperty != null;

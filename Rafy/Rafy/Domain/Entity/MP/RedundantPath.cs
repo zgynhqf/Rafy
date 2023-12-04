@@ -122,7 +122,7 @@ namespace Rafy.Domain
                 {
                     //如果给定的 ConcreteProperty 中使用的引用实体属性，那么需要转换为引用 Id 属性。
                     var refProperty = RefPropertyHelper.Find(res.Property);
-                    if (refProperty is IRefEntityProperty)
+                    if (refProperty is IRefProperty)
                     {
                         res = new ConcreteProperty(refProperty.RefKeyProperty, res.Owner);
                     }

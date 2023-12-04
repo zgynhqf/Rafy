@@ -64,7 +64,7 @@ namespace Rafy.WPF.Editors
         {
             //如果被绑定的属性不是实体引用属性，则需要使用 TwoWay 把值写回去。
             var bindingMode = BindingMode.OneWay;
-            var isEntityRef = this.Meta.PropertyMeta.ManagedProperty is IRefEntityProperty;
+            var isEntityRef = this.Meta.PropertyMeta.ManagedProperty is IRefProperty;
             if (!isEntityRef)
             {
                 if (this.PropertyCanWrite) { bindingMode = BindingMode.TwoWay; }

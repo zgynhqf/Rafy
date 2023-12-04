@@ -76,7 +76,7 @@ namespace Rafy.Web.EntityDataPortal
 
                     ListReader.JsonToEntity(value as JObject, repo, list);
                 }
-                else if(mp is IRefEntityProperty)
+                else if(mp is IRefProperty)
                 {
                     //do nothing, ignore ref entity property.
                 }

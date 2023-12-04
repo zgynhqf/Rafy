@@ -25,7 +25,7 @@ namespace Rafy.Domain
     /// 引用实体属性的实体标记
     /// </summary>
     /// <typeparam name="TRefEntity">引用实体的类型</typeparam>
-    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefEntityProperty, IRefEntityPropertyInternal
+    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefProperty, IRefEntityPropertyInternal
         where TRefEntity : Entity
     {
         private IManagedProperty _refKeyProperty;
@@ -109,8 +109,6 @@ namespace Rafy.Domain
                     TypeHelper.IsNullableOrClass(_refKeyProperty.PropertyType);
             }
         }
-
-        IRefEntityProperty IRefProperty.RefEntityProperty => this;
 
         Entity IRefEntityPropertyInternal.Load(object keyValue, Entity owner)
         {

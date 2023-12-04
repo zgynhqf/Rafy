@@ -118,7 +118,7 @@ namespace Rafy.Domain
         public virtual object GetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
-            var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefKeyProperty;
+            var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
 
             var table = f.Table(_repository);
             var q = f.Query(
@@ -141,7 +141,7 @@ namespace Rafy.Domain
         public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
-            var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefKeyProperty;
+            var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
 
             var table = f.Table(_repository);
             var parentColumn = table.Column(mp);
@@ -384,9 +384,9 @@ namespace Rafy.Domain
                             var mp = container.Find(property, true);
                             if (mp != null)
                             {
-                                if (mp is IRefEntityProperty)
+                                if (mp is IRefProperty)
                                 {
-                                    var refProperty = mp as IRefEntityProperty;
+                                    var refProperty = mp as IRefProperty;
                                     loadOptions.LoadWith(refProperty);
                                     nextEntityType = refProperty.RefEntityType;
                                 }
@@ -407,9 +407,9 @@ namespace Rafy.Domain
                             {
                                 loadOptions.LoadWith(mp as IListProperty);
                             }
-                            else if (mp is IRefEntityProperty)
+                            else if (mp is IRefProperty)
                             {
-                                loadOptions.LoadWith(mp as IRefEntityProperty);
+                                loadOptions.LoadWith(mp as IRefProperty);
                             }
                         }
                         else if (expand == EntityConvention.TreeChildrenPropertyName)

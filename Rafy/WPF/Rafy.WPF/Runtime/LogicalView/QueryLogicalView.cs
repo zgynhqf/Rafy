@@ -202,7 +202,7 @@ namespace Rafy.WPF
                     {
                         foreach (var mp in destProperties)
                         {
-                            var entityRef = mp as IRefEntityProperty;
+                            var entityRef = mp as IRefProperty;
 
                             //约定：被查询实体的引用实体Key属性名与 naviProperty 的名称相同，并且二者类型一致时，才能被设置。
                             if (entityRef != null
@@ -211,7 +211,7 @@ namespace Rafy.WPF
                                 )
                             {
                                 //读值，并写值到新对象中。
-                                var value = criteria.GetRefEntity(criteriaRef.RefEntityProperty);
+                                var value = criteria.GetRefEntity(criteriaRef);
                                 newEntity.SetRefEntity(entityRef, value);
                                 break;
                             }
