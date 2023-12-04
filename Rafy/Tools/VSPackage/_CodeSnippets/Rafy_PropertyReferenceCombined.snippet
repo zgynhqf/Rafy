@@ -4,7 +4,7 @@
         <Header>
             <Description>引用键属性 + 引用实体属性</Description>
             <Title>Rafy PropertyReference Combined</Title>
-            <Shortcut>Rafy_PropertyReferenceCombined</Shortcut>
+            <Shortcut>RafyPropertyReferenceCombined</Shortcut>
             <Author>HuQingfang</Author>
             <SnippetTypes>
                 <SnippetType>Expansion</SnippetType>
@@ -34,14 +34,13 @@
                 </Literal>
             </Declarations>
             <Code Language="csharp">
-                <![CDATA[public static readonly Property<$KeyType$> $RefPropertyName$IdProperty =
-            P<$ClassName$>.RegisterRefId(e => e.$RefPropertyName$Id);
+                <![CDATA[public static readonly Property<$KeyType$> $RefPropertyName$IdProperty = P<$ClassName$>.Register(e => e.$RefPropertyName$Id);
         public $KeyType$ $RefPropertyName$Id
         {
-            get { return ($KeyType$)this.GetRefKey($RefPropertyName$IdProperty); }
-            set { this.SetRefKey($RefPropertyName$IdProperty, value); }
+            get { return this.GetProperty($RefPropertyName$IdProperty); }
+            set { this.SetProperty($RefPropertyName$IdProperty, value); }
         }
-        public static readonly RefEntityProperty<$RefEntityType$> $RefPropertyName$Property =
+        public static readonly RefEntityProperty<$RefEntityType$> $RefPropertyName$Property = 
             P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty);
         /// <summary>
         /// $end$
