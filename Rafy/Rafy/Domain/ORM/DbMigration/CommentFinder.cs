@@ -94,8 +94,15 @@ namespace Rafy.Domain.ORM.DbMigration
                 var xmlDocPath = Path.Combine(Path.GetDirectoryName(assemblyCodeBase), Path.GetFileNameWithoutExtension(assemblyCodeBase) + ".xml");
                 if (File.Exists(xmlDocPath))
                 {
-                    xdoc = XDocument.Load(xmlDocPath);
-                    _store.Add(assembly, xdoc);
+                    try
+                    {
+                        xdoc = XDocument.Load(xmlDocPath);
+                        _store.Add(assembly, xdoc);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"无法以 XML 加载文件：{xmlDocPath}，请重新编译生成相应注释文件。", ex);
+                    }
                 }
             }
 
