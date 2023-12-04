@@ -30,19 +30,14 @@ namespace Rafy.Web.EntityDataPortal
     {
         private EntityMeta _entityMeta;
 
-        private IList<IRefProperty> _refProperties;
+        private IList<IManagedProperty> _refKeyProperties;
 
         public EntityPropertySetter(EntityMeta entityMeta)
         {
             _entityMeta = entityMeta;
-            _refProperties = _entityMeta.ManagedProperties
+            _refKeyProperties = _entityMeta.ManagedProperties
                 .GetAvailableProperties()
-                .Select(p =>
-                {
-                    RefPropertyHelper.IsRefKeyProperty(p, out var refP);
-                    return refP;
-                })
-                .Where(p => p != null)
+                .Where(p => RefPropertyHelper.IsRefKeyProperty(p))
                 .ToArray();
         }
 
@@ -83,7 +78,7 @@ namespace Rafy.Web.EntityDataPortal
                 }
                 else if(mp is IRefEntityProperty)
                 {
-                    //do nothing
+                    //do nothing, ignore ref entity property.
                 }
                 else
                 {
@@ -99,12 +94,12 @@ namespace Rafy.Web.EntityDataPortal
                 var rawValue = (value as JValue).Value;
 
                 //如果没有找到一般的属性，则尝试查找外键属性
-                for (int i = 0, c = _refProperties.Count; i < c; i++)
+                for (int i = 0, c = _refKeyProperties.Count; i < c; i++)
                 {
-                    var rip = _refProperties[i];
-                    if (rip.RefKeyProperty.Name == pName)
+                    var rkp = _refKeyProperties[i];
+                    if (rkp.Name == pName)
                     {
-                        e.SetRefKey(rip, rawValue);
+                        e.SetRefKey(rkp, rawValue);
                         break;
                     }
                 }

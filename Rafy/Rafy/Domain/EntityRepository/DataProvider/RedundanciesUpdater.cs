@@ -153,7 +153,7 @@ namespace Rafy.Domain
         /// <param name="dbEntity">The db entity.</param>
         private void UpdateRedundancyByRefValue(Entity entity, RedundantPath path, IRefProperty refChanged, Lazy<Entity> dbEntity)
         {
-            var newValue = entity.GetProperty(refChanged.RefKeyProperty);
+            var newValue = entity.GetRefKey(refChanged);
 
             this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, dbEntity);
         }
