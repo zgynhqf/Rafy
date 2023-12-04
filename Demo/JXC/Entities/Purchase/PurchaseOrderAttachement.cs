@@ -17,8 +17,8 @@ namespace JXC
     [ChildEntity]
     public partial class PurchaseOrderAttachement : FileAttachement
     {
-        public static readonly IRefIdProperty PurchaseOrderIdProperty =
-            P<PurchaseOrderAttachement>.RegisterRefId(e => e.PurchaseOrderId, ReferenceType.Parent);
+        public static readonly Property<int> PurchaseOrderIdProperty =
+            P<PurchaseOrderAttachement>.Register(e => e.PurchaseOrderId, ReferenceType.Parent);
         public int PurchaseOrderId
         {
             get { return (int)this.GetRefId(PurchaseOrderIdProperty); }

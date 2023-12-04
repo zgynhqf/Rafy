@@ -94,10 +94,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             {
                 foreach (var reference in type.References)
                 {
-                    var refTypeName = reference[RefEntityTypeFullNameProperty] as string;
+                    var refTypeName = reference[ExtProperty_RefEntityTypeFullName] as string;
                     if (refTypeName != null)
                     {
-                        reference[RefEntityTypeFullNameProperty] = null;
+                        reference[ExtProperty_RefEntityTypeFullName] = null;
                         var refType = _entityTypes.Find(refTypeName);
                         if (refType != null) { reference.RefEntityType = refType; }
                     }
@@ -122,10 +122,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
         {
             foreach (var type in _entityTypes)
             {
-                var baseTypeFullName = type[BaseTypeFullNameProperty] as string;
+                var baseTypeFullName = type[ExtProperty_BaseTypeFullName] as string;
                 if (baseTypeFullName != null)
                 {
-                    type[BaseTypeFullNameProperty] = null;
+                    type[ExtProperty_BaseTypeFullName] = null;
                     var baseType = _entityTypes.Find(baseTypeFullName);
                     if (baseType != null) { type.BaseType = baseType; }
                 }
@@ -202,8 +202,6 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             if (_currentType != null)
             {
                 ParseValuePropertyDomainName(codeProperty);
-
-                SetNullableReference(codeProperty);
             }
 
             base.VisitProperty(codeProperty);
@@ -214,14 +212,16 @@ namespace Rafy.VSPackage.Modeling.CodeSync
         #region 常量
 
         private const string PropertyToken = "Property";
-        private const string RefIdProperty = "RefIdProperty";
         private const string RefEntityProperty = "RefEntityProperty<";
-        private const string ListProperty = "ListProperty<";
+        private const string ReferenceTypeParent = "ReferenceType.Parent";
+        private const string ReferenceTypeChild = "ReferenceType.Child";
+        private const string ReferenceNullableArgs = "nullable";
         private const string NullableTypeToken = "System.Nullable<";
+        private const string ListProperty = "ListProperty<";
         private const string ListAsAggregationToken = "HasManyType.Aggregation";
 
-        private const string BaseTypeFullNameProperty = "BaseTypeFullNameProperty";
-        private const string RefEntityTypeFullNameProperty = "RefEntityTypeFullNameProperty";
+        private const string ExtProperty_BaseTypeFullName = "BaseTypeFullNameProperty";
+        private const string ExtProperty_RefEntityTypeFullName = "RefEntityTypeFullNameProperty";
 
         #endregion
 
@@ -234,7 +234,7 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             _currentType.FullName = codeClass.FullName;
             _currentType.CodeElement = codeClass;
             var baseType = Helper.GetBaseClass(codeClass);
-            if (baseType != null) _currentType[BaseTypeFullNameProperty] = baseType.FullName;
+            if (baseType != null) _currentType[ExtProperty_BaseTypeFullName] = baseType.FullName;
             //使用 Attribute 来进行检测是否为聚合根。
             foreach (CodeAttribute attri in codeClass.Attributes)
             {
@@ -250,6 +250,8 @@ namespace Rafy.VSPackage.Modeling.CodeSync
 
             base.VisitClass(codeClass);
 
+            this.ParseAllReferences();
+
             _entityTypes.Add(_currentType);
             _currentType = null;
         }
@@ -261,10 +263,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             //名字与类型中都有 Property 字样的属性，才是托管属性。
             if (name.EndsWith(PropertyToken) && typeFullName.Contains(PropertyToken))
             {
-                var propertyName = name.Substring(0, name.Length - PropertyToken.Length);//去除后缀 Property
-
-                var handled = ParseReference(codeVariable, propertyName, typeFullName);
+                var handled = this.CacheIfReference(codeVariable, typeFullName);
                 if (handled) return;
+
+                var propertyName = ParsePropertyName(codeVariable);
 
                 handled = ParseChild(codeVariable, propertyName, typeFullName);
                 if (handled) return;
@@ -273,16 +275,86 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             }
         }
 
-        private bool ParseChild(CodeVariable codeVariable, string propertyName, string typeFullName)
+        #region 解析引用属性
+
+        private List<CodeVariable> _references;
+
+        private bool CacheIfReference(CodeVariable staticPropertyViriable, string typeFullName)
+        {
+            if (typeFullName.Contains(RefEntityProperty))
+            {
+                if (_references == null) _references = new List<CodeVariable>();
+                _references.Add(staticPropertyViriable);
+                return true;
+            }
+            return false;
+        }
+
+        private void ParseAllReferences()
+        {
+            if (_references != null && _references.Count > 0)
+            {
+                foreach (var refPropertyVariable in _references)
+                {
+                    var initExp = refPropertyVariable.InitExpression.ToString();
+
+                    //必须找到 refKeyProperty
+                    var match = Regex.Match(initExp, @"RegisterRef\([^,]+, (?<refKey>\w+)Property");
+                    if (!match.Success) continue;
+                    var refKey = match.Groups["refKey"].Value;
+                    var refKeyProperty = _currentType.ValueProperties.FirstOrDefault(vp => vp.Name == refKey);
+                    if (refKeyProperty == null)
+                    {
+                        throw new InvalidProgramException($"没有在 {_currentType.FullName} 类型中找到 {refKey} 名称的值类型。当前所有的值属性有：" + string.Join(",", _currentType.ValueProperties.Select(vp => vp.Name)));
+                    }
+
+                    var currentReference = new Reference
+                    {
+                        CodeElement = refPropertyVariable,
+                        EntityProperty = ParsePropertyName(refPropertyVariable),
+                        KeyProperty = refKeyProperty.Name,
+                    };
+
+                    var refEntityTypeFullName = UnwrapGenericType(refPropertyVariable.Type.AsFullName);
+                    currentReference[ExtProperty_RefEntityTypeFullName] = refEntityTypeFullName;
+
+                    if (initExp.Contains(ReferenceTypeParent))
+                    {
+                        currentReference.ReferenceType = ReferenceType.Parent;
+                    }
+                    else if (initExp.Contains(ReferenceTypeChild))
+                    {
+                        currentReference.ReferenceType = ReferenceType.Child;
+                    }
+
+                    if (initExp.ToLower().Contains(ReferenceNullableArgs))
+                    {
+                        currentReference.Nullable = true;
+                    }
+                    else
+                    {
+                        currentReference.Nullable = refKeyProperty.Nullable || refKeyProperty.PropertyType == ValuePropertyType.String;
+                    }
+
+                    _currentType.References.Add(currentReference);
+                }
+
+                _references = null;
+            }
+        }
+
+        #endregion
+
+        private bool ParseChild(CodeVariable staticPropertyViriable, string propertyName, string typeFullName)
         {
             if (typeFullName.Contains(ListProperty))
             {
-                var initExp = codeVariable.InitExpression as string;
+                var initExp = staticPropertyViriable.InitExpression as string;
                 if (!initExp.Contains(ListAsAggregationToken))
                 {
                     var child = new Child
                     {
-                        CodeElement = codeVariable,
+                        CodeElement = staticPropertyViriable,
                         Name = propertyName,
                         ListTypeFullName = UnwrapGenericType(typeFullName)
                     };
@@ -294,63 +366,7 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             return false;
         }
 
-        #region 解析引用属性
-
-        private Reference _currentReference;
-
-        private bool ParseReference(CodeVariable codeVariable, string propertyName, string typeFullName)
-        {
-            if (typeFullName.Contains(RefIdProperty))
-            {
-                _currentReference = new Reference
-                {
-                    CodeElement = codeVariable,
-                    IdProperty = propertyName,
-                };
-
-                var initExp = codeVariable.InitExpression.ToString();
-                if (initExp.Contains("ReferenceType.Parent"))
-                {
-                    _currentReference.ReferenceType = ReferenceType.Parent;
-                }
-                else if (initExp.Contains("ReferenceType.Child"))
-                {
-                    _currentReference.ReferenceType = ReferenceType.Child;
-                }
-
-                //Nullable 放到 VisitProperty 中处理。
-                //...
-
-                _currentType.References.Add(_currentReference);
-                return true;
-            }
-
-            if (typeFullName.Contains(RefEntityProperty))
-            {
-                var refEntityTypeFullName = UnwrapGenericType(typeFullName);
-                _currentReference[RefEntityTypeFullNameProperty] = refEntityTypeFullName;
-                _currentReference.EntityProperty = propertyName;
-                _currentReference = null;
-                return true;
-            }
-
-            return false;
-        }
-
-        private void SetNullableReference(CodeProperty codeProperty)
-        {
-            if (_currentReference != null)
-            {
-                if (codeProperty.Type.AsFullName.Contains(NullableTypeToken))
-                {
-                    _currentReference.Nullable = true;
-                }
-            }
-        }
-
-        #endregion
-
-        private void ParseValueProperty(CodeVariable codeVariable, string propertyName, string typeFullName)
+        private void ParseValueProperty(CodeVariable staticPropertyViriable, string propertyName, string typeFullName)
         {
             //如果匹配以下格式，说明此属性是一个一般属性。
             //例如：Rafy.Domain.Property<System.Nullable<System.Double>>
@@ -359,7 +375,7 @@ namespace Rafy.VSPackage.Modeling.CodeSync
 
             var property = new ValueProperty();
 
-            property.CodeElement = codeVariable;
+            property.CodeElement = staticPropertyViriable;
             property.Name = propertyName;
 
             //System.Nullable<System.Double>
@@ -402,6 +418,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
             _currentType.ValueProperties.Add(property);
         }
 
+        /// <summary>
+        /// 尝试为值属性解析领域名称。
+        /// </summary>
+        /// <param name="codeProperty"></param>
         private void ParseValuePropertyDomainName(CodeProperty codeProperty)
         {
             if (!string.IsNullOrWhiteSpace(codeProperty.DocComment))
@@ -412,6 +432,14 @@ namespace Rafy.VSPackage.Modeling.CodeSync
                     TryParseDomainName(valueProperty, codeProperty.DocComment);
                 }
             }
+        }
+
+        private static string ParsePropertyName(CodeVariable staticPropertyViriable)
+        {
+            //var propertyName = name.Substring(0, name.Length - PropertyToken.Length);//去除后缀 Property
+            var initExp = staticPropertyViriable.InitExpression.ToString();
+            var propertyName = Regex.Match(initExp, @"\.Register[^\.]+\.(?<propertyName>\w+)").Groups["propertyName"].Value;
+            return propertyName;
         }
 
         #endregion
@@ -472,9 +500,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
         }
 
         /// <summary>
-        /// 获取模型的注释。
+        /// 从注释中尝试解析模型的领域名称。
         /// </summary>
-        /// <param name="comment"></param>
+        /// <param name="type">正在为这个模型解析领域名称</param>
+        /// <param name="comment">需要解析的注释文档</param>
         /// <returns></returns>
         private static void TryParseDomainName(EOMObject type, string comment)
         {

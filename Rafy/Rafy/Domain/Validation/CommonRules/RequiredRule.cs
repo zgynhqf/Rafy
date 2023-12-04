@@ -38,10 +38,10 @@ namespace Rafy.Domain.Validation
 
             bool isNull = false;
 
-            if (property is IRefProperty)
+            if (RefPropertyHelper.IsRefKeyProperty(property, out var refP))
             {
-                var id = entity.GetRefNullableId((property as IRefProperty).RefIdProperty);
-                isNull = id == null;
+                var key = entity.GetRefNullableKey(refP);
+                isNull = refP.KeyProvider.IsAvailable(key);
             }
             else
             {

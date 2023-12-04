@@ -189,7 +189,7 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReadOnly.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyRedundancy.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReference.snippet" />
-    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReferenceNullable.snippet" />
+    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReferenceCombined.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_CoerceGetValue.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_PropertyChanged.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_PropertyChanging.snippet" />
@@ -210,7 +210,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionReference.snippet" />
-    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionReferenceNullable.snippet" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="VSPackage.vsct">

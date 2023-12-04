@@ -51,8 +51,8 @@ namespace Rafy.RBAC.Old
         /// </summary>
         public const string ModuleScope = " 模块功能";
 
-        public static readonly IRefIdProperty ModuleACIdProperty =
-            P<OperationAC>.RegisterRefId(e => e.ModuleACId, ReferenceType.Parent);
+        public static readonly Property<int> ModuleACIdProperty =
+            P<OperationAC>.Register(e => e.ModuleACId, ReferenceType.Parent);
         public int ModuleACId
         {
             get { return (int)this.GetRefId(ModuleACIdProperty); }

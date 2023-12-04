@@ -152,7 +152,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         //    var refEntityType = childrenProperty.ListEntityType;
         //    var refRepo = RepositoryFactoryHost.Factory.FindByEntity(refEntityType);
         //    var parentProperty = refRepo.FindParentPropertyInfo(true);
-        //    var parentRef = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
+        //    var parentRef = RefPropertyHelper.Find((parentProperty.ManagedProperty).RefKeyProperty;
 
         //    var refTableSource = _allJoinTables.FirstOrDefault(
         //        ts => ts.RefProperty == parentRef && ts.PrimaryKeyTable == propertyOwner
@@ -175,7 +175,7 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// <param name="propertyOwner">引用属性所在的实体对应的表。也是外键关系中外键列所在的表。</param>
         /// <param name="refProperty">指定的引用属性。</param>
         /// <returns></returns>
-        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IRefEntityProperty refProperty)
+        internal ITableSource FindOrCreateJoinTable(ITableSource propertyOwner, IRefProperty refProperty)
         {
             var refTableSource = _allJoinTables.FirstOrDefault(
                 ts => ts.ForeignKeyTable == propertyOwner && ts.RefProperty == refProperty
@@ -201,8 +201,8 @@ namespace Rafy.Domain.ORM.Query.Impl
             var joinType = parentRef.Nullable ? JoinType.LeftOuter : JoinType.Inner;
             var query = this as IQuery;
             query.From = f.Join(query.From, joinTo, f.Constraint(
-                fkTable.Column(parentRef.RefIdProperty),
-                pkTable.IdColumn
+                fkTable.Column(parentRef.RefKeyProperty),
+                pkTable.Column(parentRef.KeyPropertyOfRefEntity)
                 ), joinType);
 
             var refTableSource = new SqlTableSource

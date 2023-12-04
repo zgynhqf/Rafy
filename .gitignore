@@ -4,7 +4,6 @@
 
 *.user
 /.gitattributes
-/.vs
 *.suo
 
 # Directory
@@ -13,6 +12,7 @@
 [Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+.vs/
 
 # NuGet
 packages/

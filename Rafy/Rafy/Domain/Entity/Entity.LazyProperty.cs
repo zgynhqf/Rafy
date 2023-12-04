@@ -97,84 +97,120 @@ namespace Rafy.Domain
 
         #region 延迟加载 - 引用实体
 
-        /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的可空类型返回值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns>本方法为兼容值类型而使用。不论 Id 是值类型、还是引用类型，都可能返回 null。</returns>
-        public object GetRefNullableId(IRefIdProperty property)
-        {
-            var value = this.GetProperty(property);
-            return property.KeyProvider.ToNullableValue(value);
-        }
+        #region 考虑到未来可能会还需要获取可空值，这些方法暂时不能删除。
 
         /// <summary>
-        /// 设置指定引用 id 属性对应的 id 的可空类型值。
+        /// 获取引用键属性的可空值。
         /// </summary>
-        /// <param name="property"></param>
-        /// <param name="value">本方法为兼容值类型而使用。不论外键是否为值类型，都可以传入 null。</param>
+        /// <param name="refProperty"></param>
         /// <returns></returns>
-        public object SetRefNullableId(IRefIdProperty property, object value)
+        internal object GetRefNullableKey(IManagedProperty refProperty)
         {
-            if (value == null) { value = GetEmptyIdForRefIdProperty(property); }
-            var finalValue = this.SetRefId(property, value);
-            return property.KeyProvider.ToNullableValue(finalValue);
+            var value = this.GetRefKey(refProperty);
+            return value;
+            //return refProperty.KeyProvider.ToNullableValue(value);
         }
 
         /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的返回值。
+        /// 设置引用键属性的可空值。
         /// </summary>
-        /// <param name="property"></param>
-        /// <returns>如果 Id 是值类型，则这个函数的返回值不会是 null；如果是引用类型，则可能返回 null。</returns>
-        public object GetRefId(IRefIdProperty property)
-        {
-            return this.GetProperty(property);
-        }
-
-        /// <summary>
-        /// 设置指定引用 id 属性对应的 id 的值。
-        /// 
-        /// 在引用 id 变化时，会同步相应的引用实体属性。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="value">外键如果是值类型，则不能传入 null。</param>
-        /// 
+        /// <param name="refProperty"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public object SetRefId(IRefIdProperty property, object value)
+        internal object SetRefNullableKey(IManagedProperty refProperty, object value)
+        {
+            return this.SetRefKey(refProperty, value, true);
+            //允许
+            //if (value == null) { value = GetEmptyKeyForRefKeyProperty(refProperty); }
+            //var finalValue = this.SetRefKey(refProperty, value, true);
+            //return refProperty.KeyProvider.ToNullableValue(finalValue);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 获取指定引用属性对应的键的值。
+        /// </summary>
+        /// <param name="refProperty"></param>
+        /// <returns></returns>
+        public object GetRefKey(IManagedProperty refProperty)
+        {
+            var value = this.GetProperty((refProperty as IRefProperty)?.RefKeyProperty ?? refProperty);
+            return value;
+        }
+
+        /// <summary>
+        /// 设置指定引用属性对应的键属性的值。
+        /// 
+        /// 在引用键变化时，会同步相应的引用实体属性。
+        /// </summary>
+        /// <param name="refProperty">引用属性。</param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public object SetRefKey(IManagedProperty refProperty, object value)
+        {
+            return this.SetRefKey(refProperty, value, true);
+        }
+
+        /// <summary>
+        /// 设置指定引用属性对应的键属性的值。
+        /// 
+        /// 在引用键变化时，会同步相应的引用实体属性。
+        /// </summary>
+        /// <param name="refProperty">引用属性。</param>
+        /// <param name="value"></param>
+        /// <param name="resetDisabledStatus"></param>
+        /// <returns></returns>
+        public object SetRefKey(IManagedProperty refProperty, object value, bool resetDisabledStatus)
+        {
+            var keyP = (refProperty as IRefProperty)?.RefKeyProperty ?? refProperty;
+            return this.SetRefKey(keyP as IManagedPropertyInternal, value, resetDisabledStatus);
+        }
+
+        private object SetRefKey(IManagedPropertyInternal keyProperty, object value, bool resetDisabledStatus)
         {
             //引用属性的托管属性类型是 object，这里需要强制为指定的主键类型。
-            value = TypeHelper.CoerceValue(property.KeyProvider.KeyType, value);
+            var entityProperty = keyProperty.RefEntityProperty;
 
-            var id = this.GetRefId(property);
+            value = TypeHelper.CoerceValue(entityProperty.RefKeyProperty.PropertyType, value);
+            if (entityProperty.Nullable)
+            {
+                value = entityProperty.KeyProvider.ToNullableValue(value);
+            }
+
+            var oldKey = this.GetProperty(keyProperty);
 
             //设置 id 完成后的值。
-            object finalId = id;
+            object finalKey = oldKey;
 
             //确实需要改变 Id 时，才进行以下逻辑。
-            if (!object.Equals(id, value))
+            if (!object.Equals(oldKey, value))
             {
-                var entityProperty = property.RefEntityProperty;
-
                 //在设置 RefId 前先清空实体值，这样在回调 RefId 的外部 Changed 事件处理函数时，
                 //外部看到的 RefEntity 也已经改变了，外部可以获得一致的 Entity 和 Id 值。
-                var entity = base.GetProperty(entityProperty) as Entity;
-                if (entity != null && !object.Equals(entity.Id, value)) { base.ResetProperty(entityProperty); }
+                var oldEntity = base.GetProperty(entityProperty) as Entity;
+                var needResetEntity = oldEntity != null && !object.Equals(oldEntity.GetProperty(entityProperty.KeyPropertyOfRefEntity), value);
+                if (needResetEntity)
+                {
+                    base.ResetProperty(entityProperty);
+                }
+
                 try
                 {
                     //此时发生 OnIdChanged 事件。
-                    finalId = base.SetProperty(property, value);
+                    finalKey = base.SetProperty(keyProperty, value, resetDisabledStatus);
                 }
                 finally
                 {
                     //还原实体的值。
-                    if (entity != null) { base.LoadProperty(entityProperty, entity); }
+                    if (oldEntity != null) { base.LoadProperty(entityProperty, oldEntity); }
                 }
 
                 //如果二者相等，表示 Id 成功设置，没有被 cancel。
-                if (object.Equals(finalId, value))
+                if (object.Equals(finalKey, value))
                 {
-                    //如果之前的实体已经存在值，则需要设置为 null，并引发外部事件。
-                    if (entity != null)
+                    //如果旧实体的键值不同，则需要设置为 null，并引发外部事件。
+                    if (needResetEntity)
                     {
                         //重新设置 Entity 的值，此时发生 OnEntityChanged 事件。
                         var finalEntity = base.SetProperty(entityProperty, null) as Entity;
@@ -183,17 +219,18 @@ namespace Rafy.Domain
                         if (finalEntity != null)
                         {
                             //此时，需要重设 Id 的值。
-                            finalId = base.SetProperty(property, finalEntity.Id);
-                            if (!object.Equals(finalId, finalEntity.Id))
+                            var finalEntityKey = finalEntity.GetProperty(entityProperty.KeyPropertyOfRefEntity);
+                            finalKey = base.SetProperty(keyProperty, finalEntityKey);
+                            if (!object.Equals(finalKey, finalEntityKey))
                             {
-                                ThrowRefPropertyChangingConflict(property);
+                                ThrowRefPropertyChangingConflict(keyProperty, entityProperty);
                             }
                         }
                     }
                 }
             }
 
-            return finalId;
+            return finalKey;
         }
 
         /// <summary>
@@ -205,7 +242,7 @@ namespace Rafy.Domain
         public TRefEntity GetRefEntity<TRefEntity>(RefEntityProperty<TRefEntity> entityProperty)
             where TRefEntity : Entity
         {
-            return this.GetRefEntity(entityProperty as IRefEntityProperty) as TRefEntity;
+            return this.GetRefEntity(entityProperty as IRefProperty) as TRefEntity;
         }
 
         /// <summary>
@@ -213,17 +250,16 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="entityProperty"></param>
         /// <returns></returns>
-        public Entity GetRefEntity(IRefEntityProperty entityProperty)
+        public Entity GetRefEntity(IRefProperty entityProperty)
         {
             var value = base.GetProperty(entityProperty) as Entity;
 
             if (!this._settingEntity && value == null)
             {
-                var idProperty = entityProperty.RefIdProperty;
-                var id = this.GetRefId(idProperty);
-                if (HasRefId(idProperty, id))
+                var keyValue = this.GetProperty(entityProperty.RefKeyProperty);
+                if (entityProperty.KeyProvider.IsAvailable(keyValue))
                 {
-                    value = (entityProperty as IRefEntityPropertyInternal).Load(id, this);
+                    value = (entityProperty as IRefEntityPropertyInternal).Load(keyValue, this);
                     if (value != null)
                     {
                         base.LoadProperty(entityProperty, value);
@@ -248,9 +284,8 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="entityProperty">The entity property.</param>
         /// <param name="value">The value.</param>
-        /// 
         /// <returns></returns>
-        public Entity SetRefEntity(IRefEntityProperty entityProperty, Entity value)
+        public Entity SetRefEntity(IRefProperty entityProperty, Entity value)
         {
             var oldEntity = base.GetProperty(entityProperty) as Entity;
             Entity finalEntity = oldEntity;
@@ -259,45 +294,50 @@ namespace Rafy.Domain
             {
                 _settingEntity = true;
 
-                var idProperty = entityProperty.RefIdProperty;
-                var oldId = this.GetProperty(idProperty);
+                var keyProperty = entityProperty.RefKeyProperty;
+                var oldKey = this.GetProperty(keyProperty);
 
-                //如果 实体变更 或者 （设置实体为 null 并且 id 不为 null），都需要设置值改变。
-                if (oldEntity != value || (value == null && HasRefId(idProperty, oldId)))
+                //如果 实体变更 或者 （设置实体为 null 并且 key 不为 null），都需要设置值改变。
+                if (oldEntity != value || (value == null && entityProperty.KeyProvider.IsAvailable(oldKey)))
                 {
-                    var newId = value == null ? GetEmptyIdForRefIdProperty(idProperty) : value.Id;
+                    //从引用实体中加载引用键的值。
+                    var newKey = value == null ? entityProperty.KeyProvider.GetEmptyId() : value.GetProperty(entityProperty.KeyPropertyOfRefEntity);
+                    if (entityProperty.Nullable)
+                    {
+                        newKey = entityProperty.KeyProvider.ToNullableValue(newKey);
+                    }
 
-                    //在触发外界事件处理函数之前，先设置好 Id 的值
-                    base.LoadProperty(idProperty, newId);
+                    //在触发外界事件处理函数之前，先设置好 key 的值
+                    base.LoadProperty(keyProperty, newKey);
                     try
                     {
-                        //此时再发生 OnEntityChanged 事件，外界可以获取到一致的 id 和 entity 值。
+                        //此时再发生 OnEntityChanged 事件，外界可以获取到一致的 key 和 entity 值。
                         finalEntity = base.SetProperty(entityProperty, value) as Entity;
                     }
                     finally
                     {
-                        //还原 id 的值。
-                        base.LoadProperty(idProperty, oldId);
+                        //还原 key 的值。
+                        base.LoadProperty(keyProperty, oldKey);
                     }
 
                     //如果设置实体成功，则需要开始变更 Id 的值。
                     if (finalEntity == value)
                     {
                         //如果 id 发生了变化，则需要设置 id 的值。
-                        if (!object.Equals(oldId, newId))
+                        if (!object.Equals(oldKey, newKey))
                         {
                             //尝试设置 id 值，如果成功，则同时会发生 OnIdChanged 事件。
-                            var finalId = base.SetProperty(idProperty, newId);
+                            var finalKey = base.SetProperty(keyProperty, newKey);
 
                             //如果设置 id 值失败，则应该还原 entity 的值。
-                            if (!object.Equals(finalId, newId))
+                            if (!object.Equals(finalKey, newKey))
                             {
                                 finalEntity = base.SetProperty(entityProperty, oldEntity) as Entity;
 
                                 //还原 entity 值失败，向个界抛出冲突的异常。
                                 if (finalEntity != oldEntity)
                                 {
-                                    ThrowRefPropertyChangingConflict(idProperty);
+                                    ThrowRefPropertyChangingConflict(keyProperty, entityProperty);
                                 }
                             }
                         }
@@ -327,11 +367,12 @@ namespace Rafy.Domain
         /// <returns></returns>
         public override object SetProperty(IManagedProperty property, object value, bool resetDisabledStatus)
         {
-            //防止外界使用 SetProperty 方法来操作列表属性。
-            if (property is IListProperty)
-            {
-                throw new InvalidOperationException($"{property} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。");
-            }
+            //为了提升性能，这里面的判断不再需要。
+            ////防止外界使用 SetProperty 方法来操作列表属性。
+            //if (property is IListProperty)
+            //{
+            //    throw new InvalidOperationException($"{property} 是列表属性，不能使用 SetProperty 方法直接设置。请使用 GetLazyList 方法获取，或使用 LoadProperty 方法进行加载。");
+            //}
 
             if ((property == IdProperty || property == TreePIdProperty) && value != null)
             {
@@ -339,14 +380,21 @@ namespace Rafy.Domain
                 value = TypeHelper.CoerceValue(this.IdProvider.KeyType, value);
             }
 
+            //如果是引用值属性，则需要调用 SetRefKey 方法。
+            var propertyInternal = property as IManagedPropertyInternal;
+            if (propertyInternal.RefEntityProperty != null)
+            {
+                return this.SetRefKey(propertyInternal, value, resetDisabledStatus);
+            }
+
             return base.SetProperty(property, value, resetDisabledStatus);
         }
 
-        private static void ThrowRefPropertyChangingConflict(IRefIdProperty property)
+        private static void ThrowRefPropertyChangingConflict(IManagedProperty keyProperty, IRefProperty entityProperty)
         {
             throw new InvalidOperationException(
                 string.Format(@"{0} 属性的变更前事件与引用实体属性 {1} 的变更前事件设置的值冲突！",
-                property.Name, property.RefEntityProperty.Name)
+                keyProperty.Name, entityProperty.Name)
                 );
         }
 
@@ -424,22 +472,22 @@ namespace Rafy.Domain
         public virtual void SetParentEntity(Entity parent)
         {
             var property = this.GetRepository().EntityMeta
-                .FindParentReferenceProperty(true).ManagedProperty as IRefEntityProperty;
+                .FindParentReferenceProperty(true).ManagedProperty as IRefProperty;
             this.SetParentEntity(parent, property);
         }
 
-        internal void SetParentEntity(Entity parent, IRefEntityProperty parentRefProperty)
+        internal void SetParentEntity(Entity parent, IRefProperty parentRefProperty)
         {
             //由于有时父引用实体没有发生改变，但是父引用实体的 Id 变了，此时也可以调用此方法同步二者的 Id。
             //例如：保存父实体后，它的 Id 生成了。这时会调用此方法来同步 Id。
-            this.SetRefNullableId(parentRefProperty.RefIdProperty, parent.Id);
+            this.SetRefNullableKey(parentRefProperty, parent.GetProperty(parentRefProperty.KeyPropertyOfRefEntity));
             this.SetRefEntity(parentRefProperty, parent);
 
             //由于新的父实体可以还没有 Id，这时需要主动通知冗余属性变更。
             //见测试：MPT_Redundancy_AddNewAggt
             if (parent != null && parent.PersistenceStatus == PersistenceStatus.New)
             {
-                this.NotifyIfInRedundancyPath(parentRefProperty.RefIdProperty as IProperty);
+                this.NotifyIfInRedundancyPath(parentRefProperty.RefKeyProperty as IProperty);
             }
         }
 
@@ -449,18 +497,8 @@ namespace Rafy.Domain
         Entity IEntity.FindParentEntity()
         {
             var pMeta = this.GetRepository().EntityMeta.FindParentReferenceProperty();
-            if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefEntityProperty); }
+            if (pMeta != null) { return this.GetRefEntity(pMeta.ManagedProperty as IRefProperty); }
             return null;
-        }
-
-        private static object GetEmptyIdForRefIdProperty(IRefIdProperty refIdProperty)
-        {
-            return refIdProperty.KeyProvider.GetEmptyId();
-        }
-
-        private static bool HasRefId(IRefIdProperty refIdProperty, object id)
-        {
-            return refIdProperty.KeyProvider.IsAvailable(id);
         }
 
         ///// <summary>
@@ -476,7 +514,7 @@ namespace Rafy.Domain
 
         //    if (value == null)
         //    {
-        //        var refIndicator = property as IRefProperty;
+        //        var refIndicator = RefPropertyHelper.Find(property);
         //        if (refIndicator != null) value = refIndicator.CreateRef(this);
         //    }
 

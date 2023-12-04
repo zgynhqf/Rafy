@@ -16,32 +16,7 @@ using Rafy.Domain.ORM.Query;
 
 namespace UT
 {
-    public abstract class UnitTestEntity : IntEntity
-    {
-        #region 兼容老接口
-
-        /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的可空类型返回值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public new int? GetRefNullableId(IRefIdProperty property)
-        {
-            return (int?)base.GetRefNullableId(property);
-        }
-
-        /// <summary>
-        /// 获取指定引用 id 属性对应的 id 的返回值。
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        public new int GetRefId(IRefIdProperty property)
-        {
-            return (int)base.GetRefId(property);
-        }
-
-        #endregion
-    }
+    public abstract class UnitTestEntity : IntEntity { }
 
     public abstract class UnitTestEntityList : EntityList { }
 

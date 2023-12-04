@@ -266,7 +266,7 @@ namespace Rafy.MetaModel
 
             #region 创建 ReferenceInfo 及聚合子类
 
-            var refMP = mp as IRefEntityProperty;
+            var refMP = mp as IRefProperty;
             if (refMP != null)
             {
                 var ri = new ReferenceInfo()

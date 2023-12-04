@@ -54,7 +54,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -64,7 +64,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public byte ByteValue
         {
-            get { return this.GetProperty(ByteValueProperty); }
+            get { return this.GetProperty<byte>(ByteValueProperty); }
             set { this.SetProperty(ByteValueProperty, value); }
         }
 
@@ -75,7 +75,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public float FloatValue
         {
-            get { return this.GetProperty(FloatValueProperty); }
+            get { return this.GetProperty<float>(FloatValueProperty); }
             set { this.SetProperty(FloatValueProperty, value); }
         }
 
@@ -85,7 +85,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public double DoubleValue
         {
-            get { return this.GetProperty(DoubleValueProperty); }
+            get { return this.GetProperty<double>(DoubleValueProperty); }
             set { this.SetProperty(DoubleValueProperty, value); }
         }
 
@@ -96,7 +96,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public decimal DecimalValue
         {
-            get { return this.GetProperty(DecimalValueProperty); }
+            get { return this.GetProperty<decimal>(DecimalValueProperty); }
             set { this.SetProperty(DecimalValueProperty, value); }
         }
 
@@ -106,7 +106,7 @@ namespace Rafy.UnitTest
         /// </summary>
         public DateTimeOffset? DateTimeOffsetValue
         {
-            get { return this.GetProperty(DateTimeOffsetValueProperty); }
+            get { return this.GetProperty<DateTimeOffset?>(DateTimeOffsetValueProperty); }
             set { this.SetProperty(DateTimeOffsetValueProperty, value); }
         }
 

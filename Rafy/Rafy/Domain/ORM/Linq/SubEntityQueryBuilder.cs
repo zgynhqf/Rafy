@@ -115,8 +115,8 @@ namespace Rafy.Domain.ORM.Linq
 
             //添加子表查询与父实体的关系条件：WHERE c.BookId = b.Id
             var parentProperty = childRepo.EntityMeta.FindParentReferenceProperty(true);
-            var parentRefIdProperty = (parentProperty.ManagedProperty as IRefProperty).RefIdProperty;
-            var toParentConstraint = f.Constraint(childTable.Column(parentRefIdProperty), listPropertyTable.IdColumn);
+            var parentRefKeyProperty = RefPropertyHelper.Find(parentProperty.ManagedProperty).RefKeyProperty;
+            var toParentConstraint = f.Constraint(childTable.Column(parentRefKeyProperty), listPropertyTable.IdColumn);
             _query.Where = f.And(toParentConstraint, _query.Where);
 
             return exp;

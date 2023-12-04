@@ -99,6 +99,7 @@ namespace Rafy.MongoDb
         protected virtual BsonDocument Serialize(Entity data)
         {
             var serializer = new BsonAggtWriter();
+            serializer.EnumSerializationMode = (this.DataProvider as MongoDbDataProvider).EnumSerializationMode;
             var json = serializer.Serialize(data);
             return json;
         }

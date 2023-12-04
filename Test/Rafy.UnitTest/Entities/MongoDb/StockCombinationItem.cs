@@ -1,4 +1,4 @@
-﻿using Rafy;
+using Rafy;
 using Rafy.ComponentModel;
 using Rafy.Data;
 using Rafy.Domain;
@@ -26,15 +26,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty StockCombinationIdProperty =
-            P<StockCombinationItem>.RegisterRefId(e => e.StockCombinationId, ReferenceType.Parent);
+        public static readonly Property<string> StockCombinationIdProperty =
+            P<StockCombinationItem>.Register(e => e.StockCombinationId);
         public string StockCombinationId
         {
-            get { return (string)this.GetRefId(StockCombinationIdProperty); }
-            set { this.SetRefId(StockCombinationIdProperty, value); }
+            get { return this.GetProperty(StockCombinationIdProperty); }
+            set { this.SetProperty(StockCombinationIdProperty, value); }
         }
         public static readonly RefEntityProperty<StockCombination> StockCombinationProperty =
-            P<StockCombinationItem>.RegisterRef(e => e.StockCombination, StockCombinationIdProperty);
+            P<StockCombinationItem>.RegisterRef(e => e.StockCombination, StockCombinationIdProperty, ReferenceType.Parent);
         public StockCombination StockCombination
         {
             get { return this.GetRefEntity(StockCombinationProperty); }

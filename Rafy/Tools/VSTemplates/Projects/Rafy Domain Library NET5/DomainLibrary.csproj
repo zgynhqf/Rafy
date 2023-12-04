@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Rafy.Domain" Version="3.90.4280" />
+        <PackageReference Include="Rafy.Domain" Version="3.93.4315" />
     </ItemGroup>
     
     <ItemGroup>

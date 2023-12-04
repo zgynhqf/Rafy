@@ -271,92 +271,18 @@ namespace Rafy.Domain
         #region RegisterRef
 
         /// <summary>
-        /// 声明一个引用 Id 属性
+        /// 声明一个引用实体属性。
         /// </summary>
-        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey?>> propertyExp)
-            where TKey : struct
-        {
-            return RegisterRefId(propertyExp, ReferenceType.Normal);
-        }
-
-        /// <summary>
-        /// 声明一个引用 Id 属性
-        /// </summary>
-        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
+        /// <typeparam name="TRefEntity"></typeparam>
+        /// <param name="propertyExp">指向引用实体属性的表达式。</param>
+        /// <param name="refKeyProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="nullable">是否为一个可空的引用属性。如果不指定，则根据类型来判断</param>
         /// <param name="referenceType">引用的类型</param>
         /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey?>> propertyExp, ReferenceType referenceType)
-            where TKey : struct
+        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IManagedProperty refKeyProperty, ReferenceType referenceType = ReferenceType.Normal, bool? nullable = null)
+            where TRefEntity : Entity
         {
-            var propertyInfo = Reflect<TEntity>.GetProperty(propertyExp);
-            return RegisterRefIdCore(propertyInfo.Name, referenceType, propertyInfo.PropertyType, new RegisterRefIdArgs<TKey>());
-        }
-
-        /// <summary>
-        /// 声明一个引用 Id 属性
-        /// </summary>
-        /// <param name="propertyExp"></param>
-        /// <param name="args">一系列相关的参数。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey?>> propertyExp, RegisterRefIdArgs<TKey> args)
-            where TKey : struct
-        {
-            var propertyInfo = Reflect<TEntity>.GetProperty(propertyExp);
-
-            //简单地，args 直接作为 defaultMeta 传入。
-            return RegisterRefIdCore(propertyInfo.Name, args.ReferenceType, propertyInfo.PropertyType, args);
-        }
-
-        /// <summary>
-        /// 声明一个引用 Id 属性
-        /// </summary>
-        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey>> propertyExp)
-            where TKey : struct
-        {
-            return RegisterRefId(propertyExp, ReferenceType.Normal);
-        }
-
-        /// <summary>
-        /// 声明一个引用 Id 属性
-        /// </summary>
-        /// <param name="propertyExp">指向相应 CLR 的表达式。</param>
-        /// <param name="referenceType">引用的类型</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey>> propertyExp, ReferenceType referenceType)
-        {
-            var propertyInfo = Reflect<TEntity>.GetProperty(propertyExp);
-            return RegisterRefIdCore(propertyInfo.Name, referenceType, propertyInfo.PropertyType, new RegisterRefIdArgs<TKey>());
-        }
-
-        /// <summary>
-        /// 声明一个引用 Id 属性
-        /// </summary>
-        /// <param name="propertyExp"></param>
-        /// <param name="args">一系列相关的参数。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefId<TKey>(Expression<Func<TEntity, TKey>> propertyExp, RegisterRefIdArgs<TKey> args)
-        {
-            var propertyInfo = Reflect<TEntity>.GetProperty(propertyExp);
-
-            //简单地，args 直接作为 defaultMeta 传入。
-            return RegisterRefIdCore(propertyInfo.Name, args.ReferenceType, propertyInfo.PropertyType, args);
-        }
-
-        private static IRefIdProperty RegisterRefIdCore<TKey>(string propertyName, ReferenceType referenceType, Type propertyType, PropertyMetadata<TKey> defaultMeta)
-        {
-            var property = new RefIdProperty<TKey>(typeof(TEntity), propertyName, defaultMeta)
-            {
-                ReferenceType = referenceType,
-                Nullable = propertyType.IsClass || TypeHelper.IsNullable(propertyType)
-            };
-
-            ManagedPropertyRepository.Instance.RegisterProperty(property);
-
-            return property;
+            return RegisterRef(propertyExp, refKeyProperty, Entity.IdProperty, referenceType, nullable);
         }
 
         /// <summary>
@@ -364,22 +290,28 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TRefEntity"></typeparam>
         /// <param name="propertyExp">指向引用实体属性的表达式。</param>
-        /// <param name="refIdProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="refKeyProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="refEntityValueProperty">指定引用的实体类型所对应的值属性。如果不指定，则使用 <see cref="Entity.IdProperty"/>。</param>
+        /// <param name="nullable">是否为一个可空的引用属性。如果不指定，则根据类型来判断</param>
+        /// <param name="referenceType">引用的类型</param>
         /// <returns></returns>
-        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IRefIdProperty refIdProperty)
+        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IManagedProperty refKeyProperty, IManagedProperty refEntityValueProperty, ReferenceType referenceType = ReferenceType.Normal, bool? nullable = null)
             where TRefEntity : Entity
         {
-            if (refIdProperty == null) throw new ArgumentNullException("refIdProperty", "必须指定引用 Id 属性，将为其建立关联。");
+            if (refKeyProperty == null) throw new ArgumentNullException("refKeyProperty", "必须指定引用键属性，将为其建立关联。");
 
             var defaultMeta = new PropertyMetadata<Entity>();
             defaultMeta.AffectStatus = false;
 
             var property = new RefEntityProperty<TRefEntity>(typeof(TEntity), GetPropertyName(propertyExp), defaultMeta)
             {
-                RefIdProperty = refIdProperty
+                KeyPropertyOfRefEntity = refEntityValueProperty,
+                RefKeyProperty = refKeyProperty,
+                ReferenceType = referenceType
             };
+            property.ResetNullable(nullable);
 
-            SetReferenceSerializable(defaultMeta, refIdProperty);
+            SetReferenceSerializable(defaultMeta, property);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
@@ -397,18 +329,20 @@ namespace Rafy.Domain
             where TRefEntity : Entity
         {
             if (args == null) throw new ArgumentNullException("args");
-            if (args.RefIdProperty == null) throw new ArgumentNullException("args.RefIdProperty", "必须指定引用 Id 属性，将为其建立关联。");
+            if (args.RefKeyProperty == null) throw new ArgumentNullException("args.RefKeyProperty", "必须指定引用键属性，将为其建立关联。");
 
             //简单地，直接把 Args 作为 defaultMeta
             var defaultMeta = args;
 
             var property = new RefEntityProperty<TRefEntity>(typeof(TEntity), GetPropertyName(propertyExp), defaultMeta)
             {
-                RefIdProperty = args.RefIdProperty,
-                Loader = args.Loader
+                KeyPropertyOfRefEntity = args.KeyPropertyOfRefEntity,
+                RefKeyProperty = args.RefKeyProperty,
+                Loader = args.Loader,
+                ReferenceType = args.ReferenceType
             };
 
-            SetReferenceSerializable(defaultMeta, args.RefIdProperty);
+            SetReferenceSerializable(defaultMeta, property);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 
@@ -440,7 +374,7 @@ namespace Rafy.Domain
             //简单地，直接把 Args 作为 meta
             property.OverrideMeta(typeof(TEntity), args, m =>
             {
-                SetReferenceSerializable(m, m.RefIdProperty);
+                SetReferenceSerializable(m, property);
 
                 overrideValues(m);
             });
@@ -448,11 +382,11 @@ namespace Rafy.Domain
             return property;
         }
 
-        private static void SetReferenceSerializable(PropertyMetadata<Entity> defaultMeta, IRefIdProperty refIdProperty)
+        private static void SetReferenceSerializable(PropertyMetadata<Entity> defaultMeta, IRefProperty refProperty)
         {
             //父引用不需要序列化，否则会因为子集合中的子实体引用了同一个父实体，而导致二进制序列化框架，会多次序列化这一个父实体，造成性能问题。
             //另外，同时也会导致序列化失败，原因不祥。复现此问题的单元测试见：SerializationTest.SrlzT_Binary_List
-            defaultMeta.Serializable = refIdProperty.ReferenceType != ReferenceType.Parent;
+            defaultMeta.Serializable = refProperty.ReferenceType != ReferenceType.Parent;
         }
 
         #endregion
@@ -460,48 +394,32 @@ namespace Rafy.Domain
         #region RegisterRefExtension
 
         /// <summary>
-        /// 扩展一个引用属性
-        /// </summary>
-        /// <typeparam name="TKey">The type of the entity list.</typeparam>
-        /// <param name="propertyName">属性名称。</param>
-        /// <param name="declareType">声明此属性的类型。</param>
-        /// <param name="isNullable">是否为一个可空的引用属性。</param>
-        /// <returns></returns>
-        public static IRefIdProperty RegisterRefIdExtension<TKey>(string propertyName, Type declareType, bool isNullable = false)
-            where TKey : struct
-        {
-            var property = new RefIdProperty<TKey>(typeof(TEntity), declareType, propertyName, new RegisterRefIdArgs<TKey>())
-            {
-                ReferenceType = ReferenceType.Normal,
-                Nullable = isNullable
-            };
-
-            ManagedPropertyRepository.Instance.RegisterProperty(property);
-
-            return property;
-        }
-
-        /// <summary>
         /// 扩展一个引用实体属性。
         /// </summary>
         /// <typeparam name="TRefEntity"></typeparam>
         /// <param name="propertyName">实体属性的名称。</param>
         /// <param name="declareType">声明此属性的类型。</param>
-        /// <param name="refIdProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="refKeyProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="refEntityValueProperty">指定引用的实体类型所对应的值属性。如果不指定，则使用 <see cref="Entity.IdProperty"/>。</param>
+        /// <param name="nullable">是否为一个可空的引用属性。如果不指定，则根据类型来判断</param>
+        /// <param name="referenceType">引用的类型</param>
         /// <returns></returns>
-        public static RefEntityProperty<TRefEntity> RegisterRefExtension<TRefEntity>(string propertyName, Type declareType, IRefIdProperty refIdProperty)
+        public static RefEntityProperty<TRefEntity> RegisterRefExtension<TRefEntity>(string propertyName, Type declareType, IManagedProperty refKeyProperty, IManagedProperty refEntityValueProperty = null, bool? nullable = null, ReferenceType referenceType = ReferenceType.Normal)
             where TRefEntity : Entity
         {
-            if (refIdProperty == null) throw new ArgumentNullException("refIdProperty", "必须指定引用 Id 属性，将为其建立关联。");
+            if (refKeyProperty == null) throw new ArgumentNullException("refKeyProperty", "必须指定引用键属性，将为其建立关联。");
 
             var defaultMeta = new PropertyMetadata<Entity>();
 
             var property = new RefEntityProperty<TRefEntity>(typeof(TEntity), declareType, propertyName, defaultMeta)
             {
-                RefIdProperty = refIdProperty
+                KeyPropertyOfRefEntity = refEntityValueProperty,
+                RefKeyProperty = refKeyProperty,
+                ReferenceType = referenceType
             };
+            property.ResetNullable(nullable);
 
-            SetReferenceSerializable(defaultMeta, refIdProperty);
+            SetReferenceSerializable(defaultMeta, property);
 
             ManagedPropertyRepository.Instance.RegisterProperty(property);
 

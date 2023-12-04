@@ -25,33 +25,30 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty HouseMerchantIdProperty =
-            P<MerchantItem>.RegisterRefId(e => e.HouseMerchantId, ReferenceType.Parent);
+        public static readonly Property<string> HouseMerchantIdProperty =
+            P<MerchantItem>.Register(e => e.HouseMerchantId);
         public string HouseMerchantId
         {
-            get { return (string)this.GetRefId(HouseMerchantIdProperty); }
-            set { this.SetRefId(HouseMerchantIdProperty, value); }
+            get { return this.GetProperty(HouseMerchantIdProperty); }
+            set { this.SetProperty(HouseMerchantIdProperty, value); }
         }
         public static readonly RefEntityProperty<HouseMerchant> HouseMerchantProperty =
-            P<MerchantItem>.RegisterRef(e => e.HouseMerchant, HouseMerchantIdProperty);
+            P<MerchantItem>.RegisterRef(e => e.HouseMerchant, HouseMerchantIdProperty, ReferenceType.Parent);
         public HouseMerchant HouseMerchant
         {
             get { return this.GetRefEntity(HouseMerchantProperty); }
             set { this.SetRefEntity(HouseMerchantProperty, value); }
         }
 
-        public static readonly IRefIdProperty HouseIdProperty =
-            P<MerchantItem>.RegisterRefId(e => e.HouseId, ReferenceType.Normal);
+        public static readonly Property<string> HouseIdProperty =
+            P<MerchantItem>.Register(e => e.HouseId);
         public string HouseId
         {
-            get { return (string)this.GetRefId(HouseIdProperty); }
-            set { this.SetRefId(HouseIdProperty, value); }
+            get { return this.GetProperty(HouseIdProperty); }
+            set { this.SetProperty(HouseIdProperty, value); }
         }
         public static readonly RefEntityProperty<House> HouseProperty =
             P<MerchantItem>.RegisterRef(e => e.House, HouseIdProperty);
-        /// <summary>
-        /// 
-        /// </summary>
         public House House
         {
             get { return this.GetRefEntity(HouseProperty); }

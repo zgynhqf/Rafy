@@ -53,35 +53,35 @@ namespace UT
         public static readonly Property<string> NameProperty = P<PBSType>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
         public static readonly Property<string> CodeProperty = P<PBSType>.Register(e => e.Code);
         public string Code
         {
-            get { return this.GetProperty(CodeProperty); }
+            get { return this.GetProperty<string>(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
         public static readonly Property<int> AmountProperty = P<PBSType>.Register(e => e.Amount);
         public int Amount
         {
-            get { return this.GetProperty(AmountProperty); }
+            get { return this.GetProperty<int>(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
         }
 
         public static readonly Property<DateTime> CreateTimeProperty = P<PBSType>.Register(e => e.CreateTime);
         public DateTime CreateTime
         {
-            get { return this.GetProperty(CreateTimeProperty); }
+            get { return this.GetProperty<DateTime>(CreateTimeProperty); }
             set { this.SetProperty(CreateTimeProperty, value); }
         }
 
         public static readonly Property<bool> IsDefaultProperty = P<PBSType>.Register(e => e.IsDefault);
         public bool IsDefault
         {
-            get { return this.GetProperty(IsDefaultProperty); }
+            get { return this.GetProperty<bool>(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
 

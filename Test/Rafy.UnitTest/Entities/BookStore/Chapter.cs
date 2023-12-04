@@ -35,15 +35,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty BookIdProperty =
-            P<Chapter>.RegisterRefId(e => e.BookId, ReferenceType.Parent);
+        public static readonly Property<int> BookIdProperty =
+            P<Chapter>.Register(e => e.BookId);
         public int BookId
         {
-            get { return this.GetRefId(BookIdProperty); }
-            set { this.SetRefId(BookIdProperty, value); }
+            get { return this.GetProperty(BookIdProperty); }
+            set { this.SetProperty(BookIdProperty, value); }
         }
         public static readonly RefEntityProperty<Book> BookProperty =
-            P<Chapter>.RegisterRef(e => e.Book, BookIdProperty);
+            P<Chapter>.RegisterRef(e => e.Book, BookIdProperty, ReferenceType.Parent);
         public Book Book
         {
             get { return this.GetRefEntity(BookProperty); }
@@ -67,7 +67,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<Chapter>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 

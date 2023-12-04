@@ -76,11 +76,11 @@ namespace Rafy.Domain
             var propertyType = typeof(TPropertyType);
             object defaultValue = null;
 
-            //处理DateTime类型的默认值为当天。
-            if (propertyType == typeof(string))
-            {
-                defaultValue = string.Empty;
-            }
+            //if (propertyType == typeof(string))
+            //{
+            //    defaultValue = string.Empty;
+            //}
+            //else 
             //else if (propertyType == typeof(DateRange))
             //{
             //    defaultValue = new DateRange()
@@ -93,7 +93,7 @@ namespace Rafy.Domain
             //{
             //    defaultValue = new NumberRange();
             //}
-            else if (propertyType == typeof(DateTime))
+            if (propertyType == typeof(DateTime))
             {
                 defaultValue = PropertyDefailtValues.DefaultDateTime;
             }

@@ -37,15 +37,15 @@ namespace Rafy.SerialNumber
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty SerialNumberInfoIdProperty =
-            P<SerialNumberValue>.RegisterRefId(e => e.SerialNumberInfoId, ReferenceType.Parent);
+        public static readonly Property<long> SerialNumberInfoIdProperty =
+            P<SerialNumberValue>.Register(e => e.SerialNumberInfoId);
         public long SerialNumberInfoId
         {
-            get { return (long)this.GetRefId(SerialNumberInfoIdProperty); }
-            set { this.SetRefId(SerialNumberInfoIdProperty, value); }
+            get { return this.GetProperty(SerialNumberInfoIdProperty); }
+            set { this.SetProperty(SerialNumberInfoIdProperty, value); }
         }
         public static readonly RefEntityProperty<SerialNumberInfo> AutoCodeInfoProperty =
-            P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty);
+            P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty, ReferenceType.Parent);
         /// <summary>
         /// 所使用的自动编码规则
         /// </summary>

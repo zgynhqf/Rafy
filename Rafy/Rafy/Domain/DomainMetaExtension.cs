@@ -121,7 +121,7 @@ namespace Rafy.Domain
             var parentPropertyMeta = entity.GetRepository().EntityMeta.FindParentReferenceProperty();
             if (parentPropertyMeta == null) { return entity.Id; }
 
-            var refMP = parentPropertyMeta.ManagedProperty.CastTo<IRefEntityProperty>();
+            var refMP = parentPropertyMeta.ManagedProperty.CastTo<IRefProperty>();
             var parent = entity.GetRefEntity(refMP);
 
             return GetRootId(parent);

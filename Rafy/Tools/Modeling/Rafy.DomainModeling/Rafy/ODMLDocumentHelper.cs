@@ -142,7 +142,7 @@ namespace Rafy.DomainModeling
                             {
                                 var connectionEl = new ConnectionElement(type.FullName, reference.RefEntityType.FullName);
                                 connectionEl.ConnectionType = reference.Nullable ? ConnectionType.NullableReference : ConnectionType.Reference;
-                                connectionEl.Label = reference.EntityProperty ?? reference.IdProperty;
+                                connectionEl.Label = reference.EntityProperty ?? reference.KeyProperty;
                                 TryAddConnection(document, connectionEl);
                             }
                             break;

@@ -109,7 +109,7 @@ namespace Rafy.MetaModel.View
                     }
                     else
                     {
-                        var refProperty = value as IRefProperty;
+                        var refProperty = RefPropertyHelper.Find(value);
                         if (refProperty == null) throw new InvalidOperationException("子属性必须是一个列表属性或者一个引用属性。");
 
                         this.EntityType = refProperty.RefEntityType;

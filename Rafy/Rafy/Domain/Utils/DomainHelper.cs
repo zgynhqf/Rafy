@@ -66,7 +66,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    var refProperty = childProperty as IRefProperty;
+                    var refProperty = RefPropertyHelper.Find(childProperty);
                     if (refProperty != null)
                     {
                         childEntityType = refProperty.RefEntityType;

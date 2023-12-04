@@ -249,7 +249,7 @@ namespace RafyUnitTest
 
                 var user2 = repo.GetById(user.Id);
                 Assert.IsTrue(!user2.HasLocalValue(TestUserExt.TestUserLogListProperty));
-                Assert.IsTrue(user2.GetProperty(TestUserExt.TestUserLogListProperty) == null);
+                Assert.IsTrue(user2.GetProperty<TestUserLogList>(TestUserExt.TestUserLogListProperty) == null);
                 Assert.IsTrue(user2.GetTestUserLogList().Count == 2);
             }
         }
@@ -364,13 +364,13 @@ namespace RafyUnitTest
             var count2 = container.GetAvailableProperties().Count;
             Assert.AreEqual(count2, count1 + 2);
 
-            Assert.AreEqual(admin.GetProperty(RuntimeNameProperty), string.Empty);
-            Assert.AreEqual(admin.GetProperty(RuntimeAgeProperty), 10);
+            Assert.AreEqual(admin.GetProperty<string>(RuntimeNameProperty), null);
+            Assert.AreEqual(admin.GetProperty<int>(RuntimeAgeProperty), 10);
 
             admin.SetProperty(RuntimeNameProperty, "Haha");
             admin.SetProperty(RuntimeAgeProperty, 12);
-            Assert.AreEqual(admin.GetProperty(RuntimeNameProperty), "Haha");
-            Assert.AreEqual(admin.GetProperty(RuntimeAgeProperty), 12);
+            Assert.AreEqual(admin.GetProperty<string>(RuntimeNameProperty), "Haha");
+            Assert.AreEqual(admin.GetProperty<int>(RuntimeAgeProperty), 12);
 
             P.UnRegister(RuntimeAgeProperty, RuntimeNameProperty);
 
@@ -759,7 +759,7 @@ namespace RafyUnitTest
         {
             using (RF.TransactionScope(UnitTestEntityRepositoryDataProvider.DbSettingName))
             {
-                var a = new A { Type = AType.Y };
+                var a = new A { Name = "a1", Type = AType.Y };
                 Save(a);
 
                 var b = new B { A = a };
@@ -788,8 +788,8 @@ namespace RafyUnitTest
                 var c = new C { B = b };
                 Save(c);
 
-                Assert.AreEqual(c.AId, b.AId);
-                Assert.AreEqual(b.AId, a1.Id);
+                Assert.AreEqual(c.AId, a1.Id);
+                Assert.AreEqual(b.ANameRef, a1.Name);
 
                 b.A = a2;
                 Save(b);
@@ -814,14 +814,14 @@ namespace RafyUnitTest
                 var c = new C { B = b };
                 Save(c);
 
-                Assert.AreEqual(c.AIdOfB, b.AId);
-                Assert.AreEqual(b.AId, a1.Id);
+                Assert.AreEqual(c.ANameRefOfB, b.ANameRef);
+                Assert.AreEqual(b.ANameRef, a1.Name);
 
                 b.A = a2;
                 Save(b);
 
                 var cInDb = RF.ResolveInstance<CRepository>().GetById(c.Id) as C;
-                Assert.AreEqual(cInDb.AIdOfB, a2.Id);
+                Assert.AreEqual(cInDb.ANameRefOfB, a2.Name);
             }
         }
 
@@ -1477,7 +1477,7 @@ namespace RafyUnitTest
 
             Assert.IsTrue(book2.IsDisabled(Book.NameProperty), "在拷贝实体的 Id 时，目标实体的禁用状态将会被设置，但是值不会拷贝。");
             book2.Disable(Book.NameProperty, false);
-            Assert.AreEqual(string.Empty, book2.Name, "此值未进行拷贝");
+            Assert.IsNull(book2.Name, "此值未进行拷贝");
         }
 
         /// <summary>
@@ -1493,7 +1493,7 @@ namespace RafyUnitTest
             book2.Clone(book1, CloneOptions.NewSingleEntity());
 
             Assert.IsTrue(!book2.IsDisabled(Book.NameProperty), "在不拷贝实体的 Id 时，目标实体的禁用状态的属性将会被忽略。");
-            Assert.AreEqual(string.Empty, book2.Name, "此值未进行拷贝");
+            Assert.IsNull(book2.Name, "此值未进行拷贝");
             Assert.AreEqual("code", book2.Code);
         }
 
@@ -1522,11 +1522,11 @@ namespace RafyUnitTest
             var user = Get<TestUser>();
 
             user.SetProperty(Entity.IdProperty, 100D);
-            var value = user.GetProperty(Entity.IdProperty);
+            var value = user.GetProperty<object>(Entity.IdProperty);
             Assert.AreEqual(value.GetType(), typeof(int));
 
             user.SetProperty(Entity.IdProperty, 100L);
-            value = user.GetProperty(Entity.IdProperty);
+            value = user.GetProperty<object>(Entity.IdProperty);
             Assert.AreEqual(value.GetType(), typeof(int));
         }
 
@@ -1537,8 +1537,8 @@ namespace RafyUnitTest
         public void MPT_RefId_CoerceType()
         {
             var model = Get<TestTreeTask>();
-            model.SetRefNullableId(TestTreeTask.TestUserIdProperty, 100L);
-            var value = model.GetProperty(TestTreeTask.TestUserIdProperty);
+            model.SetProperty(TestTreeTask.TestUserIdProperty, 100L);
+            var value = model.GetProperty<int>(TestTreeTask.TestUserIdProperty);
             Assert.AreEqual(value.GetType(), typeof(int));
         }
 
@@ -1547,13 +1547,13 @@ namespace RafyUnitTest
         {
             var model = Get<Book>();
 
-            model.SetRefNullableId(Book.BookCategoryIdProperty, null);
+            model.SetProperty(Book.BookCategoryIdProperty, null);
             var value = model.GetProperty(Book.BookCategoryIdProperty);
-            Assert.AreEqual(value, 0);
+            Assert.IsTrue(!value.HasValue);
 
-            model.SetRefId(Book.BookCategoryIdProperty, null);
+            model.SetRefKey(Book.BookCategoryIdProperty, null);
             value = model.GetProperty(Book.BookCategoryIdProperty);
-            Assert.AreEqual(value, 0);
+            Assert.IsTrue(!value.HasValue);
         }
 
         #endregion

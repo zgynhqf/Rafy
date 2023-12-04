@@ -38,15 +38,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty TestUserIdProperty =
-            P<TestUserLog>.RegisterRefId(e => e.TestUserId, ReferenceType.Parent);
+        public static readonly Property<int> TestUserIdProperty =
+            P<TestUserLog>.Register(e => e.TestUserId);
         public int TestUserId
         {
-            get { return (int)this.GetRefId(TestUserIdProperty); }
-            set { this.SetRefId(TestUserIdProperty, value); }
+            get { return (int)this.GetProperty(TestUserIdProperty); }
+            set { this.SetProperty(TestUserIdProperty, value); }
         }
         public static readonly RefEntityProperty<TestUser> TestUserProperty =
-            P<TestUserLog>.RegisterRef(e => e.TestUser, TestUserIdProperty);
+            P<TestUserLog>.RegisterRef(e => e.TestUser, TestUserIdProperty, ReferenceType.Parent);
         public TestUser TestUser
         {
             get { return this.GetRefEntity(TestUserProperty); }

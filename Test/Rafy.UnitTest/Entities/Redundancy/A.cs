@@ -40,7 +40,7 @@ namespace UT
         /// </summary>
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -50,7 +50,7 @@ namespace UT
         /// </summary>
         public AType Type
         {
-            get { return this.GetProperty(TypeProperty); }
+            get { return this.GetProperty<AType>(TypeProperty); }
             set { this.SetProperty(TypeProperty, value); }
         }
 
@@ -73,6 +73,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+            //Meta.Property(A.NameProperty).MapColumn().HasLength("200").HasIndex();
         }
     }
 

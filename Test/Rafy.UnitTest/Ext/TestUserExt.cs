@@ -23,7 +23,7 @@ namespace UT
             P<TestUser>.RegisterExtension("TestUserExt_UserCode", typeof(TestUserExt), "DefaultUserCode");
         public static string GetUserCode(TestUser entity)
         {
-            return entity.GetProperty(UserCodeProperty);
+            return entity.GetProperty<string>(UserCodeProperty);
         }
         public static void SetUserCode(TestUser entity, string value)
         {
@@ -34,7 +34,7 @@ namespace UT
             P<TestUser>.RegisterExtensionReadOnly("TestUserExt_ReadOnlyUserCode", typeof(TestUserExt), ReadOnlyUserCodeProperty_GetValue, UserCodeProperty);
         public static string GetReadOnlyUserCode(TestUser entity)
         {
-            return entity.GetProperty(ReadOnlyUserCodeProperty);
+            return entity.GetProperty<string>(ReadOnlyUserCodeProperty);
         }
         private static string ReadOnlyUserCodeProperty_GetValue(TestUser user)
         {
@@ -45,7 +45,7 @@ namespace UT
             P<TestUser>.RegisterExtensionReadOnly("TestUserExt_ReadOnlyUserCodeShadow", typeof(TestUserExt), ReadOnlyUserCodeShadow_GetValue, ReadOnlyUserCodeProperty);
         public static string GetReadOnlyUserCodeShadow(TestUser entity)
         {
-            return entity.GetProperty(ReadOnlyUserCodeShadowProperty);
+            return entity.GetProperty<string>(ReadOnlyUserCodeShadowProperty);
         }
         private static string ReadOnlyUserCodeShadow_GetValue(TestUser user)
         {
@@ -83,7 +83,7 @@ namespace UT
         /// <param name="me">要获取扩展属性值的对象。</param>
         public static string GetANameExt(this B me)
         {
-            return me.GetProperty(ANameExtProperty);
+            return me.GetProperty<string>(ANameExtProperty);
         }
 
         #endregion

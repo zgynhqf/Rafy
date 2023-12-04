@@ -20,15 +20,17 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty AIdProperty =
-            P<B>.RegisterRefId(e => e.AId, ReferenceType.Normal);
-        public int AId
+        public static readonly Property<string> ANameRefProperty = P<B>.Register(e => e.ANameRef);
+        /// <summary>
+        /// B 与 A 的关系，使用 Name 这个一般值属性来关联。
+        /// </summary>
+        public string ANameRef
         {
-            get { return this.GetRefId(AIdProperty); }
-            set { this.SetRefId(AIdProperty, value); }
+            get { return this.GetProperty<string>(ANameRefProperty); }
+            set { this.SetProperty(ANameRefProperty, value); }
         }
         public static readonly RefEntityProperty<A> AProperty =
-            P<B>.RegisterRef(e => e.A, AIdProperty);
+            P<B>.RegisterRef(e => e.A, ANameRefProperty, A.NameProperty);
         public A A
         {
             get { return this.GetRefEntity(AProperty); }
@@ -42,7 +44,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<B>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -54,14 +56,14 @@ namespace UT
             e => e.AName, new RedundantPath(AProperty, A.NameProperty));
         public string AName
         {
-            get { return this.GetProperty(ANameProperty); }
+            get { return this.GetProperty<string>(ANameProperty); }
         }
 
         public static readonly Property<AType> ATypeProperty = P<B>.RegisterRedundancy(e => e.AType,
             new RedundantPath(AProperty, A.TypeProperty));
         public AType AType
         {
-            get { return this.GetProperty(ATypeProperty); }
+            get { return this.GetProperty<AType>(ATypeProperty); }
         }
 
         #endregion
@@ -79,6 +81,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+            //Meta.Property(B.ANameRefProperty).MapColumn().IsForeignKey();
         }
     }
 }

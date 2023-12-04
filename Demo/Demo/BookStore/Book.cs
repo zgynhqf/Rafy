@@ -62,8 +62,8 @@ namespace Demo
             set { this.SetProperty(SubContentProperty, value); }
         }
 
-        public static readonly IRefIdProperty BookCategoryIdProperty =
-            P<Book>.RegisterRefId(e => e.BookCategoryId, ReferenceType.Normal);
+        public static readonly Property<int> BookCategoryIdProperty =
+            P<Book>.Register(e => e.BookCategoryId);
         public int BookCategoryId
         {
             get { return (int)this.GetRefId(BookCategoryIdProperty); }

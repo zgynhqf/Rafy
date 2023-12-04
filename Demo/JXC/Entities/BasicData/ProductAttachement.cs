@@ -20,8 +20,8 @@ namespace JXC
     [ChildEntity]
     public partial class ProductAttachement : FileAttachement
     {
-        public static readonly IRefIdProperty ProductIdProperty =
-            P<ProductAttachement>.RegisterRefId(e => e.ProductId, ReferenceType.Parent);
+        public static readonly Property<int> ProductIdProperty =
+            P<ProductAttachement>.Register(e => e.ProductId, ReferenceType.Parent);
         public int ProductId
         {
             get { return (int)this.GetRefId(ProductIdProperty); }

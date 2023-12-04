@@ -33,14 +33,14 @@ namespace Rafy.EntityObjectModel
             set { this._referenceType = value; }
         }
 
-        private string _idProperty;
+        private string _keyProperty;
         /// <summary>
         /// 引用属性的 Id 属性。
         /// </summary>
-        public string IdProperty
+        public string KeyProperty
         {
-            get { return this._idProperty; }
-            set { this._idProperty = value; }
+            get { return this._keyProperty; }
+            set { this._keyProperty = value; }
         }
 
         private string _entityProperty;
@@ -69,15 +69,15 @@ namespace Rafy.EntityObjectModel
                     if (value != null)
                     {
                         //同步 _idProperty
-                        if (string.IsNullOrWhiteSpace(_idProperty))
+                        if (string.IsNullOrWhiteSpace(_keyProperty))
                         {
                             if (!string.IsNullOrEmpty(_entityProperty))
                             {
-                                _idProperty = _entityProperty + Convention.Id;
+                                _keyProperty = _entityProperty + Convention.Id;
                             }
                             else
                             {
-                                _idProperty = value.Name + Convention.Id;
+                                _keyProperty = value.Name + Convention.Id;
                             }
                         }
                     }

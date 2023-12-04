@@ -64,7 +64,7 @@ namespace Rafy.Accounts.Controllers
             var userNameAsId = _identityMode.HasFlag(UserIdentityMode.UserName);
             if (userNameAsId && string.IsNullOrEmpty(user.UserName)) return new Result(ResultCodes.RegisterUserNameInvalid, "用户名不能为空。");
             var emailAsId = _identityMode.HasFlag(UserIdentityMode.Email);
-            if (emailAsId && !TextFormatter.ReEmail.IsMatch(user.Email)) return new Result(ResultCodes.RegisterEmailInvalid, "邮箱格式不正确。");
+            if (emailAsId && (string.IsNullOrEmpty(user.Email) || !TextFormatter.ReEmail.IsMatch(user.Email))) return new Result(ResultCodes.RegisterEmailInvalid, "邮箱格式不正确。");
             if (!userNameAsId && !emailAsId) throw new InvalidProgramException("!userNameAsId && !useEmailAsId");
 
             //验证其它属性。

@@ -37,12 +37,12 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty BookCategoryIdProperty =
-            P<Book>.RegisterRefId(e => e.BookCategoryId, ReferenceType.Normal);
+        public static readonly Property<int?> BookCategoryIdProperty =
+            P<Book>.Register(e => e.BookCategoryId);
         public int? BookCategoryId
         {
-            get { return this.GetRefNullableId(BookCategoryIdProperty); }
-            set { this.SetRefNullableId(BookCategoryIdProperty, value); }
+            get { return this.GetProperty(BookCategoryIdProperty); }
+            set { this.SetProperty(BookCategoryIdProperty, value); }
         }
         public static readonly RefEntityProperty<BookCategory> BookCategoryProperty =
             P<Book>.RegisterRef(e => e.BookCategory, BookCategoryIdProperty);
@@ -55,15 +55,14 @@ namespace UT
             set { this.SetRefEntity(BookCategoryProperty, value); }
         }
 
-        public static readonly IRefIdProperty BookLocIdProperty =
-            P<Book>.RegisterRefId(e => e.BookLocId, ReferenceType.Normal);
-        public int? BookLocId
+        public static readonly Property<string> BookLocCodeProperty = P<Book>.Register(e => e.BookLocCode);
+        public string BookLocCode
         {
-            get { return this.GetRefNullableId(BookLocIdProperty); }
-            set { this.SetRefNullableId(BookLocIdProperty, value); }
+            get { return this.GetProperty<string>(BookLocCodeProperty); }
+            set { this.SetProperty(BookLocCodeProperty, value); }
         }
         public static readonly RefEntityProperty<BookLoc> BookLocProperty =
-            P<Book>.RegisterRef(e => e.BookLoc, BookLocIdProperty);
+            P<Book>.RegisterRef(e => e.BookLoc, BookLocCodeProperty, BookLoc.CodeProperty);
         /// <summary>
         /// 书籍所在的货架
         /// </summary>
@@ -90,14 +89,14 @@ namespace UT
         public static readonly Property<string> CodeProperty = P<Book>.Register(e => e.Code);
         public string Code
         {
-            get { return this.GetProperty(CodeProperty); }
+            get { return this.GetProperty<string>(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -115,28 +114,28 @@ namespace UT
         public static readonly Property<string> AuthorProperty = P<Book>.Register(e => e.Author);
         public string Author
         {
-            get { return this.GetProperty(AuthorProperty); }
+            get { return this.GetProperty<string>(AuthorProperty); }
             set { this.SetProperty(AuthorProperty, value); }
         }
 
         public static readonly Property<double?> PriceProperty = P<Book>.Register(e => e.Price);
         public double? Price
         {
-            get { return this.GetProperty(PriceProperty); }
+            get { return this.GetProperty<double?>(PriceProperty); }
             set { this.SetProperty(PriceProperty, value); }
         }
 
         public static readonly Property<string> PublisherProperty = P<Book>.Register(e => e.Publisher);
         public string Publisher
         {
-            get { return this.GetProperty(PublisherProperty); }
+            get { return this.GetProperty<string>(PublisherProperty); }
             set { this.SetProperty(PublisherProperty, value); }
         }
 
         public static readonly Property<byte[]> BytesProperty = P<Book>.Register(e => e.Bytes);
         public byte[] Bytes
         {
-            get { return this.GetProperty(BytesProperty); }
+            get { return this.GetProperty<byte[]>(BytesProperty); }
             set { this.SetProperty(BytesProperty, value); }
         }
 
@@ -146,7 +145,7 @@ namespace UT
         /// </summary>
         public bool? IsSoldOut
         {
-            get { return this.GetProperty(IsSoldOutProperty); }
+            get { return this.GetProperty<bool?>(IsSoldOutProperty); }
             set { this.SetProperty(IsSoldOutProperty, value); }
         }
 
@@ -167,6 +166,19 @@ namespace UT
         public virtual int GetThreadPortalCount()
         {
             return DataPortalApi.ThreadPortalCount;
+        }
+
+        [RepositoryQuery]
+        public virtual BookList GetWithEager1()
+        {
+            var args = new ORMQueryArgs
+            {
+                Query = QueryFactory.Instance.Query(this),
+                LoadOptions = new LoadOptions()
+                    .LoadWith(Book.BookLocProperty)
+            };
+
+            return (BookList)this.QueryData(args);
         }
 
         [RepositoryQuery]
@@ -492,6 +504,14 @@ namespace UT
                 c.SectionList.Cast<Section>().All(s => s.SectionOwnerId != null)
                 ));
             q = q.OrderBy(b => b.Name);
+            return (BookList)this.QueryData(q);
+        }
+
+        [RepositoryQuery]
+        public virtual BookList LinqGetByBooklocName(string bookLocName)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.BookLoc.Name == bookLocName);
             return (BookList)this.QueryData(q);
         }
 

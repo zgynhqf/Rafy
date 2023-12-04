@@ -389,7 +389,7 @@ namespace Rafy.Domain
             if (this.Count > 0)
             {
                 var refProperty = this.GetRepository().EntityMeta
-                    .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefEntityProperty>();
+                    .FindParentReferenceProperty(true).ManagedProperty.CastTo<IRefProperty>();
                 this.EachNode(child =>
                 {
                     child.SetParentEntity(parent, refProperty);

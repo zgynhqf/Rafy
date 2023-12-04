@@ -179,9 +179,9 @@ namespace RafyUnitTest
             var model2 = BinarySerializer.Clone(model);
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
-            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
-            Assert.AreSame(model2, model2.ChapterList[0].GetProperty(Chapter.BookProperty));
-            Assert.AreSame(model2, model2.ChapterList[1].GetProperty(Chapter.BookProperty));
+            Assert.IsNotNull(model2.GetProperty<ChapterList>(Book.ChapterListProperty));
+            Assert.AreSame(model2, model2.ChapterList[0].GetProperty<Entity>(Chapter.BookProperty));
+            Assert.AreSame(model2, model2.ChapterList[1].GetProperty<Entity>(Chapter.BookProperty));
 
             Assert.AreEqual(2, model2.ChapterList.Count);
             Assert.AreEqual(111, model2.ChapterList[0].Id);
@@ -213,8 +213,8 @@ namespace RafyUnitTest
 
             Assert.IsTrue(model2.HasLocalValue(Book.ChapterListProperty));
             Assert.IsTrue(model2.IsChanged(Book.ChapterListProperty));
-            Assert.IsNotNull(model2.GetProperty(Book.ChapterListProperty));
-            Assert.AreEqual(2, model2.GetProperty(Book.ChapterListProperty).Count);
+            Assert.IsNotNull(model2.GetProperty<ChapterList>(Book.ChapterListProperty));
+            Assert.AreEqual(2, model2.GetProperty<ChapterList>(Book.ChapterListProperty).Count);
         }
 
         [TestMethod]
@@ -409,7 +409,7 @@ namespace RafyUnitTest
         /// 序列化及反序列化
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF()
+        public void __SrlzT_WCF()
         {
             var model = new Article
             {
@@ -430,7 +430,7 @@ namespace RafyUnitTest
         /// 属性的变更状态，需要支持序列化和反序列化。
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF_MP_ChangedStatus()
+        public void __SrlzT_WCF_MP_ChangedStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -452,7 +452,7 @@ namespace RafyUnitTest
         /// 被禁用的属性，经过序列化和反序列化后，应该还是禁用状态的。
         /// </summary>
         [TestMethod]
-        public void SrlzT_WCF_MP_DisabledStatus()
+        public void __SrlzT_WCF_MP_DisabledStatus()
         {
             var user = new TestUser();
             user.Name = "1";
@@ -466,7 +466,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_WCF_RefId()
+        public void __SrlzT_WCF_RefId()
         {
             var model = new Article
             {
@@ -481,7 +481,7 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
-        public void SrlzT_WCF_Ref()
+        public void __SrlzT_WCF_Ref()
         {
             var model = new Article
             {
@@ -501,12 +501,12 @@ namespace RafyUnitTest
             Assert.IsTrue(content.Contains("HuQingFang"));
 
             Assert.IsTrue(model2.UserId == 111);
-            Assert.IsTrue(model2.GetProperty(Article.UserProperty) != null);
+            Assert.IsTrue(model2.GetProperty<Entity>(Article.UserProperty) != null);
             Assert.IsTrue(model2.User.UserName == "HuQingFang");
         }
 
         [TestMethod]
-        public void SrlzT_WCF_List()
+        public void __SrlzT_WCF_List()
         {
             var model = new Book
             {
@@ -532,7 +532,7 @@ namespace RafyUnitTest
             Assert.IsTrue(content.Contains("<Name"));
             Assert.IsTrue(content.Contains("Chapter1"));
 
-            Assert.IsTrue(model2.GetProperty(Book.ChapterListProperty) != null);
+            Assert.IsTrue(model2.GetProperty<ChapterList>(Book.ChapterListProperty) != null);
             Assert.IsTrue(model2.ChapterList.Count == 2);
             Assert.IsTrue(model2.ChapterList[0].Id == 111);
             Assert.IsTrue(model2.ChapterList[0].Name == "Chapter1");
@@ -961,10 +961,10 @@ namespace RafyUnitTest
     @"{
   ""createdTime"": ""2000-01-01T00:00:00"",
   ""updatedTime"": ""2000-01-01T00:00:00"",
-  ""createdUser"": """",
-  ""updatedUser"": """",
+  ""createdUser"": null,
+  ""updatedUser"": null,
   ""id"": 0,
-  ""bookId"": 0,
+  ""bookId"": null,
   ""name"": ""name"",
   ""arrayValue"": null,
   ""listValue"": null,
@@ -1205,13 +1205,13 @@ namespace RafyUnitTest
 
                 var json = @"{
 ""AName"": ""b"",
-""AId"": " + a.Id + @"
+""ANameRef"": """ + a.Name + @"""
 }";
 
                 var deserializer = new AggtDeserializer();
                 var entity = deserializer.Deserialize(typeof(B), json) as B;
 
-                Assert.AreEqual(entity.AName, "a", "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
+                Assert.AreEqual("a", entity.AName, "冗余属性需要支持反序列化。同时，当反序列化的值是错的时候，应该以引用属性的值为主。");
             }
         }
 
@@ -1226,7 +1226,7 @@ namespace RafyUnitTest
                 repoA.Save(a);
 
                 var json = @"{
-""AId"": " + a.Id + @",
+""ANameRef"": """ + a.Name + @""",
 ""AName"": ""b""
 }
             ";

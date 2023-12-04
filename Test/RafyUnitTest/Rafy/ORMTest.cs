@@ -50,7 +50,7 @@ namespace RafyUnitTest
                 Assert.AreEqual("DefaultName", entity2.Name);
                 Assert.AreEqual(10, entity2.Age);
                 Assert.AreEqual(null, entity2.NotEmptyCode);
-                Assert.AreEqual(string.Empty, entity2.LoginName);
+                Assert.AreEqual(null, entity2.LoginName);
                 Assert.AreEqual(2000, entity2.AddedTime.Year);
             }
         }
@@ -373,6 +373,37 @@ namespace RafyUnitTest
                     }
                 }
                 Assert.IsTrue(DbAccesserInterceptor.ThreadDbAccessedCount == newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+            }
+        }
+
+        [TestMethod]
+        public void ORM_Query_EagerLoad_RefKeyProperty()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bookLoc1 = new BookLoc { Code = "bl1" };
+                var bookLoc2 = new BookLoc { Code = "bl2" };
+                RF.Save(bookLoc1);
+                RF.Save(bookLoc2);
+
+                RF.Save(new Book { Name = "b1", BookLoc = bookLoc1 });
+                RF.Save(new Book { Name = "b2", BookLoc = bookLoc2 });
+                RF.Save(new Book { Name = "b3", });
+
+                //查询的数据访问测试。
+                var oldCount = DbAccesserInterceptor.ThreadDbAccessedCount;
+                var all = repo.GetWithEager1();
+                var newCount = DbAccesserInterceptor.ThreadDbAccessedCount;
+                Assert.AreEqual(2, newCount - oldCount, "应该只进行了指定次的数据库查询。");
+
+                //无懒加载测试。
+                foreach (Book b in all)
+                {
+                    var bl = b.BookLoc;
+                    Assert.IsTrue(bl != null || b.Name == "b3");
+                }
+                Assert.AreEqual(DbAccesserInterceptor.ThreadDbAccessedCount, newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
             }
         }
 
@@ -1350,6 +1381,38 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ORM_LinqQuery_WhereRef_ValueProperty()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bookLock1 = new BookLoc { Code = "bl1", Name = "bookLock1" };
+                RF.Save(bookLock1);
+                var bookLock2 = new BookLoc { Code = "bl2", Name = "bookLock2" };
+                RF.Save(bookLock2);
+
+                repo.Save(new Book
+                {
+                    Name = "1",
+                    BookLoc = bookLock1
+                });
+                repo.Save(new Book
+                {
+                    Name = "2",
+                    BookLoc = bookLock2
+                });
+
+                var list = repo.LinqGetByBooklocName("bookLock1");
+                Assert.IsTrue(list.Count == 1);
+                Assert.AreEqual("1", list[0].Name);
+
+                list = repo.LinqGetByBooklocName("bookLock2");
+                Assert.IsTrue(list.Count == 1);
+                Assert.AreEqual("2", list[0].Name);
+            }
+        }
+
+        [TestMethod]
         public void ORM_LinqQuery_WhereRefAndWhereRef()
         {
             var repo = RF.ResolveInstance<SectionRepository>();
@@ -1431,7 +1494,6 @@ namespace RafyUnitTest
                 repo.Save(new Favorate { Name = "f1", Book = book1 });
                 repo.Save(new Favorate { Name = "f2", Book = book2 });
                 repo.Save(new Favorate { Name = "f3" });
-
 
                 var list = repo.GetByBookName(book1.Name);
                 Assert.IsTrue(list.Count == 1);
@@ -6681,7 +6743,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', @p0, NULL, '', @p1, @p2)",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocCode,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', @p0, NULL, '', @p1, @p2)",
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p1", now),
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p2", now)
@@ -6696,7 +6758,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.RawAccesser.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', :p0, NULL, '', :p1, :p2, :p3)",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocCode,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ('', NULL, NULL, '', '', :p0, NULL, '', :p1, :p2, :p3)",
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p0", i),
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p1", i),
                                 dba.RawAccesser.ParameterFactory.CreateParameter("p2", now),
@@ -6743,7 +6805,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9})",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocCode,Code,Content,Name,Price,Publisher,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9})",
                                 string.Empty,
                                 null,
                                 null,
@@ -6762,7 +6824,7 @@ ORDER BY Article.Code ASC");
                         for (int i = 0; i < Config_LineCount; i++)
                         {
                             dba.ExecuteText(
-                                "INSERT INTO Book (Author,BookCategoryId,BookLocId,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10})",
+                                "INSERT INTO Book (Author,BookCategoryId,BookLocCode,Code,Content,Name,Price,Publisher,Id,CreatedTime,UpdatedTime) VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10})",
                                 string.Empty,
                                 null,
                                 null,

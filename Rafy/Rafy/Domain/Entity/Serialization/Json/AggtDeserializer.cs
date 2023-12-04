@@ -192,7 +192,7 @@ namespace Rafy.Domain.Serialization.Json
                     {
                         DeserializeList(entity, mp as IListProperty, jValue as JArray);
                     }
-                    else if (mp is IRefEntityProperty)
+                    else if (mp is IRefProperty)
                     {
                         //一般引用属性不支持反序列化。
                     }

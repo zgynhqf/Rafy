@@ -18,12 +18,12 @@ namespace UT
     [RootEntity]
     public partial class D : UnitTestEntity
     {
-        public static readonly IRefIdProperty CIdProperty =
-            P<D>.RegisterRefId(e => e.CId, ReferenceType.Normal);
+        public static readonly Property<int> CIdProperty =
+            P<D>.Register(e => e.CId);
         public int CId
         {
-            get { return this.GetRefId(CIdProperty); }
-            set { this.SetRefId(CIdProperty, value); }
+            get { return this.GetProperty(CIdProperty); }
+            set { this.SetProperty(CIdProperty, value); }
         }
         public static readonly RefEntityProperty<C> CProperty =
             P<D>.RegisterRef(e => e.C, CIdProperty);
@@ -37,7 +37,7 @@ namespace UT
             e => e.AName, new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string AName
         {
-            get { return this.GetProperty(ANameProperty); }
+            get { return this.GetProperty<string>(ANameProperty); }
         }
     }
 

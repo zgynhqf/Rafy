@@ -23,19 +23,19 @@ namespace VSTemplates.Wizards
 {
     public class ItemCodeTemplate
     {
-        private static string DomainEntityCodeTemplate = 
+        private static string DomainEntityCodeTemplate =
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntity.DomainEntity.cs");
 
-        private static string DomainEntityAutoCodeTemplate = 
+        private static string DomainEntityAutoCodeTemplate =
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntity.DomainEntity.g.cs");
 
-        private static string DomainEntityRepositoryCodeTemplate = 
+        private static string DomainEntityRepositoryCodeTemplate =
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntityRepository.DomainEntityRepository.cs");
 
-        private static string DomainEntityRepositoryAutoCodeTemplate = 
+        private static string DomainEntityRepositoryAutoCodeTemplate =
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntityRepository.DomainEntityRepository.g.cs");
 
-        private static string DomainEntityRepositoryAutoCodeTemplateCore = 
+        private static string DomainEntityRepositoryAutoCodeTemplateCore =
             Helper.GetResourceContent("RafySDK.Templates.Items.DomainEntityRepository.DomainEntityRepositoryTemplate.cs");
 
         /// <summary>
@@ -118,51 +118,30 @@ namespace VSTemplates.Wizards
         {
             if (!isRequired && keyType == "string") { isRequired = true; }
 
-            string template = null;
-            if (isRequired)
-            {
-                template = @"
-        public static readonly IRefIdProperty $RefPropertyName$IdProperty =
-            P<$ClassName$>.RegisterRefId(e => e.$RefPropertyName$Id, ReferenceType.$ReferenceType$);
-        public $Key$ $RefPropertyName$Id
+            var template = @"
+        public static readonly Property<$KeyType$> $RefPropertyName$IdProperty = P<$ClassName$>.Register(e => e.$RefPropertyName$Id);
+        public $KeyType$ $RefPropertyName$Id
         {
-            get { return ($Key$)this.GetRefId($RefPropertyName$IdProperty); }
-            set { this.SetRefId($RefPropertyName$IdProperty, value); }
+            get { return this.GetProperty($RefPropertyName$IdProperty); }
+            set { this.SetProperty($RefPropertyName$IdProperty, value); }
         }
         public static readonly RefEntityProperty<$RefEntityType$> $RefPropertyName$Property =
-            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty);
+            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty$ReferenceType$$Nullable$);
+        /// <summary>
+        /// $end$
+        /// </summary>
         public $RefEntityType$ $RefPropertyName$
         {
             get { return this.GetRefEntity($RefPropertyName$Property); }
             set { this.SetRefEntity($RefPropertyName$Property, value); }
         }
 ";
-            }
-            else
-            {
-                template = @"
-        public static readonly IRefIdProperty $RefPropertyName$IdProperty =
-            P<$ClassName$>.RegisterRefId(e => e.$RefPropertyName$Id, ReferenceType.$ReferenceType$);
-        public $Key$? $RefPropertyName$Id
-        {
-            get { return ($Key$?)this.GetRefNullableId($RefPropertyName$IdProperty); }
-            set { this.SetRefNullableId($RefPropertyName$IdProperty, value); }
-        }
-        public static readonly RefEntityProperty<$RefEntityType$> $RefPropertyName$Property =
-            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty);
-        public $RefEntityType$ $RefPropertyName$
-        {
-            get { return this.GetRefEntity($RefPropertyName$Property); }
-            set { this.SetRefEntity($RefPropertyName$Property, value); }
-        }
-";
-            }
-
             var propertyCode = template.Replace("$ClassName$", domainEntityName)
                 .Replace("$RefEntityType$", refEntityName)
                 .Replace("$RefPropertyName$", refPropertyName)
-                .Replace("$Key$", keyType)
-                .Replace("$ReferenceType$", isParent ? "Parent" : "Normal");
+                .Replace("$KeyType$", keyType)
+                .Replace("$ReferenceType$", isParent ? ", ReferenceType.Parent" : "")
+                .Replace("$Nullable$", isRequired ? "" : ", nullable: true");
 
             return propertyCode;
         }

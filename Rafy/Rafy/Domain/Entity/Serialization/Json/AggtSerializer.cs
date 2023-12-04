@@ -289,13 +289,12 @@ namespace Rafy.Domain.Serialization.Json
                 case PropertyCategory.Normal:
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
-                case PropertyCategory.ReferenceId:
                     this.WritePropertyName(property.Name);
                     this.SerializeValue(value);
                     break;
                 //ReferenceId 也都全部直接输出。
                 //case PropertyCategory.ReferenceId:
-                //    var refProperty = property as IRefProperty;
+                //    var refProperty = RefPropertyHelper.Find(property);
                 //    switch (refProperty.ReferenceType)
                 //    {
                 //        case ReferenceType.Child:
@@ -346,20 +345,7 @@ namespace Rafy.Domain.Serialization.Json
             }
             else
             {
-                if (value != null && value.GetType().IsEnum)
-                {
-                    switch (this.EnumSerializationMode)
-                    {
-                        case EnumSerializationMode.String:
-                            value = value.ToString();
-                            break;
-                        case EnumSerializationMode.EnumLabel:
-                            value = EnumViewModel.EnumToLabel((Enum)value) ?? value.ToString();
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                value = EnumSerializer.ConvertEnumValue(value, this.EnumSerializationMode);
                 _writer.WriteValue(value);
             }
         }

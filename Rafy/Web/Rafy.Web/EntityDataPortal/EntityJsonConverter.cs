@@ -71,19 +71,18 @@ namespace Rafy.Web.EntityDataPortal
                     if (!isTree && (mp == Entity.TreeIndexProperty || mp == Entity.TreePIdProperty)) { continue; }
 
                     //引用属性
-                    if (mp is IRefEntityProperty)
+                    if (mp is IRefProperty refMp)
                     {
-                        var refMp = mp as IRefProperty;
-                        var id = entity.GetRefNullableId(refMp.RefIdProperty);
-                        if (id != null)
+                        var key = entity.GetRefNullableKey(refMp);
+                        if (key != null)
                         {
-                            entityJson.SetProperty(refMp.RefIdProperty.Name, id);
+                            entityJson.SetProperty(refMp.RefKeyProperty.Name, key);
 
                             //同时写入引用属性的视图属性，如 BookCategoryId_Display
                             var titleProperty = propertyVM.SelectionViewMeta?.RefTypeDefaultView?.TitleProperty;
                             if (titleProperty != null)
                             {
-                                var lazyRefEntity = entity.GetRefEntity(refMp.RefEntityProperty);
+                                var lazyRefEntity = entity.GetRefEntity(refMp);
                                 var titleMp = titleProperty.PropertyMeta.ManagedProperty;
 
                                 object value;

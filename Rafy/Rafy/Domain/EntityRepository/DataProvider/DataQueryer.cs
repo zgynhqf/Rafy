@@ -215,11 +215,11 @@ namespace Rafy.Domain
                     //如果只有一个排序时，允许使用聚合父属性进行排序。
                     if (c == 1)
                     {
-                        var parentProperty = _repository.EntityMeta.FindParentReferenceProperty()?.ManagedProperty as IRefProperty;
+                        var parentProperty = RefPropertyHelper.Find(_repository.EntityMeta.FindParentReferenceProperty()?.ManagedProperty);
                         if (parentProperty != null)
                         {
                             var property = query.OrderBy[0].Column.Property;
-                            var pProperty = parentProperty.RefIdProperty;
+                            var pProperty = parentProperty.RefKeyProperty;
                             error = property != pProperty;
                         }
                     }
@@ -438,7 +438,7 @@ namespace Rafy.Domain
                     }
                     else
                     {
-                        var refProperty = mp as IRefProperty;
+                        var refProperty = RefPropertyHelper.Find(mp);
                         if (refProperty != null)
                         {
                             this.EagerLoadRef(list, refProperty, eagerCache);
@@ -500,8 +500,8 @@ namespace Rafy.Domain
 
                 #region 使用一次主循环就把所有的子实体都加载到父实体中。
                 //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
-                var parentProperty = targetRepo.EntityMeta.FindParentReferenceProperty(true).ManagedProperty as IRefProperty;
-                var parentIdProperty = parentProperty.RefIdProperty;
+                var parentProperty = RefPropertyHelper.Find(targetRepo.EntityMeta.FindParentReferenceProperty(true).ManagedProperty);
+                var parentKeyProperty = parentProperty.RefKeyProperty;
 
                 //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
                 int pIndex = 0, pLength = sortedList.Count;
@@ -510,7 +510,7 @@ namespace Rafy.Domain
                 for (int i = 0, c = allChildren.Count; i < c; i++)
                 {
                     var child = allChildren[i];
-                    var childPId = child.GetRefId(parentIdProperty);
+                    var childPId = child.GetProperty(parentKeyProperty);
 
                     //必须把该子对象处理完成后，才能跳出下面的循环。
                     while (true)
@@ -564,24 +564,31 @@ namespace Rafy.Domain
         /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
         private void EagerLoadRef(EntityList list, IRefProperty refProperty, List<ConcreteProperty> loadOptionsProperties)
         {
-            var refIdProperty = refProperty.RefIdProperty;
             //查询一个大的实体集合，包含列表中所有实体所需要的所有引用实体。
-            var idList = new List<object>(10);
+            var keyProvider = refProperty.KeyProvider;
+            var keyList = new List<object>(10);
             list.EachNode(e =>
             {
-                var refId = e.GetRefNullableId(refIdProperty);
-                if (refId != null && idList.All(id => !id.Equals(refId)))
+                var refKey = e.GetRefNullableKey(refProperty);
+                if (keyProvider.IsAvailable(refKey) && keyList.All(key => !key.Equals(refKey)))
                 {
-                    idList.Add(refId);
+                    keyList.Add(refKey);
                 }
                 return false;
             });
-            if (idList.Count > 0)
+            if (keyList.Count > 0)
             {
+                var keyPropertyOfRefEntity = refProperty.KeyPropertyOfRefEntity;
+
                 #region 加载所有的引用实体。
 
-                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType, true);
-                var refList = targetRepo.GetByIdList(idList.ToArray());
+                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity((Type)refProperty.RefEntityType, true);
+                var refList = keyPropertyOfRefEntity == Entity.IdProperty ?
+                    targetRepo.GetByIdList(keyList.ToArray()) :
+                    targetRepo.GetBy(new CommonQueryCriteria
+                    {
+                        { keyPropertyOfRefEntity, PropertyOperator.In, keyList }
+                    });
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(refList, loadOptionsProperties);
@@ -601,14 +608,14 @@ namespace Rafy.Domain
                         tmp.Add(p);
                         return false;
                     });
-                    sortedList = tmp.OrderBy(e => e.GetRefNullableId(refIdProperty)).ToList();
+                    sortedList = tmp.OrderBy((Func<Entity, object>)(e => e.GetRefNullableKey((IManagedProperty)refProperty))).ToList();
                 }
                 else
                 {
-                    sortedList = list.OrderBy(e => e.GetRefNullableId(refIdProperty)).ToList();
+                    sortedList = list.OrderBy((Func<Entity, object>)(e => e.GetRefNullableKey((IManagedProperty)refProperty))).ToList();
                 }
 
-                var sortedRefList = refList.OrderBy(e => e.Id).ToList();
+                var sortedRefList = refList.OrderBy(e => e.GetProperty(keyPropertyOfRefEntity)).ToList();
 
                 #endregion
 
@@ -616,26 +623,39 @@ namespace Rafy.Domain
                 //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
 
                 //把大的实体集合，根据 Id，设置到每一个实体上。
-                var refEntityProperty = refProperty.RefEntityProperty;
-                var needSerialize = refEntityProperty.ReferenceType == ReferenceType.Parent;
+                var needSerialize = refProperty.ReferenceType == ReferenceType.Parent;
                 int refListIndex = 0, refListCount = sortedRefList.Count;
                 var refEntity = sortedRefList[refListIndex];
                 for (int i = 0, c = sortedList.Count; i < c; i++)
                 {
                     var entity = sortedList[i];
 
-                    var refId = entity.GetRefNullableId(refIdProperty);
-                    if (refId != null)
+                    var refKey = entity.GetRefNullableKey((IManagedProperty)refProperty);
+                    if (keyProvider.IsAvailable(refKey))
                     {
                         //必须把该对象处理完成后，才能跳出下面的循环。
                         while (true)
                         {
-                            if (object.Equals(refId, refEntity.Id))
+                            if (object.Equals(refKey, refEntity.GetProperty(keyPropertyOfRefEntity)))
                             {
+
+/* Unmerged change from project 'Rafy (netstandard2.0)'
+Before:
                                 entity.LoadProperty(refEntityProperty, refEntity);
+After:
+                                entity.LoadProperty(refProperty, refEntity);
+*/
+                                entity.LoadProperty((IManagedProperty)refProperty, (object)refEntity);
                                 if (needSerialize)
                                 {
+
+/* Unmerged change from project 'Rafy (netstandard2.0)'
+Before:
                                     entity.SetSerializable(refEntityProperty, true);
+After:
+                                    entity.SetSerializable(refProperty, true);
+*/
+                                    entity.SetSerializable((IManagedProperty)refProperty, true);
                                 }
                                 break;
                             }

@@ -18,8 +18,8 @@ namespace JXC
     [ConditionQueryType(typeof(TimeSpanCriteria))]
     public partial class OrderStorageInBill : StorageInBill
     {
-        public static readonly IRefIdProperty OrderIdProperty =
-            P<OrderStorageInBill>.RegisterRefId(e => e.OrderId, ReferenceType.Normal);
+        public static readonly Property<int> OrderIdProperty =
+            P<OrderStorageInBill>.Register(e => e.OrderId);
         public int OrderId
         {
             get { return (int)this.GetRefId(OrderIdProperty); }

@@ -53,18 +53,18 @@ namespace Rafy.Domain
         /// <summary>
         /// 在属性变更时，如果该属性在某个冗余路径中，则应该使用冗余更新策略。
         /// </summary>
-        /// <param name="property">变更的属性.</param>
+        /// <param name="property">变更的属性。</param>
         private void NotifyIfInRedundancyPath(IProperty property)
         {
             if (property.IsInRedundantPath)
             {
-                var refProperty = property as IRefIdProperty;
+                var refProperty = RefPropertyHelper.Find(property);
                 if (refProperty != null)
                 {
                     foreach (var path in property.InRedundantPathes)
                     {
                         //如果该引用属性是首位引用属性，并且冗余属性就是声明在这个对象上的，则直接计算冗余值，更新对象的值。
-                        if (path.RefPathes[0].Property == refProperty)
+                        if (path.RefPathes[0].Property == refProperty.RefKeyProperty)
                         {
                             //在继承实体的情况下，引用属性声明在父类，而冗余属性声明在子类B中时，子类A中则有引用属性而无冗余属性。
                             if (path.Redundancy.Owner.IsInstanceOfType(this))
@@ -107,14 +107,14 @@ namespace Rafy.Domain
         /// 如果没有指定此属性，则表示从第一个开始。
         /// </param>
         /// <returns></returns>
-        internal object GetRedundancyValue(RedundantPath path, IRefIdProperty from = null)
+        internal object GetRedundancyValue(RedundantPath path, IRefProperty from = null)
         {
             Entity refEntity = this;
             foreach (var refP in path.RefPathes)
             {
-                if (from != null && refP.Property != from) continue;
+                if (from != null && refP.Property != from.RefKeyProperty) continue;
 
-                refEntity = refEntity.GetRefEntity((refP.Property as IRefProperty).RefEntityProperty);
+                refEntity = refEntity.GetRefEntity(RefPropertyHelper.Find(refP.Property));
                 if (refEntity == null) break;
             }
 

@@ -20,15 +20,15 @@ namespace UT
     [RootEntity, Label("单元测试 - 任务")]
     public partial class TestTreeTask : UnitTestEntity
     {
-        public static readonly IRefIdProperty TestUserIdProperty =
-            P<TestTreeTask>.RegisterRefId(e => e.TestUserId, ReferenceType.Parent);
+        public static readonly Property<int> TestUserIdProperty =
+            P<TestTreeTask>.Register(e => e.TestUserId);
         public int TestUserId
         {
-            get { return this.GetRefId(TestUserIdProperty); }
-            set { this.SetRefId(TestUserIdProperty, value); }
+            get { return this.GetProperty(TestUserIdProperty); }
+            set { this.SetProperty(TestUserIdProperty, value); }
         }
         public static readonly RefEntityProperty<TestUser> TestUserProperty =
-            P<TestTreeTask>.RegisterRef(e => e.TestUser, TestUserIdProperty);
+            P<TestTreeTask>.RegisterRef(e => e.TestUser, TestUserIdProperty, ReferenceType.Parent);
         public TestUser TestUser
         {
             get { return this.GetRefEntity(TestUserProperty); }
@@ -38,7 +38,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<TestTreeTask>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -47,7 +47,7 @@ namespace UT
         public static Property<int> AllTimeProperty = P<TestTreeTask>.Register(e => e.AllTime, (o, e) => (o as TestTreeTask).OnAllTimeChanged(e));
         public int AllTime
         {
-            get { return this.GetProperty(AllTimeProperty); }
+            get { return this.GetProperty<int>(AllTimeProperty); }
             set { this.SetProperty(AllTimeProperty, value); }
         }
         protected virtual void OnAllTimeChanged(ManagedPropertyChangedEventArgs e)
@@ -84,7 +84,7 @@ namespace UT
         public static Property<int> AllTimeByAutoCollectProperty = P<TestTreeTask>.Register(e => e.AllTimeByAutoCollect, (o, e) => (o as TestTreeTask).OnAllTimeByAutoCollectChanged(e));
         public int AllTimeByAutoCollect
         {
-            get { return this.GetProperty(AllTimeByAutoCollectProperty); }
+            get { return this.GetProperty<int>(AllTimeByAutoCollectProperty); }
             set { this.SetProperty(AllTimeByAutoCollectProperty, value); }
         }
         protected virtual void OnAllTimeByAutoCollectChanged(ManagedPropertyChangedEventArgs e)
@@ -97,7 +97,7 @@ namespace UT
         public static readonly Property<string> XmlContentProperty = P<TestTreeTask>.Register(e => e.XmlContent);
         public string XmlContent
         {
-            get { return this.GetProperty(XmlContentProperty); }
+            get { return this.GetProperty<string>(XmlContentProperty); }
             set { this.SetProperty(XmlContentProperty, value); }
         }
     }

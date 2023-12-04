@@ -30,10 +30,6 @@ namespace Rafy.Domain
         /// <summary>
         /// 引用属性
         /// </summary>
-        ReferenceId,
-        /// <summary>
-        /// 引用属性
-        /// </summary>
         ReferenceEntity,
         /// <summary>
         /// 列表属性

@@ -37,11 +37,10 @@ namespace Rafy.Domain
         /// <summary>
         /// 获取一个用于表示空引用的 Id 值。
         /// 
-        /// 值类型返回空值：
-        /// int、long: 0
-        /// Guid: Guid.Empty
-        /// 引用类型返回 null
-        /// String: null
+        /// 值类型返回空值： <br/>
+        /// int、long: 0 <br/>
+        /// Guid: Guid.Empty <br/>
+        /// String 及其它引用类型：返回 null <br/>
         /// </summary>
         /// <returns></returns>
         object GetEmptyId();

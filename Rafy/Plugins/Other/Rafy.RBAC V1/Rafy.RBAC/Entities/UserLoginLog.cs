@@ -36,8 +36,8 @@ namespace Rafy.RBAC.Old
     [RootEntity]
     public partial class UserLoginLog : IntEntity
     {
-        public static readonly IRefIdProperty UserIdProperty =
-            P<UserLoginLog>.RegisterRefId(e => e.UserId, ReferenceType.Normal);
+        public static readonly Property<int> UserIdProperty =
+            P<UserLoginLog>.Register(e => e.UserId);
         public int UserId
         {
             get { return (int)this.GetRefId(UserIdProperty); }

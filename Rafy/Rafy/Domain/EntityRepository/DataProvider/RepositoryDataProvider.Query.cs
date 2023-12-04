@@ -71,6 +71,27 @@ namespace Rafy.Domain
         }
 
         /// <summary>
+        /// 子类可以重写这个方法，用于实现 GetByKey 的数据层查询逻辑。
+        /// </summary>
+        /// <param name="keyProperty">The unique identifier.</param>
+        /// <param name="key">The unique identifier.</param>
+        /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
+        /// <returns></returns>
+        public virtual Entity GetByKey(string keyProperty, object key, LoadOptions loadOptions)
+        {
+            var allProperties = _repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
+            var mp = allProperties.Find(keyProperty);
+
+            var table = f.Table(_repository);
+            var q = f.Query(
+                table,
+                where: f.Constraint(table.Column(mp), key)
+            );
+
+            return (Entity)this.QueryData(q, null, loadOptions, false);
+        }
+
+        /// <summary>
         /// 子类重写此方法，来实现自己的 GetByIdList 方法的数据层代码。
         /// </summary>
         /// <param name="idList"></param>
@@ -97,7 +118,7 @@ namespace Rafy.Domain
         public virtual object GetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
-            var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
+            var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
 
             var table = f.Table(_repository);
             var q = f.Query(
@@ -120,7 +141,7 @@ namespace Rafy.Domain
         public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
-            var mp = (parentProperty.ManagedProperty as IRefEntityProperty).RefIdProperty;
+            var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
 
             var table = f.Table(_repository);
             var parentColumn = table.Column(mp);
@@ -363,9 +384,9 @@ namespace Rafy.Domain
                             var mp = container.Find(property, true);
                             if (mp != null)
                             {
-                                if (mp is IRefEntityProperty)
+                                if (mp is IRefProperty)
                                 {
-                                    var refProperty = mp as IRefEntityProperty;
+                                    var refProperty = mp as IRefProperty;
                                     loadOptions.LoadWith(refProperty);
                                     nextEntityType = refProperty.RefEntityType;
                                 }
@@ -386,9 +407,9 @@ namespace Rafy.Domain
                             {
                                 loadOptions.LoadWith(mp as IListProperty);
                             }
-                            else if (mp is IRefEntityProperty)
+                            else if (mp is IRefProperty)
                             {
-                                loadOptions.LoadWith(mp as IRefEntityProperty);
+                                loadOptions.LoadWith(mp as IRefProperty);
                             }
                         }
                         else if (expand == EntityConvention.TreeChildrenPropertyName)

@@ -364,6 +364,27 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void MongoT_Query_SearchByEnumProperty()
+        {
+            if (!MongoDbEnabled) return;
+
+            var repo = RF.ResolveInstance<StockCombinationRepository>();
+            try
+            {
+                repo.Save(new StockCombination { Code = "101", Type = StockCombinationType.A });
+                repo.Save(new StockCombination { Code = "102", Type = StockCombinationType.B });
+                repo.Save(new StockCombination { Code = "103", Type = StockCombinationType.B });
+
+                Assert.AreEqual(1, SearchBy(repo, new PropertyMatch(StockCombination.TypeProperty, PropertyOperator.Equal, StockCombinationType.A)).Count);
+                Assert.AreEqual(2, SearchBy(repo, new PropertyMatch(StockCombination.TypeProperty, PropertyOperator.Equal, StockCombinationType.B)).Count);
+            }
+            finally
+            {
+                this.DeleteAllDatas();
+            }
+        }
+
+        [TestMethod]
         public void MongoT_SearchByMultipleProperties()
         {
             if (!MongoDbEnabled) return;

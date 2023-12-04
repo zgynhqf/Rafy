@@ -84,7 +84,7 @@ namespace Rafy.Domain.ORM.Linq
         /// 关联操作的最后一个引用属性。
         /// 用于在访问 A.B.C.Name 时记录 C；在访问完成后，值回归到 null。
         /// </summary>
-        private IRefEntityProperty _lastJoinRefResult;
+        private IRefProperty _lastJoinRefResult;
         private ITableSource _lastJoinTable;
 
         /// <summary>
@@ -125,15 +125,15 @@ namespace Rafy.Domain.ORM.Linq
             //查询托管属性
             var mp = EntityLinqQueryBuilder.FindProperty(ownerRepo, clrProperty);
             if (mp == null) throw EntityLinqQueryBuilder.OperationNotSupported("Linq 查询的属性必须是一个托管属性。");
-            if (mp is IRefEntityProperty)
+            if (mp is IRefProperty)
             {
                 //如果是引用属性，说明需要使用关联查询。
-                var refProperty = mp as IRefEntityProperty;
+                var refProperty = mp as IRefProperty;
                 var refTable = f.FindOrCreateJoinTable(_query, ownerTable, refProperty);
 
                 if (refProperty.Nullable)
                 {
-                    var column = ownerTable.Column(refProperty.RefIdProperty);
+                    var column = ownerTable.Column(refProperty.RefKeyProperty);
                     NullableRefConstraint = _reverseConstraint ?
                         f.Or(NullableRefConstraint, column.Equal(null as object)) :
                         f.And(NullableRefConstraint, column.NotEqual(null as object));

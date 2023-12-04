@@ -42,29 +42,18 @@ namespace Rafy.ManagedProperty
         bool Nullable { get; }
 
         /// <summary>
-        /// 返回对应的引用 Id 属性。
-        /// </summary>
-        IRefIdProperty RefIdProperty { get; }
-
-        /// <summary>
-        /// 返回对应的引用实体属性。
-        /// </summary>
-        IRefEntityProperty RefEntityProperty { get; }
-    }
-
-    /// <summary>
-    /// 引用实体属性的静态属性 Id 标记
-    /// </summary>
-    public interface IRefIdProperty : IRefProperty
-    {
-        /// <summary>
         /// 引用的实体的主键的算法程序。
         /// </summary>
         IKeyProvider KeyProvider { get; }
-    }
 
-    /// <summary>
-    /// 引用实体属性的静态属性实体标记
-    /// </summary>
-    public interface IRefEntityProperty : IRefProperty { }
+        /// <summary>
+        /// 返回对应的引用键属性。
+        /// </summary>
+        IManagedProperty RefKeyProperty { get; }
+
+        /// <summary>
+        /// 引用实体的键对应的托管属性。
+        /// </summary>
+        IManagedProperty KeyPropertyOfRefEntity { get; }
+    }
 }

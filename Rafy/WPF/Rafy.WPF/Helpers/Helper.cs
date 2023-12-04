@@ -110,13 +110,12 @@ namespace Rafy.WPF
             var selectedValuePath = rvi.SelectedValuePath ?? Entity.IdProperty;
 
             //如果是一个引用属性，则返回引用属性的 Id
-            var refProperty = selectedValuePath as IRefProperty;
+            var refProperty = RefPropertyHelper.Find(selectedValuePath);
             if (refProperty != null)
             {
-                var meta = refProperty.GetMeta(entity);
                 return refProperty.Nullable ?
-                    entity.GetRefNullableId(refProperty.RefIdProperty) :
-                    entity.GetRefId(refProperty.RefIdProperty);
+                    entity.GetRefNullableKey(refProperty) :
+                    entity.GetRefKey(refProperty);
             }
 
             return entity.GetProperty(selectedValuePath);

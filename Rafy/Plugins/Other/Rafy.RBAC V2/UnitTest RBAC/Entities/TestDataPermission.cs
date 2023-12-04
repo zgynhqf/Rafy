@@ -28,8 +28,8 @@ namespace Rafy.UnitTest
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty GroupIdProperty =
-     P<TestDataPermission>.RegisterRefId(e => e.GroupId, ReferenceType.Parent);
+        public static readonly Property<int> GroupIdProperty =
+     P<TestDataPermission>.Register(e => e.GroupId, ReferenceType.Parent);
         /// <summary>
         /// 组的主键
         /// </summary>

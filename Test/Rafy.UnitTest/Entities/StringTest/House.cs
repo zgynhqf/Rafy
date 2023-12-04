@@ -38,12 +38,12 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty LesseeIdProperty =
-            P<House>.RegisterRefId(e => e.LesseeId, ReferenceType.Normal);
+        public static readonly Property<long?> LesseeIdProperty =
+            P<House>.Register(e => e.LesseeId);
         public long? LesseeId
         {
-            get { return (long?)this.GetRefNullableId(LesseeIdProperty); }
-            set { this.SetRefNullableId(LesseeIdProperty, value); }
+            get { return this.GetProperty(LesseeIdProperty); }
+            set { this.SetProperty(LesseeIdProperty, value); }
         }
         public static readonly RefEntityProperty<Lessee> LesseeProperty =
             P<House>.RegisterRef(e => e.Lessee, LesseeIdProperty);

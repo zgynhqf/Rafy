@@ -361,7 +361,7 @@ namespace RafyUnitTest
         /// 如果一个根节点变为非根节点，那么它应该从 List 中移除，这时保存时，该节点不应该被删除。
         /// </summary>
         [TestMethod]
-        public void __TET_Save_LevelDownRoot()
+        public void TET_Save_LevelDownRoot()
         {
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -568,7 +568,7 @@ namespace RafyUnitTest
         /// B 是 A 的子节点，先移动 A 使其 TreeIndex 变更，然后升级 B，再删除 A，最后保存。
         /// </summary>
         [TestMethod]
-        public void __TET_Save_Combine_MoveAndLevelUpAndDelete()
+        public void TET_Save_Combine_MoveAndLevelUpAndDelete()
         {
             var repo = RF.ResolveInstance<FolderRepository>();
             using (RF.TransactionScope(repo))
@@ -967,7 +967,7 @@ namespace RafyUnitTest
         /// 如果一个根节点变为非根节点，那么它应该从 List 中移除。
         /// </summary>
         [TestMethod]
-        public void __TET_Struc_Relation_RemoveFromListIfNotRoot()
+        public void TET_Struc_Relation_RemoveFromListIfNotRoot()
         {
             var list = new FolderList
             {
@@ -1693,7 +1693,7 @@ namespace RafyUnitTest
             list.Add(new Folder());
 
             Assert.AreEqual(list[0].TreeIndex, "001.");
-            Assert.AreEqual(list[1].TreeIndex, string.Empty);
+            Assert.AreEqual(list[1].TreeIndex, null);
         }
 
         private static void UpdateTreeIndex(object id, string value)
@@ -2467,7 +2467,7 @@ namespace RafyUnitTest
                 repo.Save(user);
 
                 var newUser = repo.GetWithTasks(user.Id);
-                Assert.IsTrue(newUser.GetProperty(TestUser.TestTreeTaskListProperty) != null);
+                Assert.IsTrue(newUser.GetProperty<TestTreeTaskList>(TestUser.TestTreeTaskListProperty) != null);
                 var tasks = newUser.TestTreeTaskList;
 
                 Assert.AreEqual(tasks.Count, 1);

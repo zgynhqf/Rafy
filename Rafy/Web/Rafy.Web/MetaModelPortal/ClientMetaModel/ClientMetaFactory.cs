@@ -110,7 +110,7 @@ namespace Rafy.Web.ClientMetaModel
                     if (groupBy != null)
                     {
                         var n = groupBy.Name;
-                        if (groupBy.PropertyMeta.ManagedProperty is IRefEntityProperty refP)
+                        if (groupBy.PropertyMeta.ManagedProperty is IRefProperty refP)
                         {
                             n = EntityModelGenerator.DisplayRefProperty(refP);
                         }
@@ -153,7 +153,7 @@ namespace Rafy.Web.ClientMetaModel
                     }
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refProperty)
+                    if (property.PropertyMeta.ManagedProperty is IRefProperty refProperty)
                     {
                         column.dataIndex = EntityModelGenerator.DisplayRefProperty(refProperty);
 
@@ -194,7 +194,7 @@ namespace Rafy.Web.ClientMetaModel
                     FieldConfig field;
 
                     //对于引用属性需要分开来特殊处理
-                    if (property.PropertyMeta.ManagedProperty is IRefEntityProperty refProperty)
+                    if (property.PropertyMeta.ManagedProperty is IRefProperty refProperty)
                     {
                         var comboList = ServerTypeHelper.CreateComboList(property);
                         comboList.name = EntityModelGenerator.DisplayRefProperty(refProperty);

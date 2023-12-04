@@ -99,7 +99,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="refProperty">引用实体属性。</param>
         /// <returns></returns>
-        public LoadOptions LoadWith(IRefEntityProperty refProperty)
+        public LoadOptions LoadWith(IRefProperty refProperty)
         {
             _eagerList.Add(new ConcreteProperty(refProperty));
             return this;
@@ -112,7 +112,7 @@ namespace Rafy.Domain
         /// <param name="owner">该属性对应的具体类型。
         /// 这个具体的类型必须是属性的拥有类型或者它的子类型。如果传入 null，则默认为属性的拥有类型。</param>
         /// <returns></returns>
-        public LoadOptions LoadWith(IRefEntityProperty refProperty, Type owner)
+        public LoadOptions LoadWith(IRefProperty refProperty, Type owner)
         {
             _eagerList.Add(new ConcreteProperty(refProperty, owner));
             return this;

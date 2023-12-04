@@ -141,7 +141,6 @@ namespace Rafy.Domain.Validation
             switch (property.Category)
             {
                 case PropertyCategory.Normal:
-                case PropertyCategory.ReferenceId:
                 case PropertyCategory.Redundancy:
                     break;
                 default:

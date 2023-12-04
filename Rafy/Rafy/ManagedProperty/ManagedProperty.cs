@@ -117,6 +117,11 @@ namespace Rafy.ManagedProperty
         /// </summary>
         IList<IManagedProperty> Dependencies { get; set; }
 
+        /// <summary>
+        /// 如果当前的属性被一个引用实体属性作为引用的键来使用，那么这里返回该引用实体属性。
+        /// </summary>
+        IRefProperty RefEntityProperty { get; set; }
+
         object ProvideReadOnlyValue(ManagedPropertyObject component);
 
         void RaiseReadOnlyPropertyChanged(ManagedPropertyObject sender);
@@ -205,6 +210,11 @@ namespace Rafy.ManagedProperty
         {
             get { return typeof(TPropertyType); }
         }
+
+        /// <summary>
+        /// 如果当前的属性被一个引用实体属性作为引用的键来使用，那么这里返回该引用实体属性。
+        /// </summary>
+        IRefProperty IManagedPropertyInternal.RefEntityProperty { get; set; }
 
         #region IsReadOnly
 

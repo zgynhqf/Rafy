@@ -75,7 +75,7 @@ namespace Rafy.Domain.Serialization
                     case PropertyCategory.ReferenceEntity:
                         if (mp.GetMeta(entityMeta.EntityType).Serializable)
                         {
-                            relativeType = (mp as IRefEntityProperty).RefEntityType;
+                            relativeType = (mp as IRefProperty).RefEntityType;
                         }
                         break;
                     case PropertyCategory.List:

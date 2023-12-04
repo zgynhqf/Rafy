@@ -25,10 +25,11 @@ namespace Rafy.Domain
     /// 引用实体属性的实体标记
     /// </summary>
     /// <typeparam name="TRefEntity">引用实体的类型</typeparam>
-    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefEntityProperty, IRefEntityPropertyInternal
+    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefProperty, IRefEntityPropertyInternal
         where TRefEntity : Entity
     {
-        private IRefIdProperty _refIdProperty;
+        private IManagedProperty _refKeyProperty;
+        private IManagedProperty _keyPropertyOfRefEntity = Entity.IdProperty;
 
         /// <summary>
         /// 自定义加载器。
@@ -40,30 +41,46 @@ namespace Rafy.Domain
         /// </summary>
         private IRepository _defaultLoader;
 
+        private IKeyProvider _keyProvider;
+
         internal RefEntityProperty(Type ownerType, Type declareType, string propertyName, ManagedPropertyMetadata<Entity> defaultMeta) : base(ownerType, declareType, propertyName, defaultMeta) { }
 
         internal RefEntityProperty(Type ownerType, string propertyName, ManagedPropertyMetadata<Entity> defaultMeta) : base(ownerType, propertyName, defaultMeta) { }
 
-        public override PropertyCategory Category
+        public override PropertyCategory Category => PropertyCategory.ReferenceEntity;
+
+        /// <summary>
+        /// 实体引用的类型
+        /// </summary>
+        public ReferenceType ReferenceType { get; internal set; }
+
+        /// <summary>
+        /// 引用实体的键对应的托管属性。
+        /// </summary>
+        public IManagedProperty KeyPropertyOfRefEntity { get => _keyPropertyOfRefEntity; internal set => _keyPropertyOfRefEntity = value ?? Entity.IdProperty; }
+
+        /// <summary>
+        /// 引用的实体的主键的算法程序。
+        /// </summary>
+        public IKeyProvider KeyProvider
         {
-            get { return PropertyCategory.ReferenceEntity; }
+            get
+            {
+                if (_keyProvider == null)
+                {
+                    _keyProvider = KeyProviders.Get(TypeHelper.IgnoreNullable(_refKeyProperty.PropertyType));
+                }
+                return _keyProvider;
+            }
         }
 
-        public ReferenceType ReferenceType
+        public IManagedProperty RefKeyProperty
         {
-            get { return this._refIdProperty.ReferenceType; }
-        }
-
-        public IRefIdProperty RefIdProperty
-        {
-            get { return this._refIdProperty; }
+            get { return _refKeyProperty; }
             internal set
             {
-                this._refIdProperty = value;
-                if (value != null)
-                {
-                    (value as IRefIdPropertyInternal).RefEntityProperty = this;
-                }
+                _refKeyProperty = value;
+                (value as IManagedPropertyInternal).RefEntityProperty = this;
             }
         }
 
@@ -76,54 +93,64 @@ namespace Rafy.Domain
             internal set { this._loader = value; }
         }
 
-        public Type RefEntityType
+        public Type RefEntityType => typeof(TRefEntity);
+
+        public bool Nullable { get; internal set; }
+
+        internal void ResetNullable(bool? isNullable)
         {
-            get { return typeof(TRefEntity); }
+            if (isNullable.HasValue)
+            {
+                this.Nullable = isNullable.Value;
+            }
+            else
+            {
+                this.Nullable = this.ReferenceType != ReferenceType.Parent &&
+                    TypeHelper.IsNullableOrClass(_refKeyProperty.PropertyType);
+            }
         }
 
-        public bool Nullable
-        {
-            get { return this._refIdProperty.Nullable; }
-        }
-
-        IRefEntityProperty IRefProperty.RefEntityProperty
-        {
-            get { return this; }
-        }
-
-        Entity IRefEntityPropertyInternal.Load(object id, Entity owner)
+        Entity IRefEntityPropertyInternal.Load(object keyValue, Entity owner)
         {
             //通过自定义 Loader 获取实体。
-            if (this._loader != null)
+            if (_loader != null)
             {
-                return this._loader(id, owner);
+                return _loader(keyValue, _keyPropertyOfRefEntity, owner);
             }
 
-            //通过默认的 CacheById 方法获取实体。
-            if (this._defaultLoader == null)
+            //默认加载器就是实体的仓库。
+            if (_defaultLoader == null)
             {
-                this._defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.RefEntityType, true);
+                _defaultLoader = RepositoryFactoryHost.Factory.FindByEntity(this.RefEntityType, true);
             }
-            return this._defaultLoader.CacheById(id);
+
+            //如果是 Id，则通过默认的 CacheById 方法获取实体。
+            if (_keyPropertyOfRefEntity == Entity.IdProperty)
+            {
+                return _defaultLoader.CacheById(keyValue);
+            }
+
+            return _defaultLoader.GetByKey(_keyPropertyOfRefEntity.Name, keyValue);
         }
     }
 
     /// <summary>
     /// 引用实体加载器方法。
     /// </summary>
-    /// <param name="id">引用实体的 id。</param>
+    /// <param name="keyValue">引用实体的键的值。</param>
+    /// <param name="refEntityKeyProperty">引用实体的键对应的属性。</param>
     /// <param name="owner">拥有该引用属性的实体。</param>
     /// <returns>返回对应的引用实体。</returns>
-    public delegate Entity RefEntityLoader(object id, Entity owner);
+    public delegate Entity RefEntityLoader(object keyValue, IManagedProperty refEntityKeyProperty, Entity owner);
 
     internal interface IRefEntityPropertyInternal
     {
         /// <summary>
-        /// 加载某个 id 对应的引用实体。
+        /// 加载某个 keyValue 对应的引用实体。
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="keyValue"></param>
         /// <param name="owner"></param>
         /// <returns></returns>
-        Entity Load(object id, Entity owner);
+        Entity Load(object keyValue, Entity owner);
     }
 }

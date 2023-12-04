@@ -183,7 +183,7 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="propertyOwner">引用属性对应外键所在的表。</param>
         /// <param name="refProperty">指定的引用属性。</param>
         /// <returns></returns>
-        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IRefEntityProperty refProperty)
+        public ITableSource FindOrCreateJoinTable(IQuery query, ITableSource propertyOwner, IRefProperty refProperty)
         {
             return (query as TableQuery).FindOrCreateJoinTable(propertyOwner, refProperty);
         }
@@ -430,12 +430,12 @@ namespace Rafy.Domain.ORM.Query
             var properties = left.EntityRepository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
             for (int i = 0, c = properties.Count; i < c; i++)
             {
-                var refProperty = properties[i] as IRefEntityProperty;
+                var refProperty = properties[i] as IRefProperty;
                 if (refProperty != null && refProperty.RefEntityType == rightEntity)
                 {
                     var condition = this.Constraint(
-                        left.Column(refProperty.RefIdProperty),
-                        right.Column(Entity.IdProperty)
+                        left.Column(refProperty.RefKeyProperty),
+                        right.Column(refProperty.KeyPropertyOfRefEntity)
                     );
 
                     var joinType = refProperty.Nullable ? JoinType.LeftOuter : JoinType.Inner;
@@ -488,8 +488,8 @@ namespace Rafy.Domain.ORM.Query
             var leftSource = left.FindTable(leftToRight.OwnerType);
 
             var condition = this.Constraint(
-                leftSource.Column(leftToRight),
-                right.Column(Entity.IdProperty)
+                leftSource.Column(leftToRight.RefKeyProperty),
+                right.Column(leftToRight.KeyPropertyOfRefEntity)
             );
 
             var joinType = leftToRight.Nullable ? JoinType.LeftOuter : JoinType.Inner;

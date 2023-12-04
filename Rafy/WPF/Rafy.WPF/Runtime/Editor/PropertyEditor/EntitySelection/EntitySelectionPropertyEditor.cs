@@ -64,7 +64,7 @@ namespace Rafy.WPF.Editors
         {
             //如果被绑定的属性不是实体引用属性，则需要使用 TwoWay 把值写回去。
             var bindingMode = BindingMode.OneWay;
-            var isEntityRef = this.Meta.PropertyMeta.ManagedProperty is IRefEntityProperty;
+            var isEntityRef = this.Meta.PropertyMeta.ManagedProperty is IRefProperty;
             if (!isEntityRef)
             {
                 if (this.PropertyCanWrite) { bindingMode = BindingMode.TwoWay; }
@@ -144,7 +144,7 @@ namespace Rafy.WPF.Editors
             bool success = false;
 
             //引用属性，应该先尝试设置实体属性，再设置 Id 属性。
-            var rp = this.Meta.PropertyMeta.ManagedProperty as IRefProperty;
+            var rp = RefPropertyHelper.Find(this.Meta.PropertyMeta.ManagedProperty);
             if (selectedEntities.Count > 0)
             {
                 var selectedEntity = selectedEntities[0] as Entity;
@@ -155,9 +155,10 @@ namespace Rafy.WPF.Editors
                     var valuePath = svm.SelectedValuePath;
                     if (valuePath != null)
                     {
-                        if (valuePath is IRefProperty)
+                        var valuePathRP = RefPropertyHelper.Find(valuePath);
+                        if (valuePathRP != null)
                         {
-                            selectedEntity = selectedEntity.GetRefEntity((valuePath as IRefProperty).RefEntityProperty);
+                            selectedEntity = selectedEntity.GetRefEntity(valuePathRP);
                         }
                         else if (rp.RefEntityType.IsAssignableFrom(valuePath.PropertyType))
                         {
@@ -167,8 +168,8 @@ namespace Rafy.WPF.Editors
 
                     //设置实体到本引用属性上。
                     this.OnReferenceEntityChanging();
-                    curEntity.SetRefEntity(rp.RefEntityProperty, selectedEntity);
-                    success = curEntity.GetRefEntity(rp.RefEntityProperty) == selectedEntity;
+                    curEntity.SetRefEntity(rp, selectedEntity);
+                    success = curEntity.GetRefEntity(rp) == selectedEntity;
                     if (success) { this.OnReferenceEntityChanged(); }
                 }
                 else
@@ -187,8 +188,8 @@ namespace Rafy.WPF.Editors
                 if (rp != null)
                 {
                     this.OnReferenceEntityChanging();
-                    curEntity.SetRefEntity(rp.RefEntityProperty, null);
-                    success = curEntity.GetRefEntity(rp.RefEntityProperty) == null;
+                    curEntity.SetRefEntity(rp, null);
+                    success = curEntity.GetRefEntity(rp) == null;
                     if (success) { this.OnReferenceEntityChanged(); }
                 }
                 else

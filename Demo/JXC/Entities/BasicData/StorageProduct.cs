@@ -20,8 +20,8 @@ namespace JXC
     [ChildEntity]
     public partial class StorageProduct : ProductRefItem
     {
-        public static readonly IRefIdProperty StorageIdProperty =
-            P<StorageProduct>.RegisterRefId(e => e.StorageId, ReferenceType.Parent);
+        public static readonly Property<int> StorageIdProperty =
+            P<StorageProduct>.Register(e => e.StorageId, ReferenceType.Parent);
         public int StorageId
         {
             get { return (int)this.GetRefId(StorageIdProperty); }

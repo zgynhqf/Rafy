@@ -179,12 +179,6 @@ namespace Rafy.MongoDb
                 case PropertyCategory.Readonly:
                 case PropertyCategory.Redundancy:
                     return this.CreatePropertyElement(property.Name, BsonValue.Create(value));
-                case PropertyCategory.ReferenceId:
-                    if (value != null && (property as IRefIdProperty).ReferenceType != ReferenceType.Parent)
-                    {
-                        return this.CreatePropertyElement(property.Name, BsonValue.Create(value));
-                    }
-                    break;
                 case PropertyCategory.ReferenceEntity:
                     if (value != null && (property as IRefProperty).ReferenceType != ReferenceType.Parent)
                     {
@@ -223,20 +217,7 @@ namespace Rafy.MongoDb
             //    _writer.WriteEndArray();
             //}
             //else 
-            if (value != null && value.GetType().IsEnum)
-            {
-                switch (this.EnumSerializationMode)
-                {
-                    case EnumSerializationMode.String:
-                        value = value.ToString();
-                        break;
-                    case EnumSerializationMode.EnumLabel:
-                        value = EnumViewModel.EnumToLabel((Enum)value) ?? value.ToString();
-                        break;
-                    default:
-                        break;
-                }
-            }
+            value = EnumSerializer.ConvertEnumValue(value, this.EnumSerializationMode);
             return value;
         }
 

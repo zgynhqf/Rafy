@@ -183,37 +183,36 @@ namespace Rafy.WPF
         /// 使用这个查询面板中的查询对象数据，
         /// 给实体的外键设置值。
         /// </summary>
-        /// <param name="entity"></param>
-        internal void SyncRefEntities(Entity entity)
+        /// <param name="newEntity">需要写入值的新创建的实体</param>
+        internal void SyncRefEntities(Entity newEntity)
         {
-            if (entity == null) throw new ArgumentNullException("newEntity");
+            if (newEntity == null) throw new ArgumentNullException("newEntity");
 
             var criteria = this.Current;
             if (criteria != null)
             {
-                var destProperties = entity.PropertiesContainer.GetAvailableProperties();
+                var destProperties = newEntity.PropertiesContainer.GetAvailableProperties();
 
                 //对每一个导航的实体引用属性，都给 referenceEntity 赋相应的值
                 //只有导航查询实体中的引用实体ID属性名和被查询实体的引用实体ID属性名相同时，才能设置
                 foreach (var naviProperty in this.Meta.EntityProperties)
                 {
-                    //如果是一个引用实体属性
-                    var criteriaRefId = naviProperty.PropertyMeta.ManagedProperty as IRefIdProperty;
-                    if (criteriaRefId != null)
+                    //如果是一个引用键属性
+                    if (RefPropertyHelper.IsRefKeyProperty(naviProperty.PropertyMeta.ManagedProperty, out var criteriaRef))
                     {
                         foreach (var mp in destProperties)
                         {
-                            var entityRef = mp as IRefEntityProperty;
+                            var entityRef = mp as IRefProperty;
 
-                            //约定：被查询实体的引用实体ID属性名与 naviProperty 的名称相同，并且二者类型一致时，才能被设置。
+                            //约定：被查询实体的引用实体Key属性名与 naviProperty 的名称相同，并且二者类型一致时，才能被设置。
                             if (entityRef != null
-                                && entityRef.RefIdProperty.Name == criteriaRefId.Name
-                                && criteriaRefId.RefEntityType == entityRef.RefEntityType
+                                && entityRef.RefKeyProperty.Name == criteriaRef.Name
+                                && entityRef.RefEntityType == criteriaRef.RefEntityType
                                 )
                             {
                                 //读值，并写值到新对象中。
-                                var value = criteria.GetRefEntity(criteriaRefId.RefEntityProperty);
-                                entity.SetRefEntity(entityRef, value);
+                                var value = criteria.GetRefEntity(criteriaRef);
+                                newEntity.SetRefEntity(entityRef, value);
                                 break;
                             }
                         }

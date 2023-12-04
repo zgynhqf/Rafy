@@ -429,10 +429,10 @@ namespace Rafy.WPF
                     foreach (var naviProperty in naviView.NavigationProperties)
                     {
                         //naviProperty 是一个引用实体属性
-                        var refProperty = naviProperty.PropertyMeta.ManagedProperty as IRefProperty;
+                        var refProperty = RefPropertyHelper.Find(naviProperty.PropertyMeta.ManagedProperty);
                         if (refProperty != null && !refProperty.Nullable)
                         {
-                            var value = criteria.GetRefEntity(refProperty.RefEntityProperty);
+                            var value = criteria.GetRefEntity(refProperty);
                             if (value == null) return false;
                         }
                     }
@@ -545,7 +545,7 @@ namespace Rafy.WPF
         /// 
         /// 添加记录时把导航关联值加入到当前记录中
         /// </summary>
-        /// <param name="newEntity"></param>
+        /// <param name="newEntity">需要写入值的新创建的实体</param>
         /// <param name="view"></param>
         private void InitRefProperties(Entity newEntity)
         {

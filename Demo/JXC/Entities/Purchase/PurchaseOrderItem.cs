@@ -18,8 +18,8 @@ namespace JXC
     [ChildEntity]
     public partial class PurchaseOrderItem : ProductRefItem
     {
-        public static readonly IRefIdProperty PurchaseOrderIdProperty =
-            P<PurchaseOrderItem>.RegisterRefId(e => e.PurchaseOrderId, ReferenceType.Parent);
+        public static readonly Property<int> PurchaseOrderIdProperty =
+            P<PurchaseOrderItem>.Register(e => e.PurchaseOrderId, ReferenceType.Parent);
         public int PurchaseOrderId
         {
             get { return (int)this.GetRefId(PurchaseOrderIdProperty); }

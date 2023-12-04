@@ -76,16 +76,14 @@ namespace Rafy.Domain
             var mp = this.Property;
             var entity = component as Entity;
 
+            if (RefPropertyHelper.IsRefKeyProperty(mp, out var refP))
+            {
+                return entity.GetRefNullableKey(refP);
+            }
+
             if (mp is IRefProperty)
             {
-                if (mp is IRefIdProperty)
-                {
-                    return entity.GetRefNullableId(mp as IRefIdProperty);
-                }
-                if (mp is IRefEntityProperty)
-                {
-                    return entity.GetRefEntity(mp as IRefEntityProperty);
-                }
+                return entity.GetRefEntity(mp as IRefProperty);
             }
 
             if (mp is IListProperty)
@@ -117,9 +115,9 @@ namespace Rafy.Domain
 
             using (IsOperatingItem.UseScopeValue(true))
             {
-                if (mp is IRefIdProperty)
+                if (RefPropertyHelper.IsRefKeyProperty(mp, out var refP))
                 {
-                    entity.SetRefNullableId(mp as IRefIdProperty, value);
+                    entity.SetRefNullableKey(refP, value);
                     return;
                 }
 

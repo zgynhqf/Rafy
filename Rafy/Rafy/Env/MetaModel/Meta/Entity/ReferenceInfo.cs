@@ -34,7 +34,7 @@ namespace Rafy.MetaModel
         /// <summary>
         /// 对应的引用实体属性（托管属性）。
         /// </summary>
-        public IRefEntityProperty RefEntityProperty { get; internal set; }
+        public IRefProperty RefEntityProperty { get; internal set; }
 
         /// <summary>
         /// 引用实体的实体元数据

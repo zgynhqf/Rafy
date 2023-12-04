@@ -66,8 +66,7 @@ namespace Rafy.MongoDb
 
         private void QueryList(IMongoCollection<BsonDocument> collection, ORMQueryArgs args, MongoDbDataProvider dp)
         {
-            var parser = new MongoFilterParser();
-            var filter = parser.Parse(args.Query, Builders<BsonDocument>.Filter);
+            var filter = this.ParseQuery(args.Query);
 
             //filter
             var result = collection.Find(filter);
@@ -121,11 +120,23 @@ namespace Rafy.MongoDb
         /// <returns></returns>
         private long Count(IMongoCollection<BsonDocument> collection, IQuery query)
         {
-            var parser = new MongoFilterParser();
-            var filter = parser.Parse(query, Builders<BsonDocument>.Filter);
+            var filter = this.ParseQuery(query);
 
             var count = collection.CountDocuments(filter);
             return count;
+        }
+
+        /// <summary>
+        /// 将指定的 IQuery 转换为 MongoDb 中的查询对象。
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        protected virtual FilterDefinition<BsonDocument> ParseQuery(IQuery query)
+        {
+            var parser = new MongoFilterParser();
+            parser.EnumSerializationMode = (this.DataProvider as MongoDbDataProvider).EnumSerializationMode;
+            var filter = parser.Parse(query, Builders<BsonDocument>.Filter);
+            return filter;
         }
     }
 }

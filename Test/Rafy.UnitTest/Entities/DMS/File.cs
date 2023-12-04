@@ -25,15 +25,15 @@ namespace UT
     {
         #region 引用属性
 
-        public static readonly IRefIdProperty FolderIdProperty =
-            P<File>.RegisterRefId(e => e.FolderId, ReferenceType.Parent);
+        public static readonly Property<int> FolderIdProperty =
+            P<File>.Register(e => e.FolderId);
         public int FolderId
         {
-            get { return (int)this.GetRefId(FolderIdProperty); }
-            set { this.SetRefId(FolderIdProperty, value); }
+            get { return (int)this.GetProperty(FolderIdProperty); }
+            set { this.SetProperty(FolderIdProperty, value); }
         }
         public static readonly RefEntityProperty<Folder> FolderProperty =
-            P<File>.RegisterRef(e => e.Folder, FolderIdProperty);
+            P<File>.RegisterRef(e => e.Folder, FolderIdProperty, ReferenceType.Parent);
         public Folder Folder
         {
             get { return this.GetRefEntity(FolderProperty); }
@@ -51,7 +51,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<File>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty(NameProperty); }
+            get { return this.GetProperty<string>(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 

@@ -286,7 +286,7 @@ namespace Rafy.VSPackage.Modeling
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
 
@@ -310,56 +310,63 @@ namespace Rafy.VSPackage.Modeling
 
         private void btnRefreshClasses_Click(object sender, EventArgs e)
         {
-            if (_owner.Project == null) return;
-            ResetEOM();
-
-            var oldDocument = designer.GetDocument();
-
-            //创建一个新文档对象，使用它来描述最新的文档结构。
-            var document = new ODMLDocument();
-
-            //把原来显示的所有实体类型，加入到新文档对象中。
-            var eom = EOM;
-            var types = oldDocument.EntityTypes.Select(el => eom.EntityTypes.Find(el.FullName))
-                .Where(t => t != null).ToArray();
-            ODMLDocumentHelper.AddToDocument(new AddToDocumentArgs
+            try
             {
-                Docment = document,
-                TypeList = types,
-                AllTypes = eom.EntityTypes
-            });
+                if (_owner.Project == null) return;
+                ResetEOM();
 
-            //新的元素的位置，还原为所有旧元素的位置
-            foreach (var el in document.EntityTypes)
-            {
-                var oldTypeEl = oldDocument.FindEntityType(el.FullName);
-                el.Left = oldTypeEl.Left;
-                el.Top = oldTypeEl.Top;
-                el.Width = oldTypeEl.Width;
-                el.Height = oldTypeEl.Height;
-            }
-            foreach (var el in document.EnumTypes)
-            {
-                var oldTypeEl = oldDocument.FindEnumType(el.FullName);
-                el.Left = oldTypeEl.Left;
-                el.Top = oldTypeEl.Top;
-                el.Width = oldTypeEl.Width;
-                el.Height = oldTypeEl.Height;
-            }
-            foreach (var el in document.Connections)
-            {
-                var old = oldDocument.FindConnection(el);
-                if (old != null)
+                var oldDocument = designer.GetDocument();
+
+                //创建一个新文档对象，使用它来描述最新的文档结构。
+                var document = new ODMLDocument();
+
+                //把原来显示的所有实体类型，加入到新文档对象中。
+                var eom = EOM;
+                var types = oldDocument.EntityTypes.Select(el => eom.EntityTypes.Find(el.FullName))
+                    .Where(t => t != null).ToArray();
+                ODMLDocumentHelper.AddToDocument(new AddToDocumentArgs
                 {
-                    el.Hidden = old.Hidden;
-                    el.ConnectionType = old.ConnectionType;
-                    el.FromPointPos = old.FromPointPos;
-                    el.ToPointPos = old.ToPointPos;
-                }
-            }
+                    Docment = document,
+                    TypeList = types,
+                    AllTypes = eom.EntityTypes
+                });
 
-            //绑定新文档对象到设计器中，丢弃旧对象。
-            designer.BindDocument(document);
+                //新的元素的位置，还原为所有旧元素的位置
+                foreach (var el in document.EntityTypes)
+                {
+                    var oldTypeEl = oldDocument.FindEntityType(el.FullName);
+                    el.Left = oldTypeEl.Left;
+                    el.Top = oldTypeEl.Top;
+                    el.Width = oldTypeEl.Width;
+                    el.Height = oldTypeEl.Height;
+                }
+                foreach (var el in document.EnumTypes)
+                {
+                    var oldTypeEl = oldDocument.FindEnumType(el.FullName);
+                    el.Left = oldTypeEl.Left;
+                    el.Top = oldTypeEl.Top;
+                    el.Width = oldTypeEl.Width;
+                    el.Height = oldTypeEl.Height;
+                }
+                foreach (var el in document.Connections)
+                {
+                    var old = oldDocument.FindConnection(el);
+                    if (old != null)
+                    {
+                        el.Hidden = old.Hidden;
+                        el.ConnectionType = old.ConnectionType;
+                        el.FromPointPos = old.FromPointPos;
+                        el.ToPointPos = old.ToPointPos;
+                    }
+                }
+
+                //绑定新文档对象到设计器中，丢弃旧对象。
+                designer.BindDocument(document);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
         }
 
         #endregion

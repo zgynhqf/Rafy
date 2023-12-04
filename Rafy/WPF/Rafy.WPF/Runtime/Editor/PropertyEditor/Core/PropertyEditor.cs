@@ -89,8 +89,8 @@ namespace Rafy.WPF.Editors
                 {
                     var mp = this._meta.PropertyMeta.ManagedProperty;
 
-                    var rp = mp as IRefProperty;
-                    if (rp != null) { return currentObject.GetRefNullableId(rp.RefIdProperty); }
+                    var rp = RefPropertyHelper.Find(mp);
+                    if (rp != null) { return currentObject.GetRefNullableKey(rp); }
 
                     return currentObject.GetProperty(mp);
                 }
@@ -108,10 +108,10 @@ namespace Rafy.WPF.Editors
                     {
                         this.OnPropertyValueChanging();
 
-                        var rp = mp as IRefProperty;
+                        var rp = RefPropertyHelper.Find(mp);
                         if (rp != null)
                         {
-                            currentObject.SetRefNullableId(rp.RefIdProperty, value);
+                            currentObject.SetRefNullableKey(rp, value);
                         }
                         else
                         {
@@ -460,7 +460,7 @@ namespace Rafy.WPF.Editors
             var mp = meta.PropertyMeta.ManagedProperty;
 
             //如果是引用实体属性，则使用对应的引用 Id 属性作为验证的参数。
-            if (mp is IRefEntityProperty) { mp = (mp as IRefEntityProperty).RefIdProperty; }
+            if (mp is IRefProperty) { mp = (mp as IRefProperty).RefKeyProperty; }
 
             var binding = new Binding()
             {

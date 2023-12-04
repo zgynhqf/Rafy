@@ -9,6 +9,9 @@
     <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
         <DefineConstants>DEBUG;NET45</DefineConstants>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+        <DefineConstants>NS2;NET6_0</DefineConstants>
+    </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
         <NoWarn>1701;1702;NETSDK1138</NoWarn>

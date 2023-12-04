@@ -182,7 +182,7 @@ namespace Rafy.WPF
 
             try
             {
-                if (property.PropertyMeta.ManagedProperty is IRefEntityProperty)
+                if (property.PropertyMeta.ManagedProperty is IRefProperty)
                 {
                     var displayPath = property.DisplayPath();
                     var value = ObjectHelper.GetPropertyValue(this._currentRow, displayPath);

@@ -1437,10 +1437,13 @@ namespace Rafy.VSPackage.Modeling
 
             //update editor caption with "[Read Only]" or "" as necessary
             IVsWindowFrame frame = (IVsWindowFrame)GetService(typeof(SVsWindowFrame));
-            string editorCaption = "";
-            if (isFileReadOnly) editorCaption = this.GetResourceString("@100");
-            ErrorHandler.ThrowOnFailure(frame.SetProperty((int)__VSFPROPID.VSFPROPID_EditorCaption, editorCaption));
-            _backupObsolete = true;
+            if (frame != null)
+            {
+                string editorCaption = "";
+                if (isFileReadOnly) editorCaption = this.GetResourceString("@100");
+                ErrorHandler.ThrowOnFailure(frame.SetProperty((int)__VSFPROPID.VSFPROPID_EditorCaption, editorCaption));
+                _backupObsolete = true;
+            }
         }
 
         /// <summary>
