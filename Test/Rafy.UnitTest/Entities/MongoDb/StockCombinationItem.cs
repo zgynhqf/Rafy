@@ -34,7 +34,7 @@ namespace UT
             set { this.SetProperty(StockCombinationIdProperty, value); }
         }
         public static readonly RefEntityProperty<StockCombination> StockCombinationProperty =
-            P<StockCombinationItem>.RegisterRef(e => e.StockCombination, StockCombinationIdProperty, referenceType: ReferenceType.Parent);
+            P<StockCombinationItem>.RegisterRef(e => e.StockCombination, StockCombinationIdProperty, ReferenceType.Parent);
         public StockCombination StockCombination
         {
             get { return this.GetRefEntity(StockCombinationProperty); }

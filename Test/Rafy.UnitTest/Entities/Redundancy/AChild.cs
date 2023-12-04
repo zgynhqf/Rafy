@@ -46,7 +46,7 @@ namespace UT
             set { this.SetProperty(AIdProperty, value); }
         }
         public static readonly RefEntityProperty<A> AProperty =
-            P<AChild>.RegisterRef(e => e.A, AIdProperty, referenceType: ReferenceType.Parent);
+            P<AChild>.RegisterRef(e => e.A, AIdProperty, ReferenceType.Parent);
         public A A
         {
             get { return this.GetRefEntity(AProperty); }

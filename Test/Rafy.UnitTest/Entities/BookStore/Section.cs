@@ -41,7 +41,7 @@ namespace UT
             set { this.SetProperty(ChapterIdProperty, value); }
         }
         public static readonly RefEntityProperty<Chapter> ChapterProperty =
-            P<Section>.RegisterRef(e => e.Chapter, ChapterIdProperty, referenceType: ReferenceType.Parent);
+            P<Section>.RegisterRef(e => e.Chapter, ChapterIdProperty, ReferenceType.Parent);
         public Chapter Chapter
         {
             get { return this.GetRefEntity(ChapterProperty); }

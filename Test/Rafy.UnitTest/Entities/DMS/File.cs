@@ -33,7 +33,7 @@ namespace UT
             set { this.SetProperty(FolderIdProperty, value); }
         }
         public static readonly RefEntityProperty<Folder> FolderProperty =
-            P<File>.RegisterRef(e => e.Folder, FolderIdProperty, referenceType: ReferenceType.Parent);
+            P<File>.RegisterRef(e => e.Folder, FolderIdProperty, ReferenceType.Parent);
         public Folder Folder
         {
             get { return this.GetRefEntity(FolderProperty); }

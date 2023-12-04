@@ -26,7 +26,7 @@ namespace Rafy.Customization
             set { this.SetProperty(ViewConfigurationModelIdProperty, value); }
         }
         public static readonly RefEntityProperty<ViewConfigurationModel> ViewConfigurationModelProperty =
-            P<ViewConfigurationProperty>.RegisterRef(e => e.ViewConfigurationModel, ViewConfigurationModelIdProperty, referenceType: ReferenceType.Parent);
+            P<ViewConfigurationProperty>.RegisterRef(e => e.ViewConfigurationModel, ViewConfigurationModelIdProperty, ReferenceType.Parent);
         public ViewConfigurationModel ViewConfigurationModel
         {
             get { return this.GetRefEntity(ViewConfigurationModelProperty); }

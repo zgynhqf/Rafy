@@ -28,7 +28,7 @@ namespace UT
             set { this.SetProperty(TestUserIdProperty, value); }
         }
         public static readonly RefEntityProperty<TestUser> TestUserProperty =
-            P<TestTreeTask>.RegisterRef(e => e.TestUser, TestUserIdProperty, referenceType: ReferenceType.Parent);
+            P<TestTreeTask>.RegisterRef(e => e.TestUser, TestUserIdProperty, ReferenceType.Parent);
         public TestUser TestUser
         {
             get { return this.GetRefEntity(TestUserProperty); }

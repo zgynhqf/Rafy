@@ -33,7 +33,7 @@ namespace UT
             set { this.SetProperty(HouseMerchantIdProperty, value); }
         }
         public static readonly RefEntityProperty<HouseMerchant> HouseMerchantProperty =
-            P<MerchantItem>.RegisterRef(e => e.HouseMerchant, HouseMerchantIdProperty, referenceType: ReferenceType.Parent);
+            P<MerchantItem>.RegisterRef(e => e.HouseMerchant, HouseMerchantIdProperty, ReferenceType.Parent);
         public HouseMerchant HouseMerchant
         {
             get { return this.GetRefEntity(HouseMerchantProperty); }

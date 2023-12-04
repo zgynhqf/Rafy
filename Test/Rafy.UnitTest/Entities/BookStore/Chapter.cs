@@ -43,7 +43,7 @@ namespace UT
             set { this.SetProperty(BookIdProperty, value); }
         }
         public static readonly RefEntityProperty<Book> BookProperty =
-            P<Chapter>.RegisterRef(e => e.Book, BookIdProperty, referenceType: ReferenceType.Parent);
+            P<Chapter>.RegisterRef(e => e.Book, BookIdProperty, ReferenceType.Parent);
         public Book Book
         {
             get { return this.GetRefEntity(BookProperty); }

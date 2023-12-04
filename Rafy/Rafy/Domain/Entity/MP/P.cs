@@ -276,11 +276,26 @@ namespace Rafy.Domain
         /// <typeparam name="TRefEntity"></typeparam>
         /// <param name="propertyExp">指向引用实体属性的表达式。</param>
         /// <param name="refKeyProperty">对应的引用 Id 属性，将为其建立关联。</param>
+        /// <param name="nullable">是否为一个可空的引用属性。如果不指定，则根据类型来判断</param>
+        /// <param name="referenceType">引用的类型</param>
+        /// <returns></returns>
+        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IManagedProperty refKeyProperty, ReferenceType referenceType = ReferenceType.Normal, bool? nullable = null)
+            where TRefEntity : Entity
+        {
+            return RegisterRef(propertyExp, refKeyProperty, Entity.IdProperty, referenceType, nullable);
+        }
+
+        /// <summary>
+        /// 声明一个引用实体属性。
+        /// </summary>
+        /// <typeparam name="TRefEntity"></typeparam>
+        /// <param name="propertyExp">指向引用实体属性的表达式。</param>
+        /// <param name="refKeyProperty">对应的引用 Id 属性，将为其建立关联。</param>
         /// <param name="refEntityValueProperty">指定引用的实体类型所对应的值属性。如果不指定，则使用 <see cref="Entity.IdProperty"/>。</param>
         /// <param name="nullable">是否为一个可空的引用属性。如果不指定，则根据类型来判断</param>
         /// <param name="referenceType">引用的类型</param>
         /// <returns></returns>
-        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IManagedProperty refKeyProperty, IManagedProperty refEntityValueProperty = null, bool? nullable = null, ReferenceType referenceType = ReferenceType.Normal)
+        public static RefEntityProperty<TRefEntity> RegisterRef<TRefEntity>(Expression<Func<TEntity, TRefEntity>> propertyExp, IManagedProperty refKeyProperty, IManagedProperty refEntityValueProperty, ReferenceType referenceType = ReferenceType.Normal, bool? nullable = null)
             where TRefEntity : Entity
         {
             if (refKeyProperty == null) throw new ArgumentNullException("refKeyProperty", "必须指定引用键属性，将为其建立关联。");

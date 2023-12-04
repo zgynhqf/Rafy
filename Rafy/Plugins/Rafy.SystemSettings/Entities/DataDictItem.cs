@@ -46,7 +46,7 @@ namespace Rafy.SystemSettings
             set { this.SetProperty(DataDictIdProperty, value); }
         }
         public static readonly RefEntityProperty<DataDict> DataDictProperty =
-            P<DataDictItem>.RegisterRef(e => e.DataDict, DataDictIdProperty, referenceType: ReferenceType.Parent);
+            P<DataDictItem>.RegisterRef(e => e.DataDict, DataDictIdProperty, ReferenceType.Parent);
         public DataDict DataDict
         {
             get { return this.GetRefEntity(DataDictProperty); }

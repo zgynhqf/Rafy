@@ -47,7 +47,7 @@ namespace UT
             set { this.SetProperty(InvoiceIdProperty, value); }
         }
         public static readonly RefEntityProperty<Invoice> InvoiceProperty =
-            P<InvoiceItem>.RegisterRef(e => e.Invoice, InvoiceIdProperty, referenceType: ReferenceType.Parent);
+            P<InvoiceItem>.RegisterRef(e => e.Invoice, InvoiceIdProperty, ReferenceType.Parent);
         public Invoice Invoice
         {
             get { return this.GetRefEntity(InvoiceProperty); }

@@ -42,7 +42,7 @@ namespace UT
             set { this.SetProperty(PBSTypeIdProperty, value); }
         }
         public static readonly RefEntityProperty<PBSType> PBSTypeProperty =
-            P<PBS>.RegisterRef(e => e.PBSType, PBSTypeIdProperty, referenceType: ReferenceType.Parent);
+            P<PBS>.RegisterRef(e => e.PBSType, PBSTypeIdProperty, ReferenceType.Parent);
         public PBSType PBSType
         {
             get { return this.GetRefEntity(PBSTypeProperty); }

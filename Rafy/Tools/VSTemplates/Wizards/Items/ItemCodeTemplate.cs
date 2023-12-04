@@ -126,7 +126,7 @@ namespace VSTemplates.Wizards
             set { this.SetProperty($RefPropertyName$IdProperty, value); }
         }
         public static readonly RefEntityProperty<$RefEntityType$> $RefPropertyName$Property =
-            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty$Nullable$$ReferenceType$);
+            P<$ClassName$>.RegisterRef(e => e.$RefPropertyName$, $RefPropertyName$IdProperty$ReferenceType$$Nullable$);
         /// <summary>
         /// $end$
         /// </summary>
@@ -140,8 +140,8 @@ namespace VSTemplates.Wizards
                 .Replace("$RefEntityType$", refEntityName)
                 .Replace("$RefPropertyName$", refPropertyName)
                 .Replace("$KeyType$", keyType)
-                .Replace("$Nullable$", isRequired ? "" : ", nullable: true")
-                .Replace("$ReferenceType$", isParent ? ", referenceType: ReferenceType.Parent" : "");
+                .Replace("$ReferenceType$", isParent ? ", ReferenceType.Parent" : "")
+                .Replace("$Nullable$", isRequired ? "" : ", nullable: true");
 
             return propertyCode;
         }

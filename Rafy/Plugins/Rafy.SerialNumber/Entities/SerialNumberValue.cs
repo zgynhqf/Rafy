@@ -45,7 +45,7 @@ namespace Rafy.SerialNumber
             set { this.SetProperty(SerialNumberInfoIdProperty, value); }
         }
         public static readonly RefEntityProperty<SerialNumberInfo> AutoCodeInfoProperty =
-            P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty, referenceType: ReferenceType.Parent);
+            P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty, ReferenceType.Parent);
         /// <summary>
         /// 所使用的自动编码规则
         /// </summary>
