@@ -31,16 +31,6 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 此引用表示父实体的引用
         /// </summary>
-        Parent,
-
-        /// <summary>
-        /// 此引用表示子实体的引用，一对一的子实体关系。
-        /// <remarks>
-        /// 后期，可能不再需要这种一对一的子实体关系。
-        /// 主要是因为用的地方比较少，而且也可以直接使用一对多的子实体来表示。另外，Web 框架中目前也不支持。
-        /// 由于目前已经写了比较多的代码来支持，所以先暂时不删除。
-        /// </remarks>
-        /// </summary>
-        Child
+        Parent
     }
 }

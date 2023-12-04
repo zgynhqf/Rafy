@@ -282,11 +282,7 @@ namespace Rafy.Domain
 
         private void OnDomainComponentLoaded(IManagedProperty property, object value)
         {
-            var component = value as IDomainComponent;
-            if (component == null) return;
-
-            var listProperty = property as IListProperty;
-            if (listProperty != null)
+            if (value is IDomainComponent component && property is IListProperty listProperty)
             {
                 var list = value as EntityList;
                 list.InitListProperty(listProperty);
@@ -297,16 +293,6 @@ namespace Rafy.Domain
                     list.SetParentEntity(this);
                 }
                 component.MarkSaved();
-                return;
-            }
-
-            var refProperty = property as IRefProperty;
-            if (refProperty != null && refProperty.ReferenceType == ReferenceType.Child)
-            {
-                component.SetParent(this);
-                component.SetParentEntity(this);
-                component.MarkSaved();
-                return;
             }
         }
 

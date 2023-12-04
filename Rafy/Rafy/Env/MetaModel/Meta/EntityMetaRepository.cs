@@ -264,43 +264,18 @@ namespace Rafy.MetaModel
                 ManagedProperty = mp
             };
 
-            #region 创建 ReferenceInfo 及聚合子类
-
             var refMP = mp as IRefProperty;
             if (refMP != null)
             {
-                var ri = new ReferenceInfo()
+                item.ReferenceInfo = new ReferenceInfo()
                 {
                     RefEntityProperty = refMP
                 };
-
-                this.CreateReference(ri, entityMeta);
-
-                item.ReferenceInfo = ri;
             }
-
-            #endregion
 
             entityMeta.EntityProperties.Add(item);
 
             return item;
-        }
-
-        private void CreateReference(ReferenceInfo ri, EntityMeta entityMeta)
-        {
-            //如果它同时也是聚合子类，则也会被递归创建
-            if (ri.Type == ReferenceType.Child)
-            {
-                ri.RefTypeMeta = this.FindOrCreateEntityMetaRecur(ri.RefType, entityMeta);
-            }
-            else
-            {
-                //以下代码转换为懒加载属性的模式。
-                //this.FireAfterAllPrimesReady(() =>
-                //{
-                //    ri.RefTypeMeta = this.FindOrCreate(ri.RefType);
-                //});
-            }
         }
 
         private ChildrenPropertyMeta CreateChildrenPropertyMeta(IManagedProperty mp, EntityMeta entityMeta)

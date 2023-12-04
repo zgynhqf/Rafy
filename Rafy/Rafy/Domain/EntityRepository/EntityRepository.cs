@@ -366,11 +366,6 @@ namespace Rafy.Domain
                             var lp = p as IListProperty;
                             if (lp.HasManyType == HasManyType.Composition) { return true; }
                         }
-                        else if (p is IRefProperty)
-                        {
-                            var rp = p as IRefProperty;
-                            if (rp.ReferenceType == ReferenceType.Child) { return true; }
-                        }
                         return false;
                     })
                     .Cast<IProperty>()
