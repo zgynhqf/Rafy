@@ -66,15 +66,14 @@ namespace Rafy.Domain.ORM
             DbTypeConverter dbTypeConverter
             )
         {
-            foreach (var property in em.EntityProperties)
+            foreach (var epm in em.EntityProperties)
             {
-                var columnMeta = property.ColumnMeta;
+                var columnMeta = epm.ColumnMeta;
                 if (columnMeta == null) continue;
 
-                var propertyName = property.Name;
-
-                var epm = em.Property(propertyName);
-                if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", em.EntityType.FullName, propertyName)); }
+                //var propertyName = epm.Name;
+                //var epm = em.Property(propertyName);
+                //if (epm == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", em.EntityType.FullName, propertyName)); }
 
                 var columnName = identifierProvider.Prepare(columnMeta.ColumnName);
 
