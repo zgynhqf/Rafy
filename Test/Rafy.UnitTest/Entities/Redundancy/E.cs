@@ -37,7 +37,7 @@ namespace UT
             new RedundantPath(DProperty, D.CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string ANameFromDCBA
         {
-            get { return this.GetProperty<string>(ANameFromDCBAProperty); }
+            get { return this.GetProperty(ANameFromDCBAProperty); }
         }
 
         public static readonly Property<int> CIdProperty =
@@ -59,7 +59,7 @@ namespace UT
             new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string ANameFromCBA
         {
-            get { return this.GetProperty<string>(ANameFromCBAProperty); }
+            get { return this.GetProperty(ANameFromCBAProperty); }
         }
     }
 

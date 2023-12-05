@@ -38,7 +38,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<TestTreeTask>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -47,7 +47,7 @@ namespace UT
         public static Property<int> AllTimeProperty = P<TestTreeTask>.Register(e => e.AllTime, (o, e) => (o as TestTreeTask).OnAllTimeChanged(e));
         public int AllTime
         {
-            get { return this.GetProperty<int>(AllTimeProperty); }
+            get { return this.GetProperty(AllTimeProperty); }
             set { this.SetProperty(AllTimeProperty, value); }
         }
         protected virtual void OnAllTimeChanged(ManagedPropertyChangedEventArgs e)
@@ -84,7 +84,7 @@ namespace UT
         public static Property<int> AllTimeByAutoCollectProperty = P<TestTreeTask>.Register(e => e.AllTimeByAutoCollect, (o, e) => (o as TestTreeTask).OnAllTimeByAutoCollectChanged(e));
         public int AllTimeByAutoCollect
         {
-            get { return this.GetProperty<int>(AllTimeByAutoCollectProperty); }
+            get { return this.GetProperty(AllTimeByAutoCollectProperty); }
             set { this.SetProperty(AllTimeByAutoCollectProperty, value); }
         }
         protected virtual void OnAllTimeByAutoCollectChanged(ManagedPropertyChangedEventArgs e)
@@ -97,7 +97,7 @@ namespace UT
         public static readonly Property<string> XmlContentProperty = P<TestTreeTask>.Register(e => e.XmlContent);
         public string XmlContent
         {
-            get { return this.GetProperty<string>(XmlContentProperty); }
+            get { return this.GetProperty(XmlContentProperty); }
             set { this.SetProperty(XmlContentProperty, value); }
         }
     }

@@ -67,7 +67,7 @@ namespace UT
         /// </summary>
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -79,7 +79,7 @@ namespace UT
             new RedundantPath(AProperty, A.NameProperty));
         public string RD_AName
         {
-            get { return this.GetProperty<string>(RD_ANameProperty); }
+            get { return this.GetProperty(RD_ANameProperty); }
         }
 
         #endregion

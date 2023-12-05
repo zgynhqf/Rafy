@@ -37,7 +37,7 @@ namespace UT
             e => e.AName, new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
         public string AName
         {
-            get { return this.GetProperty<string>(ANameProperty); }
+            get { return this.GetProperty(ANameProperty); }
         }
     }
 

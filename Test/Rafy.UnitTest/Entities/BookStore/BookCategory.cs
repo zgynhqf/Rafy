@@ -35,14 +35,14 @@ namespace UT
         public static readonly Property<string> NameProperty = P<BookCategory>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
         public static readonly Property<string> CodeProperty = P<BookCategory>.Register(e => e.Code);
         public string Code
         {
-            get { return this.GetProperty<string>(CodeProperty); }
+            get { return this.GetProperty(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 

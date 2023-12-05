@@ -55,14 +55,14 @@ namespace UT
         public static readonly Property<string> NameProperty = P<Favorate>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
         public static readonly Property<int[]> ArrayValueProperty = P<Favorate>.Register(e => e.ArrayValue);
         public int[] ArrayValue
         {
-            get { return this.GetProperty<int[]>(ArrayValueProperty); }
+            get { return this.GetProperty(ArrayValueProperty); }
             set { this.SetProperty(ArrayValueProperty, value); }
         }
 
@@ -76,28 +76,28 @@ namespace UT
         public static readonly Property<byte[]> BytesContentProperty = P<Favorate>.Register(e => e.BytesContent);
         public byte[] BytesContent
         {
-            get { return this.GetProperty<byte[]>(BytesContentProperty); }
+            get { return this.GetProperty(BytesContentProperty); }
             set { this.SetProperty(BytesContentProperty, value); }
         }
 
         public static readonly Property<FavorateType> FavorateTypeProperty = P<Favorate>.Register(e => e.FavorateType);
         public FavorateType FavorateType
         {
-            get { return this.GetProperty<FavorateType>(FavorateTypeProperty); }
+            get { return this.GetProperty(FavorateTypeProperty); }
             set { this.SetProperty(FavorateTypeProperty, value); }
         }
 
         public static readonly Property<FavorateType?> NullableFavorateTypeProperty = P<Favorate>.Register(e => e.NullableFavorateType);
         public FavorateType? NullableFavorateType
         {
-            get { return this.GetProperty<FavorateType?>(NullableFavorateTypeProperty); }
+            get { return this.GetProperty(NullableFavorateTypeProperty); }
             set { this.SetProperty(NullableFavorateTypeProperty, value); }
         }
 
         public static readonly Property<FavorateTypeWithLabel> FavorateTypeWithLabelProperty = P<Favorate>.Register(e => e.FavorateTypeWithLabel);
         public FavorateTypeWithLabel FavorateTypeWithLabel
         {
-            get { return this.GetProperty<FavorateTypeWithLabel>(FavorateTypeWithLabelProperty); }
+            get { return this.GetProperty(FavorateTypeWithLabelProperty); }
             set { this.SetProperty(FavorateTypeWithLabelProperty, value); }
         }
 
@@ -109,7 +109,7 @@ namespace UT
             e => e.RO_FavorateTypeString, e => e.GetRO_FavorateTypeString(), FavorateTypeProperty);
         public string RO_FavorateTypeString
         {
-            get { return this.GetProperty<string>(RO_FavorateTypeStringProperty); }
+            get { return this.GetProperty(RO_FavorateTypeStringProperty); }
         }
         private string GetRO_FavorateTypeString()
         {

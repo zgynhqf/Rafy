@@ -77,14 +77,14 @@ namespace UT
         /// </summary>
         public RoleType RoleType
         {
-            get { return this.GetProperty<RoleType>(RoleTypeProperty); }
+            get { return this.GetProperty(RoleTypeProperty); }
             set { this.SetProperty(RoleTypeProperty, value); }
         }
 
         public static readonly Property<RoleType?> RoleType2Property = P<TestRole>.Register(e => e.RoleType2);
         public RoleType? RoleType2
         {
-            get { return this.GetProperty<RoleType?>(RoleType2Property); }
+            get { return this.GetProperty(RoleType2Property); }
             set { this.SetProperty(RoleType2Property, value); }
         }
     }

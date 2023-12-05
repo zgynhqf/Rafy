@@ -37,21 +37,21 @@ namespace UT
             e => e.AName, new RedundantPath(BProperty, B.AProperty, A.NameProperty));
         public string AName
         {
-            get { return this.GetProperty<string>(ANameProperty); }
+            get { return this.GetProperty(ANameProperty); }
         }
 
         public static readonly Property<string> ANameRefOfBProperty = P<C>.RegisterRedundancy(e => e.ANameRefOfB,
             new RedundantPath(BProperty, B.ANameRefProperty));
         public string ANameRefOfB
         {
-            get { return this.GetProperty<string>(ANameRefOfBProperty); }
+            get { return this.GetProperty(ANameRefOfBProperty); }
         }
 
         public static readonly Property<int> AIdProperty = P<C>.RegisterRedundancy(e => e.AId,
             new RedundantPath(BProperty, B.AProperty, A.IdProperty));
         public int AId
         {
-            get { return this.GetProperty<int>(AIdProperty); }
+            get { return this.GetProperty(AIdProperty); }
         }
     }
 

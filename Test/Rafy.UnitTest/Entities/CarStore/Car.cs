@@ -49,21 +49,21 @@ namespace UT
         public static readonly Property<string> NameProperty = P<Car>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
         public static readonly Property<string> CodeProperty = P<Car>.Register(e => e.Code);
         public string Code
         {
-            get { return this.GetProperty<string>(CodeProperty); }
+            get { return this.GetProperty(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
         public static readonly Property<DateTime> AddTimeProperty = P<Car>.Register(e => e.AddTime);
         public DateTime AddTime
         {
-            get { return this.GetProperty<DateTime>(AddTimeProperty); }
+            get { return this.GetProperty(AddTimeProperty); }
             set { this.SetProperty(AddTimeProperty, value); }
         }
 

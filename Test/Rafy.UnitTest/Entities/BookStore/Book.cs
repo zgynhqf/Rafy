@@ -58,7 +58,7 @@ namespace UT
         public static readonly Property<string> BookLocCodeProperty = P<Book>.Register(e => e.BookLocCode);
         public string BookLocCode
         {
-            get { return this.GetProperty<string>(BookLocCodeProperty); }
+            get { return this.GetProperty(BookLocCodeProperty); }
             set { this.SetProperty(BookLocCodeProperty, value); }
         }
         public static readonly RefEntityProperty<BookLoc> BookLocProperty =
@@ -89,14 +89,14 @@ namespace UT
         public static readonly Property<string> CodeProperty = P<Book>.Register(e => e.Code);
         public string Code
         {
-            get { return this.GetProperty<string>(CodeProperty); }
+            get { return this.GetProperty(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
         public static readonly Property<string> NameProperty = P<Book>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -114,28 +114,28 @@ namespace UT
         public static readonly Property<string> AuthorProperty = P<Book>.Register(e => e.Author);
         public string Author
         {
-            get { return this.GetProperty<string>(AuthorProperty); }
+            get { return this.GetProperty(AuthorProperty); }
             set { this.SetProperty(AuthorProperty, value); }
         }
 
         public static readonly Property<double?> PriceProperty = P<Book>.Register(e => e.Price);
         public double? Price
         {
-            get { return this.GetProperty<double?>(PriceProperty); }
+            get { return this.GetProperty(PriceProperty); }
             set { this.SetProperty(PriceProperty, value); }
         }
 
         public static readonly Property<string> PublisherProperty = P<Book>.Register(e => e.Publisher);
         public string Publisher
         {
-            get { return this.GetProperty<string>(PublisherProperty); }
+            get { return this.GetProperty(PublisherProperty); }
             set { this.SetProperty(PublisherProperty, value); }
         }
 
         public static readonly Property<byte[]> BytesProperty = P<Book>.Register(e => e.Bytes);
         public byte[] Bytes
         {
-            get { return this.GetProperty<byte[]>(BytesProperty); }
+            get { return this.GetProperty(BytesProperty); }
             set { this.SetProperty(BytesProperty, value); }
         }
 
@@ -145,7 +145,7 @@ namespace UT
         /// </summary>
         public bool? IsSoldOut
         {
-            get { return this.GetProperty<bool?>(IsSoldOutProperty); }
+            get { return this.GetProperty(IsSoldOutProperty); }
             set { this.SetProperty(IsSoldOutProperty, value); }
         }
 

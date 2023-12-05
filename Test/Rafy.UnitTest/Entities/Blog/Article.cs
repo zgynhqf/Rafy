@@ -106,7 +106,7 @@ namespace UT
         /// </summary>
         public string Code
         {
-            get { return this.GetProperty<string>(CodeProperty); }
+            get { return this.GetProperty(CodeProperty); }
             set { this.SetProperty(CodeProperty, value); }
         }
 
@@ -116,7 +116,7 @@ namespace UT
         /// </summary>
         public DateTime CreateDate
         {
-            get { return this.GetProperty<DateTime>(CreateDateProperty); }
+            get { return this.GetProperty(CreateDateProperty); }
             set { this.SetProperty(CreateDateProperty, value); }
         }
 

@@ -51,7 +51,7 @@ namespace UT
         /// </summary>
         public string UserName
         {
-            get { return this.GetProperty<string>(UserNameProperty); }
+            get { return this.GetProperty(UserNameProperty); }
             set { this.SetProperty(UserNameProperty, value); }
         }
 

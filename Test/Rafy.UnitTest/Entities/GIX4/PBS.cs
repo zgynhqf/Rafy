@@ -60,7 +60,7 @@ namespace UT
         public static readonly Property<string> NameProperty = P<PBS>.Register(e => e.Name);
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 

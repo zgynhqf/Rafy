@@ -68,7 +68,7 @@ namespace UT
         /// </summary>
         public double Amount
         {
-            get { return this.GetProperty<double>(AmountProperty); }
+            get { return this.GetProperty(AmountProperty); }
             set { this.SetProperty(AmountProperty, value); }
         }
 
@@ -78,7 +78,7 @@ namespace UT
         /// </summary>
         public bool IsDefault
         {
-            get { return this.GetProperty<bool>(IsDefaultProperty); }
+            get { return this.GetProperty(IsDefaultProperty); }
             set { this.SetProperty(IsDefaultProperty, value); }
         }
 

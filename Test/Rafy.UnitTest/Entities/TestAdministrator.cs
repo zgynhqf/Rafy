@@ -18,7 +18,7 @@ namespace UT
         public static readonly Property<int?> LevelProperty = P<TestAdministrator>.Register(e => e.Level);
         public int? Level
         {
-            get { return this.GetProperty<int?>(LevelProperty); }
+            get { return this.GetProperty(LevelProperty); }
             set { this.SetProperty(LevelProperty, value); }
         }
     }

@@ -40,7 +40,7 @@ namespace UT
         /// </summary>
         public string Name
         {
-            get { return this.GetProperty<string>(NameProperty); }
+            get { return this.GetProperty(NameProperty); }
             set { this.SetProperty(NameProperty, value); }
         }
 
@@ -50,7 +50,7 @@ namespace UT
         /// </summary>
         public AType Type
         {
-            get { return this.GetProperty<AType>(TypeProperty); }
+            get { return this.GetProperty(TypeProperty); }
             set { this.SetProperty(TypeProperty, value); }
         }
 
