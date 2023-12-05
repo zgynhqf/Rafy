@@ -54,6 +54,26 @@ namespace UT
             set { this.SetProperty(TypeProperty, value); }
         }
 
+        public static readonly Property<string> Value1Property = P<A>.Register(e => e.Value1);
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value1
+        {
+            get { return this.GetProperty(Value1Property); }
+            set { this.SetProperty(Value1Property, value); }
+        }
+
+        public static readonly Property<string> Value2Property = P<A>.Register(e => e.Value2);
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value2
+        {
+            get { return this.GetProperty(Value2Property); }
+            set { this.SetProperty(Value2Property, value); }
+        }
+
         #endregion
 
         #region 只读属性

@@ -18,9 +18,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Rafy.ManagedProperty;
-using Rafy.MetaModel;
 
-namespace Rafy.Domain
+namespace Rafy.MetaModel
 {
     /// <summary>
     /// 冗余属性路径

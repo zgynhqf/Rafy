@@ -18,8 +18,7 @@ namespace UT
     [RootEntity]
     public partial class D : UnitTestEntity
     {
-        public static readonly Property<int> CIdProperty =
-            P<D>.Register(e => e.CId);
+        public static readonly Property<int> CIdProperty = P<D>.Register(e => e.CId);
         public int CId
         {
             get { return this.GetProperty(CIdProperty); }
@@ -33,8 +32,7 @@ namespace UT
             set { this.SetRefEntity(CProperty, value); }
         }
 
-        public static readonly Property<string> ANameProperty = P<D>.RegisterRedundancy(
-            e => e.AName, new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
+        public static readonly Property<string> ANameProperty = P<D>.Register(e => e.AName);
         public string AName
         {
             get { return this.GetProperty(ANameProperty); }
@@ -53,6 +51,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+            MapRefValue(e => e.AName, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

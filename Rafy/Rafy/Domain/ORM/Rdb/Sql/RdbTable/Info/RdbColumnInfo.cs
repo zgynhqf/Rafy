@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Rafy.DbMigration;
 using Rafy.Domain.ORM.Query;
 using Rafy.Domain.ORM.SqlTree;
+using Rafy.ManagedProperty;
 using Rafy.MetaModel;
 using Rafy.Reflection;
 

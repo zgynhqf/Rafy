@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rafy.Data;
 using Rafy.Domain.Caching;
+using Rafy.ManagedProperty;
 
 namespace Rafy.Domain.ORM.BatchSubmit
 {

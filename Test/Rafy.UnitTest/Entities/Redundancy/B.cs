@@ -52,18 +52,25 @@ namespace UT
 
         #region 只读属性
 
-        public static readonly Property<string> ANameProperty = P<B>.RegisterRedundancy(
-            e => e.AName, new RedundantPath(AProperty, A.NameProperty));
+        public static readonly Property<string> ANameProperty = P<B>.Register(e => e.AName);
         public string AName
         {
             get { return this.GetProperty(ANameProperty); }
+            set { this.SetProperty(ANameProperty, value); }
         }
 
-        public static readonly Property<AType> ATypeProperty = P<B>.RegisterRedundancy(e => e.AType,
-            new RedundantPath(AProperty, A.TypeProperty));
+        public static readonly Property<AType> ATypeProperty = P<B>.Register(e => e.AType);
         public AType AType
         {
             get { return this.GetProperty(ATypeProperty); }
+            set { this.SetProperty(ATypeProperty, value); }
+        }
+
+        public static readonly Property<string> AValue1Property = P<B>.Register(e => e.AValue1);
+        public string AValue1
+        {
+            get { return this.GetProperty(AValue1Property); }
+            set { this.SetProperty(AValue1Property, value); }
         }
 
         #endregion
@@ -82,6 +89,10 @@ namespace UT
         {
             Meta.MapTable().MapAllProperties();
             //Meta.Property(B.ANameRefProperty).MapColumn().IsForeignKey();
+
+            MapRefValue(e => e.AName, e => e.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.AType, e => e.A.Type, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.AValue1, e => e.A.Value1);
         }
     }
 }

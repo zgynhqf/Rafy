@@ -33,22 +33,19 @@ namespace UT
             set { this.SetRefEntity(BProperty, value); }
         }
 
-        public static readonly Property<string> ANameProperty = P<C>.RegisterRedundancy(
-            e => e.AName, new RedundantPath(BProperty, B.AProperty, A.NameProperty));
+        public static readonly Property<string> ANameProperty = P<C>.Register(e => e.AName);
         public string AName
         {
             get { return this.GetProperty(ANameProperty); }
         }
 
-        public static readonly Property<string> ANameRefOfBProperty = P<C>.RegisterRedundancy(e => e.ANameRefOfB,
-            new RedundantPath(BProperty, B.ANameRefProperty));
+        public static readonly Property<string> ANameRefOfBProperty = P<C>.Register(e => e.ANameRefOfB);
         public string ANameRefOfB
         {
             get { return this.GetProperty(ANameRefOfBProperty); }
         }
 
-        public static readonly Property<int> AIdProperty = P<C>.RegisterRedundancy(e => e.AId,
-            new RedundantPath(BProperty, B.AProperty, A.IdProperty));
+        public static readonly Property<int> AIdProperty = P<C>.Register(e => e.AId);
         public int AId
         {
             get { return this.GetProperty(AIdProperty); }
@@ -67,6 +64,10 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+
+            MapRefValue(e => e.AName, e => e.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.ANameRefOfB, e => e.B.ANameRef, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.AId, e => e.B.A.Id, ReferenceValueDataMode.Redundancy);
         }
     }
 }

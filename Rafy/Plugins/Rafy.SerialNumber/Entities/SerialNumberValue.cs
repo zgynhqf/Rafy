@@ -44,15 +44,15 @@ namespace Rafy.SerialNumber
             get { return this.GetProperty(SerialNumberInfoIdProperty); }
             set { this.SetProperty(SerialNumberInfoIdProperty, value); }
         }
-        public static readonly RefEntityProperty<SerialNumberInfo> AutoCodeInfoProperty =
+        public static readonly RefEntityProperty<SerialNumberInfo> SerialNumberInfoProperty =
             P<SerialNumberValue>.RegisterRef(e => e.SerialNumberInfo, SerialNumberInfoIdProperty, ReferenceType.Parent);
         /// <summary>
         /// 所使用的自动编码规则
         /// </summary>
         public SerialNumberInfo SerialNumberInfo
         {
-            get { return this.GetRefEntity(AutoCodeInfoProperty); }
-            set { this.SetRefEntity(AutoCodeInfoProperty, value); }
+            get { return this.GetRefEntity(SerialNumberInfoProperty); }
+            set { this.SetRefEntity(SerialNumberInfoProperty, value); }
         }
 
         #endregion
@@ -98,15 +98,13 @@ namespace Rafy.SerialNumber
 
         #region 只读属性
 
-        public static readonly Property<string> RD_TimeKeyFormatProperty = P<SerialNumberValue>.RegisterRedundancy(e => e.RD_TimeKeyFormat,
-            new RedundantPath(AutoCodeInfoProperty, SerialNumberInfo.TimeGroupFormatProperty));
+        public static readonly Property<string> RD_TimeKeyFormatProperty = P<SerialNumberValue>.Register(e => e.RD_TimeKeyFormat);
         public string RD_TimeKeyFormat
         {
             get { return this.GetProperty(RD_TimeKeyFormatProperty); }
         }
 
-        public static readonly Property<string> RD_FormatProperty = P<SerialNumberValue>.RegisterRedundancy(e => e.RD_Format,
-            new RedundantPath(AutoCodeInfoProperty, SerialNumberInfo.FormatProperty));
+        public static readonly Property<string> RD_FormatProperty = P<SerialNumberValue>.Register(e => e.RD_Format);
         /// <summary>
         /// 从 AutoCodeInfo 冗余过来的 Format 属性。
         /// </summary>
@@ -115,15 +113,13 @@ namespace Rafy.SerialNumber
             get { return this.GetProperty(RD_FormatProperty); }
         }
 
-        public static readonly Property<int> RD_RollValueStartProperty = P<SerialNumberValue>.RegisterRedundancy(e => e.RD_RollValueStart,
-            new RedundantPath(AutoCodeInfoProperty, SerialNumberInfo.RollValueStartProperty));
+        public static readonly Property<int> RD_RollValueStartProperty = P<SerialNumberValue>.Register(e => e.RD_RollValueStart);
         public int RD_RollValueStart
         {
             get { return this.GetProperty(RD_RollValueStartProperty); }
         }
 
-        public static readonly Property<int> RD_RollValueStepProperty = P<SerialNumberValue>.RegisterRedundancy(e => e.RD_RollValueStep,
-            new RedundantPath(AutoCodeInfoProperty, SerialNumberInfo.RollValueStepProperty));
+        public static readonly Property<int> RD_RollValueStepProperty = P<SerialNumberValue>.Register(e => e.RD_RollValueStep);
         public int RD_RollValueStep
         {
             get { return this.GetProperty(RD_RollValueStepProperty); }
@@ -237,6 +233,11 @@ namespace Rafy.SerialNumber
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
+
+            MapRefValue(e => e.RD_TimeKeyFormat, e => e.SerialNumberInfo.TimeGroupFormat, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.RD_Format, e => e.SerialNumberInfo.Format, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.RD_RollValueStart, e => e.SerialNumberInfo.RollValueStart, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.RD_RollValueStep, e => e.SerialNumberInfo.RollValueStep, ReferenceValueDataMode.Redundancy);
         }
     }
 }

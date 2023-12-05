@@ -75,8 +75,7 @@ namespace UT
         /// <summary>
         /// 扩展的 AName 扩展属性。
         /// </summary>
-        public static Property<string> ANameExtProperty = P<B>.RegisterRedundancyExtension<string>("ANameExt", typeof(TestUserExt),
-            new RedundantPath(B.AProperty, A.NameProperty));
+        public static Property<string> ANameExtProperty = P<B>.RegisterExtension<string>("ANameExt", typeof(TestUserExt));
         /// <summary>
         /// 获取 扩展的 AName 属性的值。
         /// </summary>
@@ -94,6 +93,14 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.Property(TestUserExt.UserCodeProperty).MapColumn();
+        }
+    }
+
+    internal class BExtConfig : EntityConfig<B>
+    {
+        protected override void ConfigMeta()
+        {
+            Meta.Property(TestUserExt.ANameExtProperty).MapRefValue<B>(b => b.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

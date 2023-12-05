@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Rafy.Reflection
 {
     /// <summary>
-    /// Provides strong-typed reflection of the <typeparamref name="TTarget"/> 
+    /// Provides strong-typed reflection of the some Type.
     /// type.
     /// </summary>
-    /// <typeparam name="TTarget">Type to reflect.</typeparam>
-    public static class Reflect<TTarget>
+    public static class Reflect
     {
         /// <summary>
         /// Gets the method represented by the lambda expression.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        public static MethodInfo GetMethod(Expression<Action<TTarget>> method)
+        public static MethodInfo GetMethod<TTarget>(Expression<Action<TTarget>> method)
         {
             return GetMethodInfo(method);
         }
@@ -24,10 +24,11 @@ namespace Rafy.Reflection
         /// <summary>
         /// Gets the method represented by the lambda expression.
         /// </summary>
+        /// <typeparam name="TTarget">Type to reflect.</typeparam>
         /// <typeparam name="T1">The type of the 1.</typeparam>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        public static MethodInfo GetMethod<T1>(Expression<Action<TTarget, T1>> method)
+        public static MethodInfo GetMethod<TTarget, T1>(Expression<Action<TTarget, T1>> method)
         {
             return GetMethodInfo(method);
         }
@@ -37,7 +38,7 @@ namespace Rafy.Reflection
         /// </summary>
         /// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-        public static MethodInfo GetMethod<T1, T2>(Expression<Action<TTarget, T1, T2>> method)
+        public static MethodInfo GetMethod<TTarget, T1, T2>(Expression<Action<TTarget, T1, T2>> method)
         {
             return GetMethodInfo(method);
         }
@@ -47,7 +48,7 @@ namespace Rafy.Reflection
         /// </summary>
         /// <exception cref="ArgumentNullException">The <paramref name="method"/> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="method"/> is not a lambda expression or it does not represent a method invocation.</exception>
-        public static MethodInfo GetMethod<T1, T2, T3>(Expression<Action<TTarget, T1, T2, T3>> method)
+        public static MethodInfo GetMethod<TTarget, T1, T2, T3>(Expression<Action<TTarget, T1, T2, T3>> method)
         {
             return GetMethodInfo(method);
         }
@@ -67,12 +68,13 @@ namespace Rafy.Reflection
         /// Gets the property.
         /// </summary>
         /// <param name="property">The property.</param>
+        /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">Member is not a property</exception>
-        public static PropertyInfo GetProperty(Expression<Func<TTarget, object>> property)
+        public static PropertyInfo GetProperty<TTarget>(Expression<Func<TTarget, object>> property, bool throwIfNotFound = true)
         {
-            var info = GetMemberInfo(property) as PropertyInfo;
-            if (info == null) throw new ArgumentException("Member is not a property");
+            var info = GetMemberExpression(property, throwIfNotFound)?.Member as PropertyInfo;
+            if (info == null && throwIfNotFound) throw new ArgumentException("Member is not a property");
 
             return info;
         }
@@ -81,13 +83,15 @@ namespace Rafy.Reflection
         /// Gets the property represented by the lambda expression.
         /// </summary>
         /// <typeparam name="P">Type assigned to the property</typeparam>
+        /// <typeparam name="TTarget">Type to reflect.</typeparam>
         /// <param name="property">Property Expression</param>
+        /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">Member is not a property</exception>
-        public static PropertyInfo GetProperty<P>(Expression<Func<TTarget, P>> property)
+        public static PropertyInfo GetProperty<TTarget, P>(Expression<Func<TTarget, P>> property, bool throwIfNotFound = true)
         {
-            var info = GetMemberInfo(property) as PropertyInfo;
-            if (info == null) throw new ArgumentException("Member is not a property");
+            var info = GetMemberExpression(property, throwIfNotFound)?.Member as PropertyInfo;
+            if (info == null && throwIfNotFound) throw new ArgumentException("Member is not a property");
 
             return info;
         }
@@ -96,17 +100,18 @@ namespace Rafy.Reflection
         /// Gets the field represented by the lambda expression.
         /// </summary>
         /// <param name="field">The field.</param>
+        /// <param name="throwIfNotFound"></param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">Member is not a field</exception>
-        public static FieldInfo GetField(Expression<Func<TTarget, object>> field)
+        public static FieldInfo GetField<TTarget>(Expression<Func<TTarget, object>> field, bool throwIfNotFound = true)
         {
-            var info = GetMemberInfo(field) as FieldInfo;
+            var info = GetMemberExpression(field, throwIfNotFound)?.Member as FieldInfo;
             if (info == null) throw new ArgumentException("Member is not a field");
 
             return info;
         }
 
-        private static MemberInfo GetMemberInfo(LambdaExpression lambda)
+        public static MemberExpression GetMemberExpression(LambdaExpression lambda, bool throwIfNotFound = true)
         {
             if (lambda == null) throw new ArgumentNullException("lambda");
 
@@ -125,9 +130,16 @@ namespace Rafy.Reflection
                 memberExpr = lambda.Body as MemberExpression;
             }
 
-            if (memberExpr == null) throw new ArgumentException("Not a member access", "member");
+            if (memberExpr == null)
+            {
+                if (throwIfNotFound)
+                {
+                    throw new ArgumentException("Not a member access", "member");
+                }
+                return null;
+            }
 
-            return memberExpr.Member;
+            return memberExpr;
         }
     }
 }

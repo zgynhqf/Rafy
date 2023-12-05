@@ -16,9 +16,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
-namespace Rafy.Domain
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// Rafy 实体框架中的托管属性
@@ -53,5 +53,15 @@ namespace Rafy.Domain
         IEnumerable<RedundantPath> InRedundantPathes { get; }
 
         #endregion
+    }
+
+    internal interface IPropertyInternal : IProperty
+    {
+        /// <summary>
+        /// 其它类声明的本依赖属性的冗余属性路径
+        /// </summary>
+        new List<RedundantPath> InRedundantPathes { get; }
+
+        void AsRedundantOf(RedundantPath path);
     }
 }

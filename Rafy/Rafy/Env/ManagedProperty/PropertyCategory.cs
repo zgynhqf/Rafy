@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rafy.Domain
+namespace Rafy.ManagedProperty
 {
     /// <summary>
     /// Rafy 中可用的属性类型

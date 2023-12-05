@@ -101,7 +101,7 @@ namespace Rafy.Domain.ORM.DbMigration
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"无法以 XML 加载文件：{xmlDocPath}，请重新编译生成相应注释文件。", ex);
+                        throw new Exception($"无法以 XML 加载文件：{xmlDocPath}，请删除旧文件后、再重新编译生成相应注释文件。", ex);
                     }
                 }
             }

@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Rafy.ManagedProperty;
 
@@ -105,6 +106,17 @@ namespace Rafy.MetaModel
         protected internal override sealed Type EntityType
         {
             get { return typeof(TEntity); }
+        }
+
+        /// <summary>
+        /// 声明实体指定的一个属性的值是通过指定的引用关系来获取。
+        /// </summary>
+        /// <param name="property">当前实体中的指定值属性。</param>
+        /// <param name="refValueProperty">通过引用关系到达值属性的路径的表达式。</param>
+        /// <param name="dataMode">关系数据获取的方式</param>
+        public void MapRefValue(Expression<Func<TEntity, object>> property, Expression<Func<TEntity, object>> refValueProperty, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        {
+            Meta.MapRefValue(property, refValueProperty, dataMode);
         }
     }
 }

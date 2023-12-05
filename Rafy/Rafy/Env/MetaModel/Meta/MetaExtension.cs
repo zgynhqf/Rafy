@@ -12,10 +12,14 @@
 *******************************************************/
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using Rafy.Domain;
 using Rafy.ManagedProperty;
 using Rafy.MetaModel.Attributes;
@@ -265,6 +269,70 @@ namespace Rafy.MetaModel
         {
             meta.ColumnName = columnName;
             return meta;
+        }
+
+        /// <summary>
+        /// 声明实体指定的一个属性的值是通过指定的引用关系来获取。
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="meta"></param>
+        /// <param name="property">当前实体中的指定值属性。</param>
+        /// <param name="refValueProperty">通过引用关系到达值属性的路径的表达式。</param>
+        /// <param name="dataMode">关系数据获取的方式</param>
+        public static void MapRefValue<TEntity>(this EntityMeta meta, Expression<Func<TEntity, object>> property, Expression<Func<TEntity, object>> refValueProperty, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        {
+            var propertyName = Reflect.GetProperty(property).Name;
+            var propertyMeta = meta.Property(propertyName);
+            MapRefValue(propertyMeta, refValueProperty, dataMode);
+        }
+
+        /// <summary>
+        /// 声明一个属性的值是通过指定的引用关系来获取。
+        /// </summary>
+        /// <param name="meta">当前实体中的指定值属性。</param>
+        /// <param name="refValueProperty">通过引用关系到达值属性的路径的表达式。</param>
+        /// <param name="dataMode">关系数据获取的方式</param>
+        public static void MapRefValue<TEntity>(this EntityPropertyMeta meta, Expression<Func<TEntity, object>> refValueProperty, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        {
+            var properties = new List<PropertyInfo>();
+            var memberExp = Reflect.GetMemberExpression(refValueProperty);
+            while (true)
+            {
+                var property = memberExp.Member as PropertyInfo;
+                if (property == null) break;
+                properties.Insert(0, property);
+                memberExp = memberExp.Expression as MemberExpression;
+                if (memberExp == null) break;
+            }
+
+            var mpPath = new List<object>();
+            var propertyOwnerType = meta.Owner.EntityType;
+            foreach (var property in properties)
+            {
+                var mpList = ManagedPropertyRepository.Instance.GetTypePropertiesContainer(propertyOwnerType).GetNonReadOnlyCompiledProperties();
+                var mp = mpList.Find(property.Name);
+                if (mp.OwnerType == propertyOwnerType)
+                {
+                    mpPath.Add(mp);
+                }
+                else
+                {
+                    mpPath.Add(new ConcreteProperty(mp, propertyOwnerType));
+                }
+
+                if (mp is IRefProperty refP)
+                {
+                    propertyOwnerType = refP.RefEntityType;
+                }
+            }
+
+            var redundantPath = new RedundantPath(mpPath.ToArray());
+            MapRefValue(meta, redundantPath, dataMode);
+        }
+
+        private static void MapRefValue(this EntityPropertyMeta meta, RedundantPath redundantPath, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        {
+            meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(redundantPath);
         }
 
         /// <summary>

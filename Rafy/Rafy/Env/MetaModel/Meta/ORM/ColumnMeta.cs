@@ -134,4 +134,23 @@ namespace Rafy.MetaModel
             set { this.SetValue(ref this._DbTypeLength, value); }
         }
     }
+
+    /// <summary>
+    /// 引用的关系的属性值时，值的处理获取方式。
+    /// </summary>
+    public enum ReferenceValueDataMode
+    {
+        /// <summary>
+        /// 采用即时的方式。
+        /// 此时，当前实体对应的表中没有字段。
+        /// 在读取实体时，会在 sql 中生成 join 语句，并把关系表中的值读取过来。
+        /// </summary>
+        ReadJoinTable,
+        /// <summary>
+        /// 采用冗余的方式。
+        /// 此时，会在本实体对应的表中生成字段，并将引用关系表属性的值直接拷贝到字段中，作为一份冗余。
+        /// 这个冗余属性的值，会在引用关系表属性的值发生改变时，自动更新。（自动更新只在通过框架变更值时触发；开发者通过其它方式直接修改数据库时，无法触发。）
+        /// </summary>
+        Redundancy
+    }
 }

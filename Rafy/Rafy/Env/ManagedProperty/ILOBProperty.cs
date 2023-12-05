@@ -21,7 +21,7 @@ namespace Rafy.ManagedProperty
     /// <summary>
     /// 大对象属性
     /// </summary>
-    public interface ILOBProperty : IManagedProperty
+    public interface ILOBProperty : IProperty
     {
         /// <summary>
         /// LOB属性的类型

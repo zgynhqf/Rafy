@@ -23,7 +23,7 @@ namespace Rafy.ManagedProperty
     /// 引用 Id 属性或者是引用实体属性。
     /// 两类属性，都可以转换为此接口，方便统一使用方法。
     /// </summary>
-    public interface IRefProperty : IManagedProperty
+    public interface IRefProperty : IProperty
     {
         /// <summary>
         /// 引用实体的类型

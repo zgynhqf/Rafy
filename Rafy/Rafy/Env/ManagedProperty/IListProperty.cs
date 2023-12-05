@@ -21,7 +21,7 @@ namespace Rafy.ManagedProperty
     /// <summary>
     /// Rafy 列表属性
     /// </summary>
-    public interface IListProperty : IManagedProperty
+    public interface IListProperty : IProperty
     {
         /// <summary>
         /// 列表对应的实体类型

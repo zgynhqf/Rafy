@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {
@@ -94,9 +95,9 @@ namespace Rafy.Domain
         /// or
         /// 冗余属性不能被其它冗余属性再次冗余，请直接写全冗余路径。
         /// </exception>
-        internal void AsRedundantOf(RedundantPath path)
+        void IPropertyInternal.AsRedundantOf(RedundantPath path)
         {
-            if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
+            //if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
             if ((path.ValueProperty.Property as IProperty).IsRedundant) throw new InvalidOperationException("冗余属性不能被其它冗余属性再次冗余，请直接写全冗余路径。");
             if (!path.RefPathes[0].Owner.IsAssignableFrom(this.OwnerType))
             {
@@ -207,13 +208,5 @@ namespace Rafy.Domain
         //}
 
         #endregion
-    }
-
-    internal interface IPropertyInternal
-    {
-        /// <summary>
-        /// 其它类声明的本依赖属性的冗余属性路径
-        /// </summary>
-        List<RedundantPath> InRedundantPathes { get; }
     }
 }

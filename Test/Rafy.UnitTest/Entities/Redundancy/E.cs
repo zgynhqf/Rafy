@@ -33,8 +33,7 @@ namespace UT
             set { this.SetRefEntity(DProperty, value); }
         }
 
-        public static readonly Property<string> ANameFromDCBAProperty = P<E>.RegisterRedundancy(e => e.ANameFromDCBA,
-            new RedundantPath(DProperty, D.CProperty, C.BProperty, B.AProperty, A.NameProperty));
+        public static readonly Property<string> ANameFromDCBAProperty = P<E>.Register(e => e.ANameFromDCBA);
         public string ANameFromDCBA
         {
             get { return this.GetProperty(ANameFromDCBAProperty); }
@@ -55,8 +54,7 @@ namespace UT
             set { this.SetRefEntity(CProperty, value); }
         }
 
-        public static readonly Property<string> ANameFromCBAProperty = P<E>.RegisterRedundancy(e => e.ANameFromCBA,
-            new RedundantPath(CProperty, C.BProperty, B.AProperty, A.NameProperty));
+        public static readonly Property<string> ANameFromCBAProperty = P<E>.Register(e => e.ANameFromCBA);
         public string ANameFromCBA
         {
             get { return this.GetProperty(ANameFromCBAProperty); }
@@ -75,6 +73,8 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
+            MapRefValue(e => e.ANameFromDCBA, e => e.D.C.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(e => e.ANameFromCBA, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

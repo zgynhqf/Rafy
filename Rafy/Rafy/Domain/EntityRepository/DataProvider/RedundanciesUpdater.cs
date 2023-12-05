@@ -17,6 +17,7 @@ using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 
 namespace Rafy.Domain
 {

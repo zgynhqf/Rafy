@@ -74,8 +74,7 @@ namespace UT
 
         #region 只读属性
 
-        public static readonly Property<string> RD_MerchantNameProperty = P<MerchantItem>.RegisterRedundancy(e => e.RD_MerchantName,
-            new RedundantPath(HouseMerchantProperty, HouseMerchant.NameProperty));
+        public static readonly Property<string> RD_MerchantNameProperty = P<MerchantItem>.Register(e => e.RD_MerchantName);
         public string RD_MerchantName
         {
             get { return this.GetProperty(RD_MerchantNameProperty); }
@@ -114,6 +113,7 @@ namespace UT
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
+            MapRefValue(e => e.RD_MerchantName, e => e.HouseMerchant.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

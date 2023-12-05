@@ -75,8 +75,7 @@ namespace UT
 
         #region 只读属性
 
-        public static readonly Property<string> RD_ANameProperty = P<AChild>.RegisterRedundancy(e => e.RD_AName,
-            new RedundantPath(AProperty, A.NameProperty));
+        public static readonly Property<string> RD_ANameProperty = P<AChild>.Register(e => e.RD_AName);
         public string RD_AName
         {
             get { return this.GetProperty(RD_ANameProperty); }
@@ -115,6 +114,7 @@ namespace UT
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
+            MapRefValue(e => e.RD_AName, e => e.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }
