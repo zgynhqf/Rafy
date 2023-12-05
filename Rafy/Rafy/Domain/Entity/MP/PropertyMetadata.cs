@@ -76,11 +76,10 @@ namespace Rafy.Domain
             var propertyType = typeof(TPropertyType);
             object defaultValue = null;
 
-            //if (propertyType == typeof(string))
-            //{
-            //    defaultValue = string.Empty;
-            //}
-            //else 
+            if (propertyType == typeof(string))
+            {
+                defaultValue = PropertyDefailtValues.DefaultString;
+            }
             //else if (propertyType == typeof(DateRange))
             //{
             //    defaultValue = new DateRange()
@@ -93,7 +92,7 @@ namespace Rafy.Domain
             //{
             //    defaultValue = new NumberRange();
             //}
-            if (propertyType == typeof(DateTime))
+            else if (propertyType == typeof(DateTime))
             {
                 defaultValue = PropertyDefailtValues.DefaultDateTime;
             }

@@ -20,15 +20,20 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// Rafy 中属性的默认值。
+    /// 
+    /// 应用层可以修改此类中的属性来统一变更管理属性在注册时的默认值。
     /// </summary>
     public static class PropertyDefailtValues
     {
         /// <summary>
-        /// 应用层可以修改此属性来变更管理属性在注册时的默认值。
-        /// 
         /// 默认是 2000-01-01，这个默认值可以插入到各个数据库中。
         /// </summary>
         public static DateTime DefaultDateTime = new DateTime(2000, 1, 1);
+
+        /// <summary>
+        /// 字符串类型属性的默认值。
+        /// </summary>
+        public static string DefaultString = null;
 
         /// <summary>
         /// 默认的 LOB 二进制流
