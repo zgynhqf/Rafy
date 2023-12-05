@@ -40,7 +40,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 如果本托管属性是一个冗余属性，则这里返回它对应的冗余路径。
         /// </summary>
-        RedundantPath RedundantPath { get; }
+        ReferenceValuePath RedundantPath { get; }
 
         /// <summary>
         /// 本托管属性是否在其它类上被声明了冗余属性的路径上
@@ -50,7 +50,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 其它类声明的本依赖属性的冗余属性路径
         /// </summary>
-        IEnumerable<RedundantPath> InRedundantPathes { get; }
+        IEnumerable<ReferenceValuePath> InRedundantPathes { get; }
 
         #endregion
     }
@@ -60,8 +60,8 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 其它类声明的本依赖属性的冗余属性路径
         /// </summary>
-        new List<RedundantPath> InRedundantPathes { get; }
+        new List<ReferenceValuePath> InRedundantPathes { get; }
 
-        void AsRedundantOf(RedundantPath path);
+        void AsRedundantOf(ReferenceValuePath path);
     }
 }

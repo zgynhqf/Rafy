@@ -118,7 +118,7 @@ namespace Rafy.Domain
         /// <param name="newValue">The new value.</param>
         /// <param name="dbEntity">The db entity.</param>
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        private void UpdateRedundancyByValue(Entity entity, RedundantPath path, object newValue, Lazy<Entity> dbEntity)
+        private void UpdateRedundancyByValue(Entity entity, ReferenceValuePath path, object newValue, Lazy<Entity> dbEntity)
         {
             this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, dbEntity);
         }
@@ -130,7 +130,7 @@ namespace Rafy.Domain
         /// <param name="path">The path.</param>
         /// <param name="refChanged">该引用属性值变化了</param>
         /// <param name="dbEntity">The db entity.</param>
-        private void UpdateRedundancyByIntermidateRef(Entity entity, RedundantPath path, IRefProperty refChanged, Lazy<Entity> dbEntity)
+        private void UpdateRedundancyByIntermidateRef(Entity entity, ReferenceValuePath path, IRefProperty refChanged, Lazy<Entity> dbEntity)
         {
             var newValue = entity.GetRedundancyValue(path, refChanged);
 
@@ -152,7 +152,7 @@ namespace Rafy.Domain
         /// <param name="path">The path.</param>
         /// <param name="refChanged">该引用属性值变化了</param>
         /// <param name="dbEntity">The db entity.</param>
-        private void UpdateRedundancyByRefValue(Entity entity, RedundantPath path, IRefProperty refChanged, Lazy<Entity> dbEntity)
+        private void UpdateRedundancyByRefValue(Entity entity, ReferenceValuePath path, IRefProperty refChanged, Lazy<Entity> dbEntity)
         {
             var newValue = entity.GetRefKey(refChanged);
 

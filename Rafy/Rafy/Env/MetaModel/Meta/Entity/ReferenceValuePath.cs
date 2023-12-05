@@ -22,10 +22,10 @@ using Rafy.ManagedProperty;
 namespace Rafy.MetaModel
 {
     /// <summary>
-    /// 冗余属性路径
+    /// 引用关系值属性的属性路径。
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay}")]
-    public class RedundantPath
+    public class ReferenceValuePath
     {
         /// <summary>
         /// 冗余属性路径
@@ -37,7 +37,7 @@ namespace Rafy.MetaModel
         /// 表示从第一个引用属性开始的一个引用链条，一直到最后一个值属性对应的值。例如：
         /// D.CRef, C.BRef, B.ARef, A.Name 这样的一个集合表示以下冗余路径：D->C->B->A.Name
         /// </param>
-        public RedundantPath(params object[] pathes)
+        public ReferenceValuePath(params object[] pathes)
         {
             this.ValueProperty = ConvertParameter(pathes[pathes.Length - 1], false);
 

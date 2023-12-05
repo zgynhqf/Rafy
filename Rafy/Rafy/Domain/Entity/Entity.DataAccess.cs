@@ -107,7 +107,7 @@ namespace Rafy.Domain
         /// 如果没有指定此属性，则表示从第一个开始。
         /// </param>
         /// <returns></returns>
-        internal object GetRedundancyValue(RedundantPath path, IRefProperty from = null)
+        internal object GetRedundancyValue(ReferenceValuePath path, IRefProperty from = null)
         {
             Entity refEntity = this;
             foreach (var refP in path.RefPathes)

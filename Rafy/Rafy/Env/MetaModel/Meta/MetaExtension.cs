@@ -277,25 +277,25 @@ namespace Rafy.MetaModel
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="meta"></param>
         /// <param name="property">当前实体中的指定值属性。</param>
-        /// <param name="refValueProperty">通过引用关系到达值属性的路径的表达式。</param>
+        /// <param name="refValuePath">通过引用关系到达值属性的路径的表达式。</param>
         /// <param name="dataMode">关系数据获取的方式</param>
-        public static void MapRefValue<TEntity>(this EntityMeta meta, Expression<Func<TEntity, object>> property, Expression<Func<TEntity, object>> refValueProperty, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        public static void MapRefValue<TEntity>(this EntityMeta meta, Expression<Func<TEntity, object>> property, Expression<Func<TEntity, object>> refValuePath, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
         {
             var propertyName = Reflect.GetProperty(property).Name;
             var propertyMeta = meta.Property(propertyName);
-            MapRefValue(propertyMeta, refValueProperty, dataMode);
+            MapRefValue(propertyMeta, refValuePath, dataMode);
         }
 
         /// <summary>
         /// 声明一个属性的值是通过指定的引用关系来获取。
         /// </summary>
         /// <param name="meta">当前实体中的指定值属性。</param>
-        /// <param name="refValueProperty">通过引用关系到达值属性的路径的表达式。</param>
+        /// <param name="refValuePath">通过引用关系到达值属性的路径的表达式。</param>
         /// <param name="dataMode">关系数据获取的方式</param>
-        public static void MapRefValue<TEntity>(this EntityPropertyMeta meta, Expression<Func<TEntity, object>> refValueProperty, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        public static void MapRefValue<TEntity>(this EntityPropertyMeta meta, Expression<Func<TEntity, object>> refValuePath, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
         {
             var properties = new List<PropertyInfo>();
-            var memberExp = Reflect.GetMemberExpression(refValueProperty);
+            var memberExp = Reflect.GetMemberExpression(refValuePath);
             while (true)
             {
                 var property = memberExp.Member as PropertyInfo;
@@ -326,13 +326,13 @@ namespace Rafy.MetaModel
                 }
             }
 
-            var redundantPath = new RedundantPath(mpPath.ToArray());
-            MapRefValue(meta, redundantPath, dataMode);
+            var rvPath = new ReferenceValuePath(mpPath.ToArray());
+            MapRefValue(meta, rvPath, dataMode);
         }
 
-        private static void MapRefValue(this EntityPropertyMeta meta, RedundantPath redundantPath, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
+        private static void MapRefValue(this EntityPropertyMeta meta, ReferenceValuePath path, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
         {
-            meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(redundantPath);
+            meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(path);
         }
 
         /// <summary>

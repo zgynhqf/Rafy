@@ -63,12 +63,12 @@ namespace Rafy.Domain
         /// <summary>
         /// 如果本托管属性是一个冗余属性，则这个字段表示它的依赖路径
         /// </summary>
-        private RedundantPath _redundantPath;
+        private ReferenceValuePath _redundantPath;
 
         /// <summary>
         /// 其它类声明的本依赖属性的冗余属性
         /// </summary>
-        private List<RedundantPath> _inRedundantPathes = new List<RedundantPath>();
+        private List<ReferenceValuePath> _inRedundantPathes = new List<ReferenceValuePath>();
 
         /// <summary>
         /// 本托管属性是否是一个冗余属性。
@@ -81,7 +81,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 如果本托管属性是一个冗余属性，则这里返回它对应的冗余路径。
         /// </summary>
-        public RedundantPath RedundantPath
+        public ReferenceValuePath RedundantPath
         {
             get { return this._redundantPath; }
         }
@@ -95,7 +95,7 @@ namespace Rafy.Domain
         /// or
         /// 冗余属性不能被其它冗余属性再次冗余，请直接写全冗余路径。
         /// </exception>
-        void IPropertyInternal.AsRedundantOf(RedundantPath path)
+        void IPropertyInternal.AsRedundantOf(ReferenceValuePath path)
         {
             //if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
             if ((path.ValueProperty.Property as IProperty).IsRedundant) throw new InvalidOperationException("冗余属性不能被其它冗余属性再次冗余，请直接写全冗余路径。");
@@ -121,12 +121,12 @@ namespace Rafy.Domain
             get { return this._inRedundantPathes.Count > 0; }
         }
 
-        List<RedundantPath> IPropertyInternal.InRedundantPathes
+        List<ReferenceValuePath> IPropertyInternal.InRedundantPathes
         {
             get { return this._inRedundantPathes; }
         }
 
-        IEnumerable<RedundantPath> IProperty.InRedundantPathes
+        IEnumerable<ReferenceValuePath> IProperty.InRedundantPathes
         {
             get { return this._inRedundantPathes; }
         }
