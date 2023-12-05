@@ -58,6 +58,7 @@ namespace Rafy.Data
 
         /// <summary>
         /// 发生了数据访问后的事件。
+        /// 如果数据访问时发生异常，则不会发现这个事件。
         /// </summary>
         public static event EventHandler<DbAccessedEventArgs> DbAccessed;
 
