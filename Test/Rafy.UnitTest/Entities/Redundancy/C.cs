@@ -65,9 +65,9 @@ namespace UT
         {
             Meta.MapTable().MapAllProperties();
 
-            MapRefValue(e => e.AName, e => e.B.A.Name, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.ANameRefOfB, e => e.B.ANameRef, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.AId, e => e.B.A.Id, ReferenceValueDataMode.Redundancy);
+            MapRefValue(C.ANameProperty, e => e.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(C.ANameRefOfBProperty, e => e.B.ANameRef, ReferenceValueDataMode.Redundancy);
+            MapRefValue(C.AIdProperty, e => e.B.A.Id, ReferenceValueDataMode.Redundancy);
         }
     }
 }

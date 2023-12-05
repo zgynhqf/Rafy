@@ -114,7 +114,7 @@ namespace UT
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            MapRefValue(e => e.RD_AName, e => e.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(AChild.RD_ANameProperty, e => e.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

@@ -73,8 +73,8 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
-            MapRefValue(e => e.ANameFromDCBA, e => e.D.C.B.A.Name, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.ANameFromCBA, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(E.ANameFromDCBAProperty, e => e.D.C.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(E.ANameFromCBAProperty, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

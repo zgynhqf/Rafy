@@ -234,10 +234,10 @@ namespace Rafy.SerialNumber
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
 
-            MapRefValue(e => e.RD_TimeKeyFormat, e => e.SerialNumberInfo.TimeGroupFormat, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.RD_Format, e => e.SerialNumberInfo.Format, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.RD_RollValueStart, e => e.SerialNumberInfo.RollValueStart, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.RD_RollValueStep, e => e.SerialNumberInfo.RollValueStep, ReferenceValueDataMode.Redundancy);
+            MapRefValue(SerialNumberValue.RD_TimeKeyFormatProperty, e => e.SerialNumberInfo.TimeGroupFormat, ReferenceValueDataMode.Redundancy);
+            MapRefValue(SerialNumberValue.RD_FormatProperty, e => e.SerialNumberInfo.Format, ReferenceValueDataMode.Redundancy);
+            MapRefValue(SerialNumberValue.RD_RollValueStartProperty, e => e.SerialNumberInfo.RollValueStart, ReferenceValueDataMode.Redundancy);
+            MapRefValue(SerialNumberValue.RD_RollValueStepProperty, e => e.SerialNumberInfo.RollValueStep, ReferenceValueDataMode.Redundancy);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace UT
         protected override void ConfigMeta()
         {
             Meta.MapTable().MapAllProperties();
-            MapRefValue(e => e.AName, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(D.ANameProperty, e => e.C.B.A.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }

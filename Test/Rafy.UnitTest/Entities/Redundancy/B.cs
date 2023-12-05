@@ -66,11 +66,11 @@ namespace UT
             set { this.SetProperty(ATypeProperty, value); }
         }
 
-        public static readonly Property<string> AValue1Property = P<B>.Register(e => e.AValue1);
-        public string AValue1
+        public static readonly Property<string> ANameFromJoinProperty = P<B>.Register(e => e.ANameFromJoin);
+        public string ANameFromJoin
         {
-            get { return this.GetProperty(AValue1Property); }
-            set { this.SetProperty(AValue1Property, value); }
+            get { return this.GetProperty(ANameFromJoinProperty); }
+            set { this.SetProperty(ANameFromJoinProperty, value); }
         }
 
         #endregion
@@ -90,9 +90,9 @@ namespace UT
             Meta.MapTable().MapAllProperties();
             //Meta.Property(B.ANameRefProperty).MapColumn().IsForeignKey();
 
-            MapRefValue(e => e.AName, e => e.A.Name, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.AType, e => e.A.Type, ReferenceValueDataMode.Redundancy);
-            MapRefValue(e => e.AValue1, e => e.A.Value1);
+            MapRefValue(B.NameProperty, e => e.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(B.ATypeProperty, e => e.A.Type, ReferenceValueDataMode.Redundancy);
+            MapRefValue(B.ANameFromJoinProperty, e => e.A.Name);
         }
     }
 }

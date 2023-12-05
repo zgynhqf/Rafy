@@ -113,7 +113,7 @@ namespace UT
         {
             //配置实体的所有属性都映射到数据表中。
             Meta.MapTable().MapAllProperties();
-            MapRefValue(e => e.RD_MerchantName, e => e.HouseMerchant.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(MerchantItem.RD_MerchantNameProperty, e => e.HouseMerchant.Name, ReferenceValueDataMode.Redundancy);
         }
     }
 }
