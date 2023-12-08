@@ -62,6 +62,10 @@ namespace Rafy.ManagedProperty
         /// </summary>
         new List<ReferenceValuePath> InRedundantPathes { get; }
 
+        /// <summary>
+        /// 声明本属性为冗余属性
+        /// </summary>
+        /// <param name="path"></param>
         void AsRedundantOf(ReferenceValuePath path);
     }
 }

@@ -5,6 +5,8 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     <Description>Rafy 的 MongoDb 连接程序</Description>
+    <Version>3.95.4403</Version>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

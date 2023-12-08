@@ -335,6 +335,7 @@ namespace Rafy.MetaModel
             var cm = meta.MapColumn();
             if (dataMode == ReferenceValueDataMode.Redundancy)
             {
+                //由于冗余属性是行为与实体属性的关系比较密切，所以实现放在托管属性上。
                 meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(path);
             }
             else

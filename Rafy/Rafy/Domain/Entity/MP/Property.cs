@@ -87,7 +87,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 声明本属性为只读属性
+        /// 声明本属性为冗余属性
         /// </summary>
         /// <param name="path">The path.</param>
         /// <exception cref="System.InvalidOperationException">
