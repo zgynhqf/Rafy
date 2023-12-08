@@ -30,7 +30,10 @@ namespace Rafy.VSPackage.Modeling.CodeSync
         public IList<string> FindTypes(ProjectItem csharpItem)
         {
             _result = new List<string>();
-            this.Visit(csharpItem.FileCodeModel.CodeElements);
+            if (csharpItem.FileCodeModel != null)
+            {
+                this.Visit(csharpItem.FileCodeModel.CodeElements);
+            }
             return _result;
         }
 

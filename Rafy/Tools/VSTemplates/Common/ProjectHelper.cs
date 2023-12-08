@@ -60,7 +60,8 @@ namespace Rafy.VSPackage
         {
             foreach (ProjectItem item in EnumerateItems(list))
             {
-                if (item.Name.EndsWith(".cs"))
+                //有些文件夹，也是以 .cs 结尾的……
+                if (item.Name.EndsWith(".cs") && item.FileCodeModel != null)
                 {
                     yield return item;
                 }
