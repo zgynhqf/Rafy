@@ -1654,6 +1654,10 @@ namespace RafyUnitTest
 
                 Assert.AreEqual(size, repo.CountAll());
 
+                var res2 = repo.GetByIdList(new object[] { books[0].Id, books[books.Count - 1].Id });
+                Assert.AreEqual("raw", res2[0].Name, "Name 被统一禁用了，所以其它的属性都被批量更新成功。");
+                Assert.AreEqual("raw", res2[1].Name, "Name 被统一禁用了，所以其它的属性都被批量更新成功。");
+
                 for (int i = 0; i < size; i++)
                 {
                     books[i].Code = i.ToString();
@@ -1664,6 +1668,8 @@ namespace RafyUnitTest
                 var res = repo.GetByIdList(new object[] { books[0].Id, books[books.Count - 1].Id });
                 Assert.AreEqual("0", res[0].Code);
                 Assert.AreEqual("raw", res[0].Name, "Name 被统一禁用了，所以其它的属性都被批量更新成功。");
+                Assert.AreEqual("1", res[1].Code);
+                Assert.AreEqual("raw", res[1].Name, "Name 被统一禁用了，所以其它的属性都被批量更新成功。");
             }
         }
 

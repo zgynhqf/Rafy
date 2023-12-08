@@ -686,7 +686,7 @@ namespace RafyUnitTest
                         Assert.AreEqual(2, rows.Rows.Count);
                     }
                     var repo = RF.Find<TestUser>();
-                    Assert.AreEqual(10, repo.CountAll());
+                    Assert.AreEqual(10, repo.CountAll(), "手工添加数据，是添加了10行代码。");
                 }
                 finally
                 {
