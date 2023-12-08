@@ -43,24 +43,6 @@ namespace Rafy.Domain.ORM.Query
         }
 
         /// <summary>
-        /// 从当前数据源中查找指定仓库对应的表。
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="entityType">要查找这个仓库对应的表。
-        /// 如果这个参数传入 null，则表示查找主表（最左边的表）。</param>
-        /// <param name="alias">
-        /// 要查找表的别名。
-        /// 如果仓库在本数据源中匹配多个实体源，那么将使用别名来进行精确匹配。
-        /// 如果仓库在本数据源中只匹配一个实体源，那么忽略本参数。
-        /// </param>
-        /// <returns></returns>
-        private static ITableSource FindTable(this ISource source, Type entityType, string alias = null)
-        {
-            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType, true);
-            return source.FindTable(repo, alias);
-        }
-
-        /// <summary>
         /// 搜索所有 source 中用到的 TableSource。
         /// </summary>
         /// <param name="source"></param>
@@ -171,7 +153,8 @@ namespace Rafy.Domain.ORM.Query
             var source = query.MainTable;
             if (!property.OwnerType.IsAssignableFrom(source.EntityRepository.EntityType))
             {
-                source = query.From.FindTable(property.OwnerType);
+                var repo = RepositoryFactoryHost.Factory.FindByEntity(property.OwnerType, true);
+                source = query.FindTable(query.From, repo);
             }
             return AddConstraint(query, property, op, value, source);
         }

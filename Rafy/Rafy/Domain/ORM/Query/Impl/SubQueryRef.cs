@@ -74,13 +74,5 @@ namespace Rafy.Domain.ORM.Query.Impl
 
             return property;
         }
-
-        private TableSourceFinder _finder;
-
-        ITableSource ISource.FindTable(IRepository repo, string alias)
-        {
-            if (_finder == null) { _finder = new TableSourceFinder(); }
-            return _finder.Find(this, repo, alias);
-        }
     }
 }

@@ -10,7 +10,7 @@
  * 
 *******************************************************/
 
-3.95.4400
+3.95.4401
     ★★公布、★重要、添加功能
         引用值的方式，支持不映射字段，而是直接从 Join 表中读取。
             添加枚举：ReferenceValueDataMode.ReadJoinTable.
@@ -19,6 +19,7 @@
         重构 IColumnNode 的缓存机制。
             ISqlSelectionColumn 重命名为 ISqlColumn。
         删除无用的 MySqlColumn、OracleColumn。
+        优化：将 ISource.FindTable 移动到 IQuery 上。
 
 3.94.4332
     ★★公布、★重要、！修改接口、！删除接口

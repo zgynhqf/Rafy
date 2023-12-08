@@ -74,40 +74,9 @@ namespace Rafy.Domain.ORM.Query.Impl
             get { return QueryNodeType.TableSource; }
         }
 
-        /// <summary>
-        /// 返回指定的用于查询的列，不包含需要过滤的列。
-        /// 注意！
-        /// 使用此方法生成列之后，不能再修改表的别名，因为这个方法有可能使用的是缓存的列，此时缓存列对应的表的列名无法修改！
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        internal IEnumerable<IColumnNode> CacheSelectionColumns(Predicate<IRdbColumnInfo> filter)
-        {
-            var columns = _tableInfo.Columns;
-            for (int i = 0, c = columns.Count; i < c; i++)
-            {
-                var column = columns[i];
-                if (filter.Invoke(column)) continue;
-
-                var item = this.CacheColumn(column.Property);
-                if (item == null)
-                {
-                    yield return item;
-                }
-            }
-        }
-
         private IColumnNode CacheColumn(IManagedProperty property, string alias = null, bool throwIfNotFound = false)
         {
             return ColumnNodeCache.Instance.Get(this, property, alias, throwIfNotFound);
-        }
-
-        private TableSourceFinder _finder;
-
-        ITableSource ISource.FindTable(IRepository repo, string alias)
-        {
-            if (_finder == null) { _finder = new TableSourceFinder(); }
-            return _finder.Find(this, repo, alias);
         }
     }
 }

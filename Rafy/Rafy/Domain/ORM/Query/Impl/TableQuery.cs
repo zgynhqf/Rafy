@@ -221,6 +221,28 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// </summary>
         public ITableSource MainTable { get; internal set; }
 
+        private TableSourceFinder _tsFinder;
+
+        /// <summary>
+        /// 从当前数据源中查找指定仓库对应的表。
+        /// </summary>
+        /// <param name="source">在这个结点中寻找。</param>
+        /// <param name="repo">要查找这个仓库对应的表。如果这个参数传入 null，则表示查找主表。</param>
+        /// <param name="alias">
+        /// 要查找表的别名。
+        /// 如果仓库在本数据源中匹配多个表，那么将使用别名来进行精确匹配。
+        /// 如果仓库在本数据源中只匹配一个表，那么忽略本参数。
+        /// </param>
+        /// <returns></returns>
+        public ITableSource FindTable(ISource source, IRepository repo = null, string alias = null)
+        {
+            if (_tsFinder == null)
+            {
+                _tsFinder = new TableSourceFinder();
+            }
+            return _tsFinder.Find(source, repo, alias);
+        }
+
         internal static bool HasOrdered(IQuery query)
         {
             return query is TableQuery tq && tq.HasOrdered();

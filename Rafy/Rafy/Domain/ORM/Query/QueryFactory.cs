@@ -100,7 +100,7 @@ namespace Rafy.Domain.ORM.Query
             }
             else
             {
-                tableQuery.MainTable = from.FindTable();
+                tableQuery.MainTable = query.FindTable(from);
             }
             return query;
         }
