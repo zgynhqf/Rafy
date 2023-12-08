@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-16"?>
-<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+<Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" HideNonsenceLabels="false">
   <EntityTypes>
-    <EntityTypeElement FullName="UT.A" Left="112" Top="63" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.A" Left="67.333333333333371" Top="47" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" Label="名称" />
+        <PropertyElement Name="Type" PropertyType="AType" Label="AType" />
+        <PropertyElement Name="Value1" PropertyType="String" />
+        <PropertyElement Name="Value2" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.B" Left="149" Top="231" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.B" Left="215.33333333333326" Top="278.00000000000006" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
-        <PropertyElement Name="AName" PropertyType="String" />
+        <PropertyElement Name="ANameRef" PropertyType="String" Label="B 与 A 的关系，使用 Name 这个一般值属性来关联。" />
         <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="AName" PropertyType="String" />
+        <PropertyElement Name="AType" PropertyType="AType" />
+        <PropertyElement Name="Join_AName" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.C" Left="319" Top="229" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.C" Left="414.00000000000011" Top="219.33333333333331" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
+        <PropertyElement Name="BId" PropertyType="Int?" />
         <PropertyElement Name="AName" PropertyType="String" />
-        <PropertyElement Name="AIdOfB" PropertyType="Int" />
+        <PropertyElement Name="ANameRefOfB" PropertyType="String" />
         <PropertyElement Name="AId" PropertyType="Int" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.D" Left="568" Top="373" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.D" Left="530.66666666666674" Top="352.00000000000011" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
+        <PropertyElement Name="CId" PropertyType="Int" />
         <PropertyElement Name="AName" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.E" Left="647" Top="137" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.E" Left="700.33333333333337" Top="34.999999999999972" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
+        <PropertyElement Name="DId" PropertyType="Int?" />
+        <PropertyElement Name="CId" PropertyType="Int?" />
+        <PropertyElement Name="AId" PropertyType="Int?" />
         <PropertyElement Name="ANameFromDCBA" PropertyType="String" />
         <PropertyElement Name="ANameFromCBA" PropertyType="String" />
+        <PropertyElement Name="Join_DCBA_Type" PropertyType="AType" />
+        <PropertyElement Name="Join_DCBA_Name" PropertyType="String" />
+        <PropertyElement Name="Join_CBA_Name" PropertyType="String" />
+        <PropertyElement Name="Join_A_Name" PropertyType="String" />
+        <PropertyElement Name="Join_D_AName" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.AChild" Label="A的子实体" Left="16" Top="344" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
-      <Properties />
+    <EntityTypeElement FullName="UT.AChild" Label="A的子实体" Left="46.666666666666671" Top="418.66666666666663" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="AId" PropertyType="Int" />
+        <PropertyElement Name="Name" PropertyType="String" />
+        <PropertyElement Name="RD_AName" PropertyType="String" />
+      </Properties>
     </EntityTypeElement>
   </EntityTypes>
   <EnumTypes />
@@ -43,8 +63,8 @@
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
     <ConnectionElement From="UT.B" To="UT.A" Label="A" Hidden="false" LabelVisible="true" ConnectionType="Reference">
-      <FromPointX xsi:nil="true" />
-      <FromPointY xsi:nil="true" />
+      <FromPointX>0.33823499999999995</FromPointX>
+      <FromPointY>0</FromPointY>
       <ToPointX xsi:nil="true" />
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
@@ -67,6 +87,12 @@
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
     <ConnectionElement From="UT.E" To="UT.C" Label="C" Hidden="false" LabelVisible="true" ConnectionType="Reference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.E" To="UT.A" Label="A" Hidden="false" LabelVisible="true" ConnectionType="NullableReference">
       <FromPointX xsi:nil="true" />
       <FromPointY xsi:nil="true" />
       <ToPointX xsi:nil="true" />
