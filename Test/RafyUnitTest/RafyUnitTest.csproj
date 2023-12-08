@@ -33,17 +33,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Castle.Core" Version="4.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
         <PackageReference Include="MySql.Data" Version="8.2.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
         <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
         <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     </ItemGroup>
 
     <ItemGroup>
@@ -67,12 +66,14 @@
     </ItemGroup>
     <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
         <Reference Include="System.Web" />
+        <PackageReference Include="Castle.Core" Version="4.4.1" />
         <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.12.0-beta2" />
         <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.114.3" />
+        <PackageReference Include="Castle.Core" Version="5.1.1" />
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
