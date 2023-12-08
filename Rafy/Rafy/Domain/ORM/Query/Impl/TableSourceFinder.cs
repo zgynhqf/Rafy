@@ -21,28 +21,26 @@ namespace Rafy.Domain.ORM.Query.Impl
     /// <summary>
     /// 从指定的数据源中查找指定仓库对应的实体数据源的查询器类型。
     /// </summary>
-    class TableSourceFinder : QueryNodeVisitor
+    public class TableSourceFinder : QueryNodeVisitor
     {
         private IRepository _repo;
         private string _alias;
         private ISource _source;
-        /// <summary>
-        /// 此字段表明结果是否已经被精确找到。
-        /// </summary>
-        private bool _resultMatched;
+        private bool _stop;
         private ITableSource _result;
 
-        public TableSourceFinder(ISource source)
-        {
-            _source = source;
-        }
-
-        public ITableSource Find(IRepository repo, string alias)
+        public ITableSource Find(ISource source, IRepository repo, string alias)
         {
             _repo = repo;
             _alias = alias;
+            return this.Search(source);
+        }
+
+        private ITableSource Search(ISource source)
+        {
+            _source = source;
             _result = null;
-            _resultMatched = false;
+            _stop = false;
 
             base.Visit(_source);
 
@@ -51,38 +49,41 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         protected override IQueryNode Visit(IQueryNode node)
         {
-            if (_resultMatched) { return node; }
+            if (_stop) { return node; }
 
             return base.Visit(node);
         }
 
-        protected override ITableSource VisitTableSource(ITableSource node)
+        protected override IQueryNode VisitTableSource(ITableSource tableSource)
         {
             if (_repo == null)
             {
-                //如果 _repo 传入 null，查找最左边的实体数据源。
-                _resultMatched = true;
-                _result = node;
+                //如果 _repo 传入 null，查找主实体数据源。
+                if (tableSource.Join == null)
+                {
+                    _stop = true;
+                    _result = tableSource;
+                }
             }
-            else if (node.EntityRepository == _repo)
+            else if (tableSource.EntityRepository == _repo)
             {
                 //如果还没有匹配的实体源，则设置结果为第一个匹配的实体源。
                 if (_result == null)
                 {
-                    _result = node;
+                    _result = tableSource;
                 }
 
                 //如果同时还匹配了别名，那么整个搜索结束。
-                if (node.Alias == _alias)
+                if (tableSource.Alias == _alias)
                 {
-                    _resultMatched = true;
+                    _stop = true;
 
-                    //不论 node 是不是第一个匹配的实体源，都需要设置为结果。
-                    _result = node;
+                    //不论 tableSource 是不是第一个匹配的实体源，都需要设置为结果。
+                    _result = tableSource;
                 }
             }
 
-            return node;
+            return tableSource;
         }
     }
 }

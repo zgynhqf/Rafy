@@ -220,6 +220,11 @@ namespace Rafy.Domain.ORM.Query.Impl
         /// 本查询所对应的基础表。
         /// </summary>
         public ITableSource MainTable { get; internal set; }
+
+        internal static bool HasOrdered(IQuery query)
+        {
+            return query is TableQuery tq && tq.HasOrdered();
+        }
     }
 
     /// <summary>

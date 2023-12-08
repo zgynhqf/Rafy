@@ -2763,10 +2763,10 @@ namespace RafyUnitTest
             var b2 = new B();
             b2.Clone(b, CloneOptions.NewSingleEntity());
 
-            Assert.AreEqual("b1", b2.Name);
+            Assert.AreEqual(b.Name, b2.Name);
             Assert.AreEqual(0, b2.Id);
-            Assert.AreEqual("a1", b2.ANameRef);
-            Assert.IsNotNull(b2.GetProperty<Entity>(B.AProperty));
+            Assert.AreEqual(a.Name, b2.ANameRef);
+            Assert.IsNotNull(b2.GetProperty(B.AProperty));
         }
 
         [TestMethod]

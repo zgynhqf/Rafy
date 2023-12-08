@@ -277,7 +277,7 @@ namespace Rafy.Domain.ORM
             return sqlTable;
         }
 
-        protected override ISqlSelectionColumn VisitSqlColumn(ISqlSelectionColumn sqlColumn)
+        protected override ISqlColumn VisitSqlColumn(ISqlColumn sqlColumn)
         {
             this.AppendColumnUsage(sqlColumn);
 
@@ -290,7 +290,7 @@ namespace Rafy.Domain.ORM
             return sqlColumn;
         }
 
-        protected virtual void AppendColumnUsage(ISqlSelectionColumn sqlColumn)
+        protected virtual void AppendColumnUsage(ISqlColumn sqlColumn)
         {
             var table = sqlColumn.Table;
             if (table != null)
@@ -430,7 +430,7 @@ namespace Rafy.Domain.ORM
             #endregion
 
             var column = node.Column;
-            this.AppendColumnUsage(node.Column);
+            this.AppendColumnUsage(column);
 
             //根据不同的操作符，来生成不同的_sql。
             switch (op)
@@ -570,7 +570,7 @@ namespace Rafy.Domain.ORM
                 strValue.Replace(WILDCARD_ALL, string.Empty).Replace(WILDCARD_SINGLE, string.Empty).Length == 0;
         }
 
-        private void AppendParameter(object value, SqlColumn column)
+        private void AppendParameter(object value, ISqlColumn column)
         {
             //如果只传入参数的值，那么 DbDataParameter 中是没有设置 DbType 的，这会造成索引无效。
             if (column.HasIndex || value == null)

@@ -22,7 +22,7 @@ namespace Rafy.Domain.ORM.SqlTree
     /// <summary>
     /// 表示某个表、或者查询结果中的某一列。
     /// </summary>
-    class SqlColumn : SqlNode, ISqlSelectionColumn
+    class SqlColumn : SqlNode, ISqlColumn
     {
         public override SqlNodeType NodeType
         {
@@ -55,6 +55,6 @@ namespace Rafy.Domain.ORM.SqlTree
         /// </summary>
         public bool HasIndex { get; set; }
 
-        IHasName ISqlSelectionColumn.Table => this.Table;
+        IHasName ISqlColumn.Table => this.Table;
     }
 }

@@ -29,7 +29,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.LeftColumn = value as SqlColumn;
+                base.LeftColumn = value;
             }
         }
 
@@ -41,7 +41,7 @@ namespace Rafy.Domain.ORM.Query.Impl
             }
             set
             {
-                base.RightColumn = value as SqlColumn;
+                base.RightColumn = value;
             }
         }
 

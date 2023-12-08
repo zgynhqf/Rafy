@@ -62,7 +62,7 @@ namespace Rafy.MongoDb
 
         private FilterDefinition<BsonDocument> _current;
 
-        protected override IBinaryConstraint VisitBinaryConstraint(IBinaryConstraint node)
+        protected override IQueryNode VisitBinaryConstraint(IBinaryConstraint node)
         {
             this.Visit(node.Left);
             var leftConstraint = _current;
@@ -85,7 +85,7 @@ namespace Rafy.MongoDb
             return node;
         }
 
-        protected override IColumnConstraint VisitPropertyConstraint(IColumnConstraint node)
+        protected override IQueryNode VisitColumnConstraint(IColumnConstraint node)
         {
             var column = AggtSerializer.ToCamel(node.Column.ColumnName);
             var value = node.Value;

@@ -48,9 +48,9 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        protected override IQuery VisitQuery(IQuery node)
+        protected override IQueryNode VisitQuery(IQuery node)
         {
-            var query = base.VisitQuery(node);
+            var query = base.VisitQuery(node) as IQuery;
 
             if (!_mainTableHandled)
             {

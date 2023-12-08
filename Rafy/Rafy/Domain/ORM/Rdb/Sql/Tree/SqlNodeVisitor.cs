@@ -35,9 +35,8 @@ namespace Rafy.Domain.ORM.SqlTree
                     return this.VisitSqlNodeList(node as SqlNodeList);
                 case SqlNodeType.SqlSelect:
                     return this.VisitSqlSelect(node as SqlSelect);
-                case SqlNodeType.SqlSelectionColumn:
                 case SqlNodeType.SqlColumn:
-                    return this.VisitSqlColumn(node as ISqlSelectionColumn) as ISqlNode;
+                    return this.VisitSqlColumn(node as ISqlColumn) as ISqlNode;
                 case SqlNodeType.SqlTable:
                     return this.VisitSqlTable(node as SqlTable);
                 case SqlNodeType.SqlColumnConstraint:
@@ -123,14 +122,14 @@ namespace Rafy.Domain.ORM.SqlTree
             return sqlTable;
         }
 
-        protected virtual ISqlSelectionColumn VisitSqlColumn(ISqlSelectionColumn sqlColumn)
+        protected virtual ISqlColumn VisitSqlColumn(ISqlColumn sqlColumn)
         {
             return sqlColumn;
         }
 
         protected virtual SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
         {
-            this.Visit(node.Column);
+            this.Visit(EnsureType(node.Column));
             return node;
         }
 
@@ -156,9 +155,19 @@ namespace Rafy.Domain.ORM.SqlTree
 
         protected virtual SqlColumnsComparisonConstraint VisitSqlColumnsComparisonConstraint(SqlColumnsComparisonConstraint sqlColumnsConstraint)
         {
-            this.Visit(sqlColumnsConstraint.LeftColumn);
-            this.Visit(sqlColumnsConstraint.RightColumn);
+            this.Visit(EnsureType(sqlColumnsConstraint.LeftColumn));
+            this.Visit(EnsureType(sqlColumnsConstraint.RightColumn));
             return sqlColumnsConstraint;
+        }
+
+        private static ISqlNode EnsureType(ISqlColumn column)
+        {
+            var n = column as ISqlNode;
+            if (n == null)
+            {
+                throw new InvalidProgramException($"{column} 必须实现 ISqlNode 接口。");//其实，内部的实现都会实现好的。外部开发者也无法实现此接口。但是为了不将 ISqlNode 公开，只能如此了。
+            }
+            return n;
         }
 
         protected virtual SqlExistsConstraint VisitSqlExistsConstraint(SqlExistsConstraint sqlExistsConstraint)

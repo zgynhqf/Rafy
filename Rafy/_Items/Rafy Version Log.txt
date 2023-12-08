@@ -10,6 +10,16 @@
  * 
 *******************************************************/
 
+3.95.4400
+    ★★公布、★重要、添加功能
+        引用值的方式，支持不映射字段，而是直接从 Join 表中读取。
+            添加枚举：ReferenceValueDataMode.ReadJoinTable.
+    重构
+        QueryNodeVisitor 升级为可修改树结构。
+        重构 IColumnNode 的缓存机制。
+            ISqlSelectionColumn 重命名为 ISqlColumn。
+        删除无用的 MySqlColumn、OracleColumn。
+
 3.94.4332
     ★★公布、★重要、！修改接口、！删除接口
         冗余属性的声明方式也使用一般属性的声明方式；只是在映射数据库时声明冗余路径。

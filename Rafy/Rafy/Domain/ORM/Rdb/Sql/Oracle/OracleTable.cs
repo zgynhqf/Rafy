@@ -36,11 +36,6 @@ namespace Rafy.Domain.ORM.Oracle
 
         public OracleTable(IRepositoryInternal repository, string dbProvider) : base(repository, dbProvider) { }
 
-        internal override RdbColumn CreateColumn(IRdbColumnInfo columnInfo)
-        {
-            return new OracleColumn(this, columnInfo);
-        }
-
         private string _selectSequenceSql;
 
         public override void Insert(IDbAccesser dba, Entity item)
@@ -73,10 +68,15 @@ namespace Rafy.Domain.ORM.Oracle
             base.Insert(dba, item);
         }
 
+        protected override bool CanInsert(RdbColumn column, bool withIdentity)
+        {
+            //Oracle 中 Identity 列是由 Sequence 生成的，这些列也必须放在 Insert 语句中进行插入。所以这检查 withIdentity。
+            return column.Meta.MappingRealColumn();
+        }
+
         public override SqlGenerator CreateSqlGenerator()
         {
-            var generator = new OracleSqlGenerator();
-            return generator;
+            return new OracleSqlGenerator();
         }
 
         public override void QueryList(IDbAccesser dba, IORMQueryArgs args)
@@ -119,8 +119,9 @@ namespace Rafy.Domain.ORM.Oracle
             var values = inClause.Value as IEnumerable;
             var parameters = values as IList ?? values.Cast<object>().ToArray();
 
-            var selectionProperties = args.LoadOptions?.SelectionProperties;
-            this.AutoSelection(query, selectionProperties);
+            var lo = args.LoadOptions;
+            var selectionProperties = lo?.SelectionProperties;
+            this.AutoSelectionAndJoin(query, selectionProperties, lo?.IgnoreRefValueLazyLoad);
 
             /*********************** 代码块解释 *********************************
              * 以下分批进行查询。算法：

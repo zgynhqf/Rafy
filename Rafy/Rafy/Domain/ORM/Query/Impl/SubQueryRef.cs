@@ -52,12 +52,10 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         IColumnNode ISubQuery.Column(IColumnNode rawProperty)
         {
-            var raw = rawProperty as ColumnNode;
-
             var property = new ColumnNode
             {
-                ColumnName = raw.ColumnName,
-                Property = raw.Property,
+                ColumnName = rawProperty.ColumnName,
+                Property = rawProperty.Property,
                 Table = this,
             };
 
@@ -66,12 +64,10 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         IColumnNode ISubQuery.Column(IColumnNode rawProperty, string alias)
         {
-            var raw = rawProperty as ColumnNode;
-
             var property = new ColumnNode
             {
-                ColumnName = raw.ColumnName,
-                Property = raw.Property,
+                ColumnName = rawProperty.ColumnName,
+                Property = rawProperty.Property,
                 Table = this,
                 Alias = alias
             };
@@ -83,8 +79,8 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         ITableSource ISource.FindTable(IRepository repo, string alias)
         {
-            if (_finder == null) { _finder = new TableSourceFinder(this); }
-            return _finder.Find(repo, alias);
+            if (_finder == null) { _finder = new TableSourceFinder(); }
+            return _finder.Find(this, repo, alias);
         }
     }
 }

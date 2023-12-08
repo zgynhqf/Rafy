@@ -42,11 +42,6 @@ SELECT @@IDENTITY";
             });
         }
 
-        internal override RdbColumn CreateColumn(IRdbColumnInfo columnInfo)
-        {
-            return new MySqlColumn(this, columnInfo);
-        }
-
         /// <summary>
         /// 创建Sql生成器对象
         /// </summary>

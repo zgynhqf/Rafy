@@ -236,7 +236,7 @@ namespace Rafy.Domain
                  * 而 Oracle 中查询时，返回的结果中 Id 可能是乱的，这会影响数据的加载。
                 **********************************************************************/
                 var f = QueryFactory.Instance;
-                var table = query.From.FindTable(Repo);
+                var table = query.MainTable;
                 query.OrderBy.Add(
                     f.OrderBy(table.Column(Entity.TreeIndexProperty))
                     );

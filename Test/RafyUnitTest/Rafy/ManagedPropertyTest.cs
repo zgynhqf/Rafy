@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Amazon.Runtime.Internal.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rafy;
 using Rafy.Data;
@@ -604,6 +605,250 @@ namespace RafyUnitTest
                 Assert.AreEqual(roles.Count, 1);
                 Assert.AreEqual(userRoles.Count, 1);
                 Assert.AreEqual(roles[0].CastTo<TestRole>().Name, role.Name);
+            }
+        }
+
+        #endregion
+
+        #region MPT RefValue
+
+        [TestMethod]
+        public void MPT_RefValue_Query()
+        {
+            var repo = RF.ResolveInstance<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+                var b = new B { A = a };
+                Save(b);
+
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id);
+                Assert.AreEqual("AName", b2.Join_AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_RefValue_Query_IgnoreRefValueLazyLoad()
+        {
+            var repo = RF.ResolveInstance<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+                var b = new B { A = a };
+                Save(b);
+
+                var b2 = RF.ResolveInstance<BRepository>().GetById(b.Id, new LoadOptions { IgnoreRefValueLazyLoad = true });
+                Assert.IsTrue(b2.IsDisabled(B.Join_ANameProperty));
+            }
+        }
+
+        [TestMethod]
+        public void MPT_RefValue_Query_CanUseInConstraint()
+        {
+            var repo = RF.ResolveInstance<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+                var b = new B { A = a };
+                Save(b);
+
+                var b2 = RF.ResolveInstance<BRepository>().GetFirstBy(new CommonQueryCriteria
+                {
+                    { B.Join_ANameProperty, a.Name }
+                });
+                Assert.AreEqual("AName", b2.Join_AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_RefValue_Query_CanUseInConstraint_Linq()
+        {
+            var repo = RF.ResolveInstance<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "AName" };
+                Save(a);
+                var b = new B { A = a };
+                Save(b);
+
+                var b2 = RF.ResolveInstance<BRepository>().GetFirstBy_Join_AName(a.Name);
+                Assert.AreEqual("AName", b2.Join_AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_RefValue_Query_CanUseInOrderBy()
+        {
+            var repo = RF.ResolveInstance<ARepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a = new A { Name = "a1" };
+                var a2 = new A { Name = "a2" };
+                Save(a, a2);
+                var b = new B { A = a };
+                var b2 = new B { A = a2 };
+                Save(b, b2);
+
+                var criteria = new CommonQueryCriteria();
+                criteria.OrderBy = B.Join_ANameProperty.Name;
+                criteria.OrderByAscending = false;
+                var list = RF.ResolveInstance<BRepository>().GetBy(criteria);
+
+                Assert.AreEqual(a2.Name, list[0].Join_AName);
+                Assert.AreEqual(a.Name, list[1].Join_AName);
+            }
+        }
+
+        [TestMethod]
+        public void MPT_RefValue_Query_UseSqlJoin()
+        {
+            var bRepo = RF.ResolveInstance<BRepository>();
+
+            var sql = string.Empty;
+            EventHandler<DbAccessEventArgs> handler = (o, e) => { sql = e.Sql; };
+            DbAccesserInterceptor.DbAccessing += handler;
+            bRepo.GetAll();
+            DbAccesserInterceptor.DbAccessing -= handler;
+
+            Assert.IsTrue(sql.Contains(" JOIN "));
+        }
+
+        /// <summary>
+        /// 多个关联，有相同的中间引用路径，且最终的值是相同的表的同一行数据；
+        /// </summary>
+        [TestMethod]
+        public void MPT_RefValue_MultiJoin_1RefPath_1Table_1Value()
+        {
+            var repo = RF.ResolveInstance<ERepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new A { Name = "A1" };
+                Save(a1);
+                var b = new B { A = a1 };
+                Save(b);
+                var c = new C { B = b };
+                Save(c);
+                var d = new D { C = c };
+                Save(d);
+                var ee = new E { D = d };
+                Save(ee);
+
+                var e2 = repo.GetFirst();
+                Assert.AreEqual(a1.Name, e2.Join_DCBA_Name);
+            }
+        }
+
+        /// <summary>
+        /// 多个关联，有相同的中间引用路径，且最终的值是相同的表的同一行数据，但引用不同的最终的值；
+        /// </summary>
+        [TestMethod]
+        public void MPT_RefValue_MultiJoin_1RefPath_1Table_2Value()
+        {
+            var repo = RF.ResolveInstance<ERepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new A { Name = "A1", Type = AType.Y };
+                Save(a1);
+                var b = new B { A = a1 };
+                Save(b);
+                var c = new C { B = b };
+                Save(c);
+                var d = new D { C = c };
+                Save(d);
+                var ee = new E { D = d };
+                Save(ee);
+
+                var e2 = repo.GetFirst();
+                Assert.AreEqual(a1.Type, e2.Join_DCBA_Type);
+                Assert.AreEqual(a1.Name, e2.Join_DCBA_Name);
+            }
+        }
+
+        /// <summary>
+        /// 多个关联，有不同的中间引用路径，且最终的值是不同的表；
+        /// </summary>
+        [TestMethod]
+        public void MPT_RefValue_MultiJoin_2RefPath_2Table()
+        {
+            var repo = RF.ResolveInstance<ERepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new A { Name = "A1" };
+                var a2 = new A { Name = "A2" };
+                Save(a1, a2);
+                var b = new B { A = a1 };
+                var b2 = new B { A = a2 };
+                Save(b, b2);
+                var c = new C { B = b };
+                var c2 = new C { B = b2 };
+                Save(c, c2);
+                var d = new D { C = c };
+                var d2 = new D { C = c2 };
+                Save(d, d2);
+                var ee = new E { D = d, C = c2 };
+                Save(ee);
+
+                var e2 = repo.GetFirst();
+                Assert.AreEqual(a1.Name, e2.Join_D_AName);
+                Assert.AreEqual(a2.Name, e2.Join_CBA_Name);
+            }
+        }
+
+        /// <summary>
+        /// 多个关联，有不同的中间引用路径，且最终的值是相同的表的不同数据；
+        /// </summary>
+        [TestMethod]
+        public void MPT_RefValue_MultiJoin_2RefPath_1Table_2Row()
+        {
+            var repo = RF.ResolveInstance<ERepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new A { Name = "A1" };
+                var a2 = new A { Name = "A2" };
+                Save(a1, a2);
+                var b = new B { A = a1 };
+                var b2 = new B { A = a2 };
+                Save(b, b2);
+                var c = new C { B = b };
+                var c2 = new C { B = b2 };
+                Save(c, c2);
+                var d = new D { C = c };
+                Save(d);
+                var ee = new E { D = d, C = c2 };
+                Save(ee);
+
+                var e2 = repo.GetFirst();
+                Assert.AreEqual(a1.Name, e2.Join_DCBA_Name);
+                Assert.AreEqual(a2.Name, e2.Join_CBA_Name);
+            }
+        }
+
+        /// <summary>
+        /// 多个关联，有不同的中间引用路径，且最终的值是相同的表的同一行数据；
+        /// </summary>
+        [TestMethod]
+        public void MPT_RefValue_MultiJoin_2RefPath_1Table_1Row()
+        {
+            var repo = RF.ResolveInstance<ERepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var a1 = new A { Name = "A1" };
+                Save(a1);
+                var b = new B { A = a1 };
+                Save(b);
+                var c = new C { B = b };
+                Save(c);
+                var d = new D { C = c };
+                Save(d);
+                var ee = new E { C = c, A = a1 };
+                Save(ee);
+
+                var e2 = repo.GetFirst();
+                Assert.AreEqual(a1.Name, e2.Join_CBA_Name);
+                Assert.AreEqual(a1.Name, e2.Join_A_Name);
             }
         }
 

@@ -151,7 +151,7 @@ namespace Rafy.Domain.ORM
 
         internal void Add(RdbColumn column)
         {
-            if (column.Info.IsIdentity)
+            if (column.Meta.IsIdentity)
             {
                 if (_identityColumn != null)
                 {
@@ -162,7 +162,7 @@ namespace Rafy.Domain.ORM
                 _identityColumn = column;
             }
 
-            if (column.Info.IsPrimaryKey)
+            if (column.Meta.IsPrimaryKey)
             {
                 if (_pkColumn != null)
                 {
@@ -177,6 +177,10 @@ namespace Rafy.Domain.ORM
             if (column.IsLOB)
             {
                 _hasLOB = true;
+            }
+            if (column.Meta.IsFromJoin())
+            {
+                _hasFromJoinColumn = true;
             }
 
             _columns.Add(column);
@@ -199,6 +203,7 @@ namespace Rafy.Domain.ORM
         private Lazy<string> _deleteSql;
 
         private bool _hasLOB;
+        private bool _hasFromJoinColumn;
 
         /// <summary>
         /// 执行 sql 插入一个实体到数据库中。
@@ -231,7 +236,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.ShouldInsert(withIdentity))
+                if (this.CanInsert(column, withIdentity))
                 {
                     if (index > 0)
                     {
@@ -263,12 +268,26 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (column.ShouldInsert(withIdentity))
+                if (this.CanInsert(column, withIdentity))
                 {
                     parameters.Add(ReadParamater(item, column));
                 }
             }
             return parameters.ToArray();
+        }
+
+        /// <summary>
+        /// 此方法用于判断是否需要将本列在 Insert 语句中插入。
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="withIdentity">表示当前的 Insert 语句是需要强制插入 Identity 列的。（如果开发者给实体设置了 Id 值，则需要直接使用这个值来进行插入）</param>
+        /// <returns></returns>
+        protected virtual bool CanInsert(RdbColumn column, bool withIdentity)
+        {
+            //默认情况下，Identity 都不应该在 Insert 语句中插入。
+            var meta = column.Meta;
+            if (meta.IsIdentity) { return withIdentity; }
+            return meta.MappingRealColumn();
         }
 
         internal int Delete(IDbAccesser dba, Entity item)
@@ -330,7 +349,7 @@ namespace Rafy.Domain.ORM
             for (int i = 0, c = _columns.Count; i < c; i++)
             {
                 var column = _columns[i];
-                if (!column.Info.IsPrimaryKey)
+                if (this.CanUpdate(column))
                 {
                     var field = item.GetField(column.Info.Property);
                     if (field.IsDisabled) continue;
@@ -353,6 +372,13 @@ namespace Rafy.Domain.ORM
             int res = dba.ExecuteText(updateSql, parameters.ToArray());
 
             return res;
+        }
+
+        private bool CanUpdate(RdbColumn column)
+        {
+            var meta = column.Meta;
+            if (meta.IsPrimaryKey) return false;
+            return meta.MappingRealColumn();
         }
 
         private string GenerateUpdateSQL(IList<RdbColumn> updateColumns)
@@ -428,8 +454,9 @@ namespace Rafy.Domain.ORM
         {
             //检查分页条件。（如果是树状实体，也不支持在数据库中进行分页。）
             var query = args.Query;
-            var selectionProperties = args.LoadOptions?.SelectionProperties;
-            this.AutoSelection(query, selectionProperties);
+            var lo = args.LoadOptions;
+            var selectionProperties = lo?.SelectionProperties;
+            this.AutoSelectionAndJoin(query, selectionProperties, lo?.IgnoreRefValueLazyLoad);
 
             var pagingInfo = args.PagingInfo;
             bool isDbPaging = this.IsDbPaging(pagingInfo);
@@ -482,23 +509,67 @@ namespace Rafy.Domain.ORM
             }
         }
 
+        protected void AutoSelectionAndJoin(IQuery query, List<IManagedProperty> selectionProperties, bool? ignoreRefValueJoin)
+        {
+            this.AutoSelection(query, selectionProperties, ignoreRefValueJoin.GetValueOrDefault());
+
+            this.AutoJoin(query);
+        }
+
         /// <summary>
-        /// 如果没有选择项，而且有 LOB 字段或限定了只读取某些属性时，Selection 将被自动生成。
+        /// 如果需要，则自动生成所有的 Selection 列。
         /// </summary>
         /// <param name="query"></param>
-        /// <param name="readProperties"></param>
+        /// <param name="selectionProperties">可以明确指定，在自动生成列时，需要哪些列。</param>
+        /// <param name="ignoreRefValueFromJoin">是否忽略加载需要从 Join 中加载的</param>
         /// <returns></returns>
-        protected void AutoSelection(IQuery query, List<IManagedProperty> readProperties)
+        private void AutoSelection(IQuery query, List<IManagedProperty> selectionProperties, bool ignoreRefValueFromJoin)
         {
-            if (query.Selection == null && !query.IsCounting && (_hasLOB || readProperties != null))
-            {
-                var table = query.From.FindTable(_repository) as TableSource;
-                if (table != null)
-                {
-                    var columns = table.CacheSelectionColumnsExceptsLOB(readProperties);
+            //如果不是在 Count、并且还没有指定 Selection
+            var needAutoSelection = !query.IsCounting && query.Selection == null;
+            //如果有不需要加载的列、或者确定只需要部分列。
+            needAutoSelection &= _hasLOB || _hasFromJoinColumn || selectionProperties != null;
 
-                    query.Selection = QueryFactory.Instance.Array(columns);
+            if (needAutoSelection)
+            {
+                var selection = new List<IColumnNode>();
+
+                var mainTable = query.MainTable;
+                var columnsInfo = _tableInfo.Columns;
+                for (int i = 0, c = columnsInfo.Count; i < c; i++)
+                {
+                    var columnInfo = columnsInfo[i];
+                    var property = columnInfo.Property;
+
+                    //LOB 列，不需要读取
+                    if (property.Category == PropertyCategory.LOB) continue;
+
+                    //如果手工指定，则过滤不需要的列。（Id 不可以被过滤。）
+                    if (property != Entity.IdProperty && selectionProperties != null && !selectionProperties.Contains(property)) continue;
+
+                    if (ignoreRefValueFromJoin && columnInfo.Meta.IsFromJoin()) continue;
+
+                    //自动生成列时，如果列是 Join 列，也会直接创建 Join 链。
+                    var column = mainTable.FindColumn(property);
+                    selection.Add(column);
                 }
+
+                query.Selection = QueryFactory.Instance.Array(selection);
+            }
+        }
+
+        /// <summary>
+        /// 自动处理 query.From 中的 Join。
+        /// </summary>
+        /// <param name="query"></param>
+        private void AutoJoin(IQuery query)
+        {
+            //如果 Where、手工指定的 Selection 中有 FromJoin 的列需要读取时，也需要为其生成对应的 Join 链。
+            if (_hasFromJoinColumn)
+            {
+                var fromJoinColumns = _tableInfo.Columns.Where(c => c.Meta.IsFromJoin()).ToList();
+
+                JoinAutoGenerator.AutoJoin(query, fromJoinColumns);
             }
         }
 

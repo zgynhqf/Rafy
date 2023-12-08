@@ -99,15 +99,15 @@ namespace Rafy.Domain
         {
             //if (this.GlobalIndex >= 0) throw new InvalidOperationException("属性已经注册完毕，不能修改！");
             if ((path.ValueProperty.Property as IProperty).IsRedundant) throw new InvalidOperationException("冗余属性不能被其它冗余属性再次冗余，请直接写全冗余路径。");
-            if (!path.RefPathes[0].Owner.IsAssignableFrom(this.OwnerType))
+            if (!path.RefPaths[0].Owner.IsAssignableFrom(this.OwnerType))
             {
-                throw new InvalidOperationException(path.RefPathes[0].FullName + "作为冗余路径中的第一个引用属性，必须和冗余属性同在一个实体类型中。");
+                throw new InvalidOperationException(path.RefPaths[0].FullName + "作为冗余路径中的第一个引用属性，必须和冗余属性同在一个实体类型中。");
             }
 
             var list = (path.ValueProperty.Property as IPropertyInternal).InRedundantPathes;
             list.Add(path);
 
-            foreach (var refProperty in path.RefPathes)
+            foreach (var refProperty in path.RefPaths)
             {
                 (refProperty.Property as IPropertyInternal).InRedundantPathes.Add(path);
             }

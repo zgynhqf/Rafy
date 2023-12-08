@@ -23,7 +23,7 @@ namespace Rafy.Domain.ORM.Query
     /// <summary>
     /// 一个列节点
     /// </summary>
-    public interface IColumnNode : IQueryNode, ISqlSelectionColumn
+    public interface IColumnNode : IQueryNode, ISqlColumn
     {
         /// <summary>
         /// 本列属于指定的数据源

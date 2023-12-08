@@ -34,17 +34,17 @@ namespace Rafy.Domain
 
         private List<ConcreteProperty> _selectionProperties;
 
+        /// <summary>
+        /// 是否忽略所有需要实时从关系中读取的引用关系值加载。
+        /// 设置此值为 true，在关系数据库中查询时，可以避免不必要的 JOIN。
+        /// </summary>
+        public bool IgnoreRefValueLazyLoad { get; set; }
+
         internal bool LoadTreeChildren;
 
-        internal List<ConcreteProperty> CoreList { get { return _eagerList; } }
+        internal List<ConcreteProperty> CoreList => _eagerList;
 
-        internal List<IManagedProperty> SelectionProperties
-        {
-            get
-            {
-                return _selectionProperties?.Select(p => p.Property).ToList();
-            }
-        }
+        internal List<IManagedProperty> SelectionProperties => _selectionProperties?.Select(p => p.Property).ToList();
 
         /// <summary>
         /// 为读取时间、减少内存、网络传输等内容，可以设置只查询实体的指定属性。

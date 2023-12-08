@@ -12,6 +12,7 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,11 +46,11 @@ namespace Rafy.Domain.ORM.Query
                 case QueryNodeType.OrderBy:
                     return this.VisitOrderBy(node as IOrderBy);
                 case QueryNodeType.Column:
-                    return this.VisitProperty(node as IColumnNode);
+                    return this.VisitColumn(node as IColumnNode);
                 case QueryNodeType.ColumnConstraint:
-                    return this.VisitPropertyConstraint(node as IColumnConstraint);
+                    return this.VisitColumnConstraint(node as IColumnConstraint);
                 case QueryNodeType.ColumnsComparisonConstraint:
-                    return this.VisitTwoPropertiesConstraint(node as IColumnsComparison);
+                    return this.VisitTwoColumnsConstraint(node as IColumnsComparison);
                 case QueryNodeType.BinaryConstraint:
                     return this.VisitBinaryConstraint(node as IBinaryConstraint);
                 case QueryNodeType.ExistsConstraint:
@@ -63,108 +64,154 @@ namespace Rafy.Domain.ORM.Query
             }
         }
 
-        protected virtual IJoin VisitJoin(IJoin node)
+        protected virtual IQueryNode VisitJoin(IJoin node)
         {
-            this.Visit(node.Left);
-            this.Visit(node.Right);
-            this.Visit(node.Condition);
+            var c = node.Left;
+            var r = this.Visit(c) as ISource;
+            if (r != c) node.Left = r;
+
+            var rc = node.Right;
+            var rr = this.Visit(rc) as ITableSource;
+            if (rr != rc) node.Right = rr;
+
+            var cc = node.Condition;
+            var cr = this.Visit(cc) as IConstraint;
+            if (cr != cc) node.Condition = cr;
             return node;
         }
 
-        protected virtual IBinaryConstraint VisitBinaryConstraint(IBinaryConstraint node)
+        protected virtual IQueryNode VisitBinaryConstraint(IBinaryConstraint node)
         {
-            this.Visit(node.Left);
-            this.Visit(node.Right);
+            var c = node.Left;
+            var r = this.Visit(c) as IConstraint;
+            if (r != c) node.Left = r;
+
+            c = node.Right;
+            r = this.Visit(c) as IConstraint;
+            if (r != c) node.Right = r;
+
             return node;
         }
 
-        protected virtual IQuery VisitQuery(IQuery node)
+        protected virtual IQueryNode VisitQuery(IQuery node)
         {
             if (node.Selection != null)
             {
-                this.Visit(node.Selection);
+                var s = node.Selection;
+                var sr = this.Visit(s);
+                if (sr != s) node.Selection = sr;
             }
-            this.Visit(node.From);
+
+            var fc = node.From;
+            var fr = this.Visit(fc) as ISource;
+            if (fr != fc) node.From = fr;
+
             if (node.Where != null)
             {
-                this.Visit(node.Where);
+                var wc = node.Where;
+                var wr = this.Visit(wc) as IConstraint;
+                if (wr != wc) node.Where = wr;
             }
-            var entityQuery = node as TableQuery;
-            if (entityQuery.HasOrdered())
+
+            if (TableQuery.HasOrdered(node))
             {
-                for (int i = 0, c = node.OrderBy.Count; i < c; i++)
+                var orderBy = node.OrderBy;
+                for (int i = 0, c = orderBy.Count; i < c; i++)
                 {
-                    var item = node.OrderBy[i];
-                    this.Visit(item);
+                    var item = orderBy[i];
+                    var or = this.Visit(item) as IOrderBy;
+                    if (or != item) orderBy[i] = or;
                 }
             }
+
             return node;
         }
 
-        protected virtual ITableSource VisitTableSource(ITableSource node)
+        protected virtual IQueryNode VisitTableSource(ITableSource node)
         {
             return node;
         }
 
-        protected virtual IColumnNode VisitProperty(IColumnNode node)
+        protected virtual IQueryNode VisitLiteral(ILiteral node)
         {
             return node;
         }
 
-        protected virtual IColumnConstraint VisitPropertyConstraint(IColumnConstraint node)
+        protected virtual IQueryNode VisitArray(IArray node)
         {
-            this.Visit(node.Column);
-            return node;
-        }
-
-        protected virtual ILiteral VisitLiteral(ILiteral node)
-        {
-            return node;
-        }
-
-        protected virtual IArray VisitArray(IArray node)
-        {
-            for (int i = 0, c = node.Items.Count; i < c; i++)
+            var items = node.Items;
+            for (int i = 0, c = items.Count; i < c; i++)
             {
-                var item = node.Items[i];
-                this.Visit(item);
+                var item = items[i];
+                var newItem = this.Visit(item);
+                if (newItem != item) items[i] = newItem;
             }
             return node;
         }
 
-        protected virtual ISelectAll VisitSelectAll(ISelectAll node)
+        protected virtual IQueryNode VisitSelectAll(ISelectAll node)
         {
             return node;
         }
 
-        protected virtual IColumnsComparison VisitTwoPropertiesConstraint(IColumnsComparison node)
+        protected virtual IQueryNode VisitColumn(IColumnNode node)
         {
-            this.Visit(node.LeftColumn);
-            this.Visit(node.RightColumn);
             return node;
         }
 
-        protected virtual IExistsConstraint VisitExistsConstraint(IExistsConstraint node)
+        protected virtual IQueryNode VisitColumnConstraint(IColumnConstraint node)
         {
-            this.Visit(node.Query);
+            var c = node.Column;
+            var r = this.Visit(c) as IColumnNode;
+            if (r != c) node.Column = r;
             return node;
         }
 
-        protected virtual INotConstraint VisitNotConstraint(INotConstraint node)
+        protected virtual IQueryNode VisitTwoColumnsConstraint(IColumnsComparison node)
         {
-            this.Visit(node.Constraint);
+            var c = node.LeftColumn;
+            var r = this.Visit(c) as IColumnNode;
+            if (r != c) node.LeftColumn = r;
+
+            c = node.RightColumn;
+            r = this.Visit(c) as IColumnNode;
+            if (r != c) node.RightColumn = r;
+
             return node;
         }
 
-        protected virtual ISubQuery VisitSubQueryRef(ISubQuery node)
+        protected virtual IQueryNode VisitExistsConstraint(IExistsConstraint node)
         {
-            this.Visit(node.Query);
+            var c = node.Query;
+            var r = this.Visit(c) as IQuery;
+            if (r != c) node.Query = r;
+
+            return node;
+        }
+
+        protected virtual IQueryNode VisitNotConstraint(INotConstraint node)
+        {
+            var c = node.Constraint;
+            var r = this.Visit(c) as IConstraint;
+            if (r != c) node.Constraint = r;
+
+            return node;
+        }
+
+        protected virtual IQueryNode VisitSubQueryRef(ISubQuery node)
+        {
+            var c = node.Query;
+            var r = this.Visit(c) as IQuery;
+            if (r != c) node.Query = r;
+
             return node;
         }
 
         protected virtual IQueryNode VisitOrderBy(IOrderBy node)
         {
-            this.Visit(node.Column);
+            var c = node.Column;
+            var r = this.Visit(c) as IColumnNode;
+            if (r != c) node.Column = r;
             return node;
         }
     }

@@ -25,9 +25,21 @@ namespace Rafy.Domain.ORM.Query
     public interface ITableSource : INamedSource
     {
         /// <summary>
+        /// 如果当前表是由一个 Join 引入的数据源，则这里表示其所在的 Join。
+        /// 如果此值为 null，则表示当前表为主表。
+        /// 在一个查询中，本类的唯一标识是从主表到此表的整个 Join 链。
+        /// </summary>
+        IJoin Join { get; }
+
+        /// <summary>
+        /// 如果当前表是由一个引用属性对应的 Join 数据源，则这里表示其对应的引用属性。
+        /// </summary>
+        IRefProperty RefProperty { get; }
+
+        /// <summary>
         /// 本表数据源来对应这个实体仓库。
         /// </summary>
-        IRepository EntityRepository { get;  }
+        IRepository EntityRepository { get; }
 
         /// <summary>
         /// 同一个实体仓库可以表示多个不同的数据源。这时，需要这些不同的数据源指定不同的别名。

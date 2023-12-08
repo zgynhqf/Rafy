@@ -270,7 +270,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.SqlServer
             var table = ToDataTable(batch.Table, batch.UpdateBatch, true);
             var updateColumns = table.Columns.Cast<DataColumn>()//顺序必须一致。
                 .Select(dtc => batch.Table.Columns.First(c => c.Name == dtc.ColumnName))
-                .Where(c => !c.Info.IsPrimaryKey)//不更新主键
+                .Where(c => !c.Meta.IsPrimaryKey)//不更新主键
                 .ToList();
 
             var sql = GenerateUpdateSQL(batch.Table, this.UpdateLOB, '@', updateColumns);

@@ -22,7 +22,7 @@ namespace Rafy.Domain.ORM
     /// <summary>
     /// 数据表列
     /// </summary>
-    internal interface IRdbColumnInfo : IColumnNode, ISqlSelectionColumn, ISqlNode, IHasName
+    internal interface IRdbColumnInfo : IColumnNode, ISqlColumn, ISqlNode, IHasName
     {
         /// <summary>
         /// 对应的列的元数据。
@@ -39,15 +39,5 @@ namespace Rafy.Domain.ORM
         /// 如果属性是可空类型。这里会去除可空类型，返回内部的真实属性类型。
         /// </summary>
         Type CorePropertyType { get; }
-
-        /// <summary>
-        /// 是否为自增长主键列。
-        /// </summary>
-        bool IsIdentity { get; }
-
-        /// <summary>
-        /// 是否主键列
-        /// </summary>
-        bool IsPrimaryKey { get; }
     }
 }

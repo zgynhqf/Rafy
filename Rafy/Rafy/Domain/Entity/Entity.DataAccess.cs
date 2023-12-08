@@ -64,7 +64,7 @@ namespace Rafy.Domain
                     foreach (var path in property.InRedundantPathes)
                     {
                         //如果该引用属性是首位引用属性，并且冗余属性就是声明在这个对象上的，则直接计算冗余值，更新对象的值。
-                        if (path.RefPathes[0].Property == refProperty.RefKeyProperty)
+                        if (path.RefPaths[0].Property == refProperty.RefKeyProperty)
                         {
                             //在继承实体的情况下，引用属性声明在父类，而冗余属性声明在子类B中时，子类A中则有引用属性而无冗余属性。
                             if (path.Redundancy.Owner.IsInstanceOfType(this))
@@ -110,7 +110,7 @@ namespace Rafy.Domain
         internal object GetRedundancyValue(ReferenceValuePath path, IRefProperty from = null)
         {
             Entity refEntity = this;
-            foreach (var refP in path.RefPathes)
+            foreach (var refP in path.RefPaths)
             {
                 if (from != null && refP.Property != from.RefKeyProperty) continue;
 

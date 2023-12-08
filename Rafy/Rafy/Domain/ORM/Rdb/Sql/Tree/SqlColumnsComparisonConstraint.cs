@@ -36,12 +36,12 @@ namespace Rafy.Domain.ORM.SqlTree
         /// <summary>
         /// 第一个需要对比的列。
         /// </summary>
-        public SqlColumn LeftColumn { get; set; }
+        public ISqlColumn LeftColumn { get; set; }
 
         /// <summary>
         /// 第二个需要对比的列。
         /// </summary>
-        public SqlColumn RightColumn { get; set; }
+        public ISqlColumn RightColumn { get; set; }
 
         /// <summary>
         /// 对比条件。

@@ -124,7 +124,7 @@ namespace Rafy.Domain.ORM.Query
         {
             IArray array = new ArrayNode();
 
-            array.Items = new List<IQueryNode>(nodes);
+            array.Items = nodes as List<IQueryNode> ?? new List<IQueryNode>(nodes);
 
             return array;
         }
@@ -478,17 +478,23 @@ namespace Rafy.Domain.ORM.Query
         /// <param name="left">左数据源。</param>
         /// <param name="right">右实体数据源。</param>
         /// <param name="leftToRight">从左到右的引用属性。</param>
+        /// <param name="refPropertyOwner">引用属性所在的表。如果传入 null，则内部会自主查询。</param>
         /// <returns></returns>
         public IJoin Join(
             ISource left,
             ITableSource right,
-            IRefProperty leftToRight
+            IRefProperty leftToRight,
+            ITableSource refPropertyOwner = null
             )
         {
-            var leftSource = left.FindTable(leftToRight.OwnerType);
+            if (refPropertyOwner == null)
+            {
+                refPropertyOwner = left.FindTable(leftToRight);
+                if (refPropertyOwner == null) throw new InvalidProgramException($"没有在 left 数据源中找到 {leftToRight.OwnerType}.{leftToRight.Name} 属性对应的表。");
+            }
 
             var condition = this.Constraint(
-                leftSource.Column(leftToRight.RefKeyProperty),
+                refPropertyOwner.Column(leftToRight.RefKeyProperty),
                 right.Column(leftToRight.KeyPropertyOfRefEntity)
             );
 
@@ -523,12 +529,61 @@ namespace Rafy.Domain.ORM.Query
             if (right == null) throw new ArgumentNullException("right");
             if (condition == null) throw new ArgumentNullException("condition");
 
-            IJoin res = new Impl.Join();
+            //如果已经有一个 OuterJoin 了，那么后面的 InnerJoin 也都需要使用 OuterJoin。
+            if (joinType == JoinType.Inner && OuterExistsChecker.Exists(left))
+            {
+                joinType = JoinType.LeftOuter;
+            }
+
+            IJoin res = new Join();
             res.Left = left;
             res.JoinType = joinType;
             res.Right = right;
             res.Condition = condition;
+
+            (right as TableSource).Join = res;
+
+            if (condition is IColumnsComparison cc)
+            {
+                //如果其中一个是引用属性，则需要设置引用属性。
+                if (!RefPropertyHelper.IsRefKeyProperty(cc.LeftColumn.Property, out var refP))
+                {
+                    RefPropertyHelper.IsRefKeyProperty(cc.RightColumn.Property, out refP);
+                }
+                (right as TableSource).RefProperty = refP;
+            }
+
             return res;
+        }
+
+        /// <summary>
+        /// 查找是否已经存在任意一个 outer join.
+        /// </summary>
+        private class OuterExistsChecker : QueryNodeVisitor
+        {
+            public static bool Exists(IQueryNode node)
+            {
+                var c = new OuterExistsChecker();
+                c.Visit(node);
+                return c._exists;
+            }
+
+            private bool _exists = false;
+            protected override IQueryNode Visit(IQueryNode node)
+            {
+                if (_exists) { return node; }
+                return base.Visit(node);
+            }
+            protected override IQueryNode VisitQuery(IQuery node)
+            {
+                //query 只检查 From
+                return this.Visit(node.From);
+            }
+            protected override IQueryNode VisitJoin(IJoin node)
+            {
+                if (node.JoinType == JoinType.LeftOuter) _exists = true;
+                return base.VisitJoin(node);
+            }
         }
 
         /// <summary>

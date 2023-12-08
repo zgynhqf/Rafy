@@ -66,11 +66,11 @@ namespace UT
             set { this.SetProperty(ATypeProperty, value); }
         }
 
-        public static readonly Property<string> ANameFromJoinProperty = P<B>.Register(e => e.ANameFromJoin);
-        public string ANameFromJoin
+        public static readonly Property<string> Join_ANameProperty = P<B>.Register(e => e.Join_AName);
+        public string Join_AName
         {
-            get { return this.GetProperty(ANameFromJoinProperty); }
-            set { this.SetProperty(ANameFromJoinProperty, value); }
+            get { return this.GetProperty(Join_ANameProperty); }
+            set { this.SetProperty(Join_ANameProperty, value); }
         }
 
         #endregion
@@ -81,6 +81,14 @@ namespace UT
     public partial class BRepository : UnitTestEntityRepository
     {
         protected BRepository() { }
+
+        [RepositoryQuery]
+        public virtual B GetFirstBy_Join_AName(string name)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(e => e.Join_AName == name);
+            return (B)this.QueryData(q);
+        }
     }
 
     internal class BConfig : UnitTestEntityConfig<B>
@@ -90,9 +98,10 @@ namespace UT
             Meta.MapTable().MapAllProperties();
             //Meta.Property(B.ANameRefProperty).MapColumn().IsForeignKey();
 
-            MapRefValue(B.NameProperty, e => e.A.Name, ReferenceValueDataMode.Redundancy);
+            MapRefValue(B.ANameProperty, e => e.A.Name, ReferenceValueDataMode.Redundancy);
             MapRefValue(B.ATypeProperty, e => e.A.Type, ReferenceValueDataMode.Redundancy);
-            MapRefValue(B.ANameFromJoinProperty, e => e.A.Name);
+
+            MapRefValue(B.Join_ANameProperty, e => e.A.Name);
         }
     }
 }

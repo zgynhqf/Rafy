@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.SqlTree
         /// <summary>
         /// 要对比的列。
         /// </summary>
-        public SqlColumn Column { get; set; }
+        public ISqlColumn Column { get; set; }
 
         /// <summary>
         /// 对比操作符

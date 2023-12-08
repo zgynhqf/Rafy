@@ -141,7 +141,8 @@ namespace Rafy.MetaModel.View
 
         private bool IsChildReference()
         {
-            return this.IsReferenceEntity && this.PropertyMeta.ReferenceInfo.Type == ReferenceType.Child;
+            return false;
+            //return this.IsReferenceEntity && this.PropertyMeta.ReferenceInfo.Type == ReferenceType.Child;
         }
 
         #region 查询方法

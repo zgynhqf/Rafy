@@ -136,7 +136,6 @@ namespace Rafy.Domain.ORM
             var table = f.Table(_dataProvider.Repository);
             var where = f.Constraint(table.Column(refProperty.RefKeyProperty), entity.GetProperty(refProperty.KeyPropertyOfRefEntity));
 
-
             using (var dba = _dataProvider.CreateDbAccesser())
             {
                 _dataProvider.DbTable.Delete(dba, where);

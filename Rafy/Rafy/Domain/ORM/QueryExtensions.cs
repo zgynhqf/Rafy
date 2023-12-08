@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using Rafy.Domain.ORM.Oracle;
 using Rafy.ManagedProperty;
+using Rafy.MetaModel;
 using static Rafy.Domain.ORM.Query.FactoryMethods;
 
 namespace Rafy.Domain.ORM.Query
@@ -29,6 +30,60 @@ namespace Rafy.Domain.ORM.Query
     /// </summary>
     public static partial class QueryExtensions
     {
+        /// <summary>
+        /// 找到 source 中第一个与指定的引用属性对应数据表。
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="refPaths"></param>
+        /// <returns></returns>
+        public static ITableSource FindTable(this ISource source, IRefProperty refPaths)
+        {
+            var tables = SearchAllTables(source);
+            return tables.FirstOrDefault(t => t.RefProperty == refPaths);
+        }
+
+        /// <summary>
+        /// 从当前数据源中查找指定仓库对应的表。
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="entityType">要查找这个仓库对应的表。
+        /// 如果这个参数传入 null，则表示查找主表（最左边的表）。</param>
+        /// <param name="alias">
+        /// 要查找表的别名。
+        /// 如果仓库在本数据源中匹配多个实体源，那么将使用别名来进行精确匹配。
+        /// 如果仓库在本数据源中只匹配一个实体源，那么忽略本参数。
+        /// </param>
+        /// <returns></returns>
+        private static ITableSource FindTable(this ISource source, Type entityType, string alias = null)
+        {
+            var repo = RepositoryFactoryHost.Factory.FindByEntity(entityType, true);
+            return source.FindTable(repo, alias);
+        }
+
+        /// <summary>
+        /// 搜索所有 source 中用到的 TableSource。
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static List<ITableSource> SearchAllTables(this ISource source)
+        {
+            return TableSearcher.GetAllTables(source);
+        }
+
+        /// <summary>
+        /// 构造一个排序节点并添加到当前集合中。。
+        /// </summary>
+        /// <param name="orderByList">实例.</param>
+        /// <param name="property">使用这个属性进行排序。</param>
+        /// <param name="direction">使用这个方向进行排序。</param>
+        /// <returns></returns>
+        public static IOrderBy Add(this ICollection<IOrderBy> orderByList, IColumnNode property, OrderDirection direction = OrderDirection.Ascending)
+        {
+            var item = QueryFactory.Instance.OrderBy(property, direction);
+            orderByList.Add(item);
+            return item;
+        }
+
         /// <summary>
         /// 如果提供的值是不可空的，则为查询添加一个对应的约束条件，并以 And 与原条件进行连接。
         /// </summary>

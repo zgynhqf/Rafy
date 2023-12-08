@@ -30,6 +30,14 @@ namespace Rafy.Domain.ORM
     /// </summary>
     class RdbColumnInfo : IRdbColumnInfo
     {
+        /// <summary>
+        /// 构造器
+        /// </summary>
+        /// <param name="name">已经 Prepare 过的列名。</param>
+        /// <param name="propertyMeta"></param>
+        /// <param name="columnMeta"></param>
+        /// <param name="table"></param>
+        /// <param name="dbType"></param>
         internal RdbColumnInfo(
             string name,
             EntityPropertyMeta propertyMeta,
@@ -58,26 +66,22 @@ namespace Rafy.Domain.ORM
 
         public IProperty Property { get; private set; }
 
-        public bool IsIdentity => this.Meta.IsIdentity;
-
-        public bool IsPrimaryKey => this.Meta.IsPrimaryKey;
-
-        public bool HasIndex => this.Meta.HasIndex;
-
         public IHasName Owner => this.Table;
 
         QueryNodeType IQueryNode.NodeType => QueryNodeType.Column;
 
-        SqlNodeType ISqlNode.NodeType => SqlNodeType.SqlSelectionColumn;
+        SqlNodeType ISqlNode.NodeType => SqlNodeType.SqlColumn;
 
-        string ISqlSelectionColumn.ColumnName => this.Name;
+        string ISqlColumn.ColumnName => this.Name;
 
         /// <summary>
         /// 使用本对象的列，都没有别名。
         /// </summary>
-        string ISqlSelectionColumn.Alias => null;
+        string ISqlColumn.Alias => null;
 
-        IHasName ISqlSelectionColumn.Table => this.Table;
+        bool ISqlColumn.HasIndex => this.Meta.HasIndex;
+
+        IHasName ISqlColumn.Table => this.Table;
 
         IRdbTableInfo IRdbColumnInfo.Table => this.Table;
     }

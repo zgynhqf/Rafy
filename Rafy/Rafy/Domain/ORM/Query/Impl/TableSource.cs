@@ -22,17 +22,32 @@ namespace Rafy.Domain.ORM.Query.Impl
 {
     class TableSource : SqlTable, ITableSource
     {
+        /// <summary>
+        /// 对应 ORM 中的运行时表。
+        /// </summary>
+        private IRdbTableInfo _tableInfo;
+
         public TableSource(IRdbTableInfo tableInfo, IRepository entityRepository)
         {
             _tableInfo = tableInfo;
-            _tableInfoColumns = tableInfo.Columns;
             this.TableName = tableInfo.Name;
             this.EntityRepository = entityRepository;
         }
 
-        public IRdbTableInfo TableInfo { get => _tableInfo; }
+        public IRdbTableInfo TableInfo => _tableInfo;
 
         public IRepository EntityRepository { get; private set; }
+
+        /// <summary>
+        /// 如果当前表是由一个 Join 引入的数据源，则这里表示其所在的 Join。
+        /// 如果此值为 null，则表示当前表为主表。
+        /// </summary>
+        public IJoin Join { get; internal set; }
+
+        /// <summary>
+        /// 如果当前表是由一个引用属性对应的 Join 数据源，则这里表示其对应的引用属性。
+        /// </summary>
+        public IRefProperty RefProperty { get; internal set; }
 
         public IColumnNode IdColumn
         {
@@ -41,17 +56,17 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         public IColumnNode Column(IManagedProperty property, string alias)
         {
-            return this.FindColumn(property, alias, true);
+            return this.CacheColumn(property, alias, true);
         }
 
         public IColumnNode Column(IManagedProperty property)
         {
-            return this.FindColumn(property, null, true);
+            return this.CacheColumn(property, null, true);
         }
 
         public IColumnNode FindColumn(IManagedProperty property)
         {
-            return this.FindColumn(property, null, false);
+            return this.CacheColumn(property, null, false);
         }
 
         QueryNodeType IQueryNode.NodeType
@@ -59,131 +74,40 @@ namespace Rafy.Domain.ORM.Query.Impl
             get { return QueryNodeType.TableSource; }
         }
 
-        #region 列的懒加载
-
-        /*********************** 代码块解释 *********************************
-         * TableSource 在构造时，不必立刻为所有属性生成相应的列。必须使用懒加载。
-        *********************************************************************/
-
         /// <summary>
-        /// 对应 ORM 中的运行时表。
-        /// </summary>
-        private IRdbTableInfo _tableInfo;
-        private IReadOnlyList<IRdbColumnInfo> _tableInfoColumns;
-
-        /// <summary>
-        /// 这个表中的所有可用的列。
-        /// 数组中元素可能是 null、RdbColumnInfo、ColumnNode 三种情况。
-        /// 要解决如果表中的列过多，而不生成过多无用的 ColumnNode 的情况。所以，在 Table.Alias、Column.Alias 都是空的情况下，直接使用 RdbColumnInfo 即可。
-        /// </summary>
-        private IColumnNode[] _columnsCache;
-
-        public IColumnNode FindColumn(IManagedProperty property, string alias = null, bool throwIfNotFound = false)
-        {
-            for (int i = 0, c = _tableInfoColumns.Count; i < c; i++)
-            {
-                if (_tableInfoColumns[i].Property == property)
-                {
-                    return GetCache(i, alias);
-                }
-            }
-
-            //如有列都遍历完成，没有找到与 property 对应的列，则返回 null。
-            if (throwIfNotFound)
-            {
-                throw new InvalidOperationException($"没有在实体数据源 {this.Name} 中找到 {property.Name} 属性对应的列。");
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 返回指定的用于查询的列，不包含 LOB 列。
+        /// 返回指定的用于查询的列，不包含需要过滤的列。
         /// 注意！
         /// 使用此方法生成列之后，不能再修改表的别名，因为这个方法有可能使用的是缓存的列，此时缓存列对应的表的列名无法修改！
         /// </summary>
-        /// <param name="readProperties">需要返回的列所对应的属性的列表。如果为 null，表示查询全部属性。</param>
+        /// <param name="filter"></param>
         /// <returns></returns>
-        internal IEnumerable<IColumnNode> CacheSelectionColumnsExceptsLOB(List<IManagedProperty> readProperties)
+        internal IEnumerable<IColumnNode> CacheSelectionColumns(Predicate<IRdbColumnInfo> filter)
         {
-            for (int i = 0, c = _tableInfoColumns.Count; i < c; i++)
+            var columns = _tableInfo.Columns;
+            for (int i = 0, c = columns.Count; i < c; i++)
             {
-                var property = _tableInfoColumns[i].Property;
+                var column = columns[i];
+                if (filter.Invoke(column)) continue;
 
-                if (property.Category == PropertyCategory.LOB) continue;
-                if (property != Entity.IdProperty && readProperties != null &&  !readProperties.Contains(property)) continue;
-
-                var item = GetCache(i, null, true);
-                yield return item;
+                var item = this.CacheColumn(column.Property);
+                if (item == null)
+                {
+                    yield return item;
+                }
             }
         }
 
-        private IColumnNode GetCache(int index, string aliasNeed, bool tryUseMeta = false)
+        private IColumnNode CacheColumn(IManagedProperty property, string alias = null, bool throwIfNotFound = false)
         {
-            //如果数组还没初始化，则先初始化好这个列表。
-            if (_columnsCache == null)
-            {
-                _columnsCache = new IColumnNode[_tableInfoColumns.Count];
-            }
-
-            //数组中元素可能是 null、ColumnNode 三种情况。
-            var item = _columnsCache[index];
-
-            //如果该位置的列还没有生成，则即刻生成一个该列的对象，并插入到数组对应的位置中。
-            if (item == null || item.Alias != aliasNeed)
-            {
-                var dbColumn = _tableInfoColumns[index];
-
-                //如果表、列都没有别名的情况下，不再生成额外的对象，直接使用元数据对象。
-                if (this.Alias == null && aliasNeed == null && tryUseMeta && this.Name == dbColumn.Table.Name) return dbColumn;
-
-                //如果别名不同，也需要生成一个新的 Column，这时，只存储最近一个使用 Column。
-                item = NewColumn(dbColumn, aliasNeed);
-                _columnsCache[index] = item;
-            }
-
-            return item;
+            return ColumnNodeCache.Instance.Get(this, property, alias, throwIfNotFound);
         }
-
-        ///// <summary>
-        ///// 由于 IRdbColumnInfo 中的表名都是没有使用别名的，所以表的别名一旦被设置，IRdbColumnInfo 都不能再使用。
-        ///// 所有使用 IRdbColumnInfo 的列缓存，都得清空。
-        ///// </summary>
-        //private void ResetCacheIfAliasChanged()
-        //{
-        //    if (_columnsCache != null)
-        //    {
-        //        for (int i = 0, c = _columnsCache.Length; i < c; i++)
-        //        {
-        //            var item = _columnsCache[i];
-        //            if (item is IRdbColumnInfo)
-        //            {
-        //                _columnsCache[i] = null;
-        //            }
-        //        }
-        //    }
-        //}
-
-        private IColumnNode NewColumn(IRdbColumnInfo dbColumn, string alias = null)
-        {
-            var res = new ColumnNode();
-            res.Table = this;
-            res.Property = dbColumn.Property;
-            res.ColumnName = dbColumn.Name;
-            res.DbType = dbColumn.DbType;
-            res.HasIndex = dbColumn.HasIndex;
-            res.Alias = alias;
-            return res;
-        }
-
-        #endregion
 
         private TableSourceFinder _finder;
 
         ITableSource ISource.FindTable(IRepository repo, string alias)
         {
-            if (_finder == null) { _finder = new TableSourceFinder(this); }
-            return _finder.Find(repo, alias);
+            if (_finder == null) { _finder = new TableSourceFinder(); }
+            return _finder.Find(this, repo, alias);
         }
     }
 }

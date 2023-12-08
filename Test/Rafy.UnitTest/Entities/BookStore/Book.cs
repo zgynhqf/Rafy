@@ -518,7 +518,6 @@ namespace UT
         [RepositoryQuery]
         public virtual BookList GetBookListByIds(IEnumerable<int> ids)
         {
-            var f = QueryFactory.Instance;
             var table = Table<Book>();
             var query = Query(
                 from: table,

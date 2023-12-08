@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.SqlTree
         /// <summary>
         /// 使用这个列进行排序。
         /// </summary>
-        public SqlColumn Column { get; set; }
+        public ISqlColumn Column { get; set; }
 
         /// <summary>
         /// 使用这个方向进行排序。

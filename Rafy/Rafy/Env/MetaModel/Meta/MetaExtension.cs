@@ -332,7 +332,16 @@ namespace Rafy.MetaModel
 
         private static void MapRefValue(this EntityPropertyMeta meta, ReferenceValuePath path, ReferenceValueDataMode dataMode = ReferenceValueDataMode.ReadJoinTable)
         {
-            meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(path);
+            var cm = meta.MapColumn();
+            if (dataMode == ReferenceValueDataMode.Redundancy)
+            {
+                meta.ManagedProperty.CastTo<IPropertyInternal>().AsRedundantOf(path);
+            }
+            else
+            {
+                cm.RefValuePath = path;
+            }
+            cm.RefValueDataMode = dataMode;
         }
 
         /// <summary>

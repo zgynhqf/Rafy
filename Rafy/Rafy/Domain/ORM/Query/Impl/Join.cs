@@ -78,8 +78,8 @@ namespace Rafy.Domain.ORM.Query.Impl
 
         ITableSource ISource.FindTable(IRepository repo, string alias)
         {
-            if (_finder == null) { _finder = new TableSourceFinder(this); }
-            return _finder.Find(repo, alias);
+            if (_finder == null) { _finder = new TableSourceFinder(); }
+            return _finder.Find(this, repo, alias);
         }
     }
 }

@@ -133,22 +133,57 @@ namespace Rafy.MetaModel
             get { return this._DbTypeLength; }
             set { this.SetValue(ref this._DbTypeLength, value); }
         }
+
+        private ReferenceValuePath _RefValuePath;
+        /// <summary>
+        /// 如果这个属性不为 null，表示该属性从哪个引用路径获取值。
+        /// </summary>
+        public ReferenceValuePath RefValuePath
+        {
+            get { return this._RefValuePath; }
+            set { this.SetValue(ref this._RefValuePath, value); }
+        }
+
+        private ReferenceValueDataMode? _RefValueDataMode;
+        /// <summary>
+        /// 如果属性 <see cref="RefValuePath"/> 不为 null，则这里表示引用值的获取方式
+        /// </summary>
+        public ReferenceValueDataMode? RefValueDataMode
+        {
+            get { return this._RefValueDataMode; }
+            set { this.SetValue(ref this._RefValueDataMode, value); }
+        }
+
+        /// <summary>
+        /// 返回这个对象，是否真正在映射表的字段。
+        /// 如果是 true，则在生成表、插入、更新时，都会有相应的列。
+        /// </summary>
+        /// <returns></returns>
+        internal bool MappingRealColumn()
+        {
+            return _RefValueDataMode != ReferenceValueDataMode.ReadJoinTable;
+        }
+
+        internal bool IsFromJoin()
+        {
+            return _RefValueDataMode == ReferenceValueDataMode.ReadJoinTable;
+        }
     }
 
     /// <summary>
-    /// 引用的关系的属性值时，值的处理获取方式。
+    /// 引用的关系的属性值时，值的处理、获取方式。
     /// </summary>
     public enum ReferenceValueDataMode
     {
         /// <summary>
-        /// 采用即时的方式。
-        /// 此时，当前实体对应的表中没有字段。
+        /// 采用实时读取的方式。
+        /// 这种模式下，当前实体对应的表中没有字段。
         /// 在读取实体时，会在 sql 中生成 join 语句，并把关系表中的值读取过来。
         /// </summary>
         ReadJoinTable,
         /// <summary>
         /// 采用冗余的方式。
-        /// 此时，会在本实体对应的表中生成字段，并将引用关系表属性的值直接拷贝到字段中，作为一份冗余。
+        /// 这种模式下，会在本实体对应的表中生成字段，并将引用关系表属性的值直接拷贝到字段中，作为一份冗余。
         /// 这个冗余属性的值，会在引用关系表属性的值发生改变时，自动更新。（自动更新只在通过框架变更值时触发；开发者通过其它方式直接修改数据库时，无法触发。）
         /// </summary>
         Redundancy

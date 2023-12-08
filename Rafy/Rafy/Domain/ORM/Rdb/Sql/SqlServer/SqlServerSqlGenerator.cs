@@ -294,8 +294,6 @@ namespace Rafy.Domain.ORM
             {
                 case SqlColumnConstraintOperator.In:
                 case SqlColumnConstraintOperator.NotIn:
-
-                    var column = node.Column;
                     base.AppendColumnUsage(node.Column);
 
                     var opSql = op == SqlColumnConstraintOperator.In ? "IN" : "NOT IN";

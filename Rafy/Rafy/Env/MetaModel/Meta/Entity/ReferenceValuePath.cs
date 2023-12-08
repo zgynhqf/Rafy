@@ -41,10 +41,10 @@ namespace Rafy.MetaModel
         {
             this.ValueProperty = ConvertParameter(pathes[pathes.Length - 1], false);
 
-            this.RefPathes = new ReadOnlyCollection<ConcreteProperty>(
+            this.RefPaths = new ReadOnlyCollection<ConcreteProperty>(
                 pathes.Take(pathes.Length - 1)
-                .Select(p => ConvertParameter(p))
-                .ToArray()
+                    .Select(p => ConvertParameter(p))
+                    .ToArray()
                 );
         }
 
@@ -58,34 +58,33 @@ namespace Rafy.MetaModel
         /// 
         /// 注意，第一个引用属性，必须和冗余属性同在一个实体类型中。
         /// 
-        /// 注意，此集合中直接存储的是引用 Id 属性。
+        /// 注意，此集合中直接存储的是引用键属性。
         /// </summary>
-        public ReadOnlyCollection<ConcreteProperty> RefPathes { get; private set; }
+        public ReadOnlyCollection<ConcreteProperty> RefPaths { get; private set; }
 
         /// <summary>
         /// 最终的值属性
         /// </summary>
         public ConcreteProperty ValueProperty { get; private set; }
 
-        private string DebuggerDisplay
-        {
-            get
-            {
-                var res = "RedundantPath : " + this.Redundancy.FullName
-                    + "，冗余路径：" + this.GetPathExpression();
-                return res;
-            }
-        }
-
         public string GetPathExpression()
         {
             var res = this.Redundancy.Owner.Name;
-            foreach (var refProperty in this.RefPathes)
+            foreach (var refProperty in this.RefPaths)
             {
                 res += "." + RefPropertyHelper.Find(refProperty.Property).RefEntityType.Name;
             }
             res += "." + ValueProperty.Property.Name;
             return res;
+        }
+
+        /// <summary>
+        /// 获取路径中所有引用属性。
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IRefProperty> GetRefProperties()
+        {
+            return this.RefPaths.Select(c => RefPropertyHelper.Find(c.Property));
         }
 
         private static ConcreteProperty ConvertParameter(object pathParameter, bool checkOwnerType = true)
@@ -121,7 +120,7 @@ namespace Rafy.MetaModel
                 {
                     //如果给定的 ConcreteProperty 中使用的引用实体属性，那么需要转换为引用 Id 属性。
                     var refProperty = RefPropertyHelper.Find(res.Property);
-                    if (refProperty is IRefProperty)
+                    if (refProperty != null)
                     {
                         res = new ConcreteProperty(refProperty.RefKeyProperty, res.Owner);
                     }
@@ -137,6 +136,16 @@ namespace Rafy.MetaModel
             }
 
             return res;
+        }
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                var res = "RedundantPath : " + this.Redundancy.FullName
+                    + "，冗余路径：" + this.GetPathExpression();
+                return res;
+            }
         }
     }
 }

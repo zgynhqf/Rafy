@@ -206,7 +206,7 @@ namespace Rafy.Domain.ORM.DbMigration
                 foreach (var property in metaProperties)
                 {
                     var columnMeta = property.ColumnMeta;
-                    if (columnMeta == null) continue;
+                    if (columnMeta == null || !columnMeta.MappingRealColumn()) continue;
 
                     var mp = property.ManagedProperty;
                     if (mp == null) { throw new ArgumentNullException(string.Format("{0}.{1} 属性需要使用托管属性进行编写。", em.Name, mp.Name)); }

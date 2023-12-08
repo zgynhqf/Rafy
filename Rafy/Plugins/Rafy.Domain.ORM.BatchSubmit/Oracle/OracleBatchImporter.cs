@@ -295,7 +295,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             var parameters = this.GenerateParametersInUpdateSql(batch, entities);
             var parametersColumns = parameters//顺序必须一致。
                 .Select(p => batch.Table.Columns.First(c => c.Name == p.ParameterName))
-                .Where(c => !c.Info.IsPrimaryKey)//不更新主键
+                .Where(c => !c.Meta.IsPrimaryKey)//不更新主键
                 .ToList();
 
             //生成 Sql
@@ -326,7 +326,7 @@ namespace Rafy.Domain.ORM.BatchSubmit.Oracle
             for (int i = 0, c = columns.Count; i < c; i++)
             {
                 var column = columns[i];
-                if (!column.Info.IsPrimaryKey && (updateLOB || !column.IsLOB))
+                if (!column.Meta.IsPrimaryKey && (updateLOB || !column.IsLOB))
                 {
                     var parameter = this.ReadIntoBatchParameter(entities, column, dba);
                     if (parameter != null) parameters.Add(parameter);

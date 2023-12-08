@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlArray" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlArray.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlBinaryConstraint" Collapsed="true">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAIAAAAAAAAAQgACACAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlBinaryConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlColumn" Collapsed="true">
+    <Position X="24.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAoAAAAAAABAQAQAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlColumn.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlColumnConstraint" Collapsed="true">
+    <Position X="15.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAABAAAAAAAAAAAAAAAAgAAAAIAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlColumnComparisonConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlColumnsComparisonConstraint" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIIA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlColumnsComparisonConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlConstraint" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlConstraint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlExistsConstraint" Collapsed="true">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlExistsConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlJoin" Collapsed="true">
+    <Position X="33.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAGAAAAAAAAAAAAAAAAAAAAACACAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlJoin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlLiteral" Collapsed="true">
+    <Position X="35.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAEIAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlLiteral.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlNamedSource" Collapsed="true">
+    <Position X="30" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlNamedSource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlNode" Collapsed="true">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlNodeList" Collapsed="true">
+    <Position X="13" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAACAAAAAACBAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlNodeList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlNodeVisitor" Collapsed="true">
+    <Position X="38" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAECqQARAAAAAAAIYCAgAAAIACAABAAACA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlNodeVisitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlNotConstraint" Collapsed="true">
+    <Position X="17.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlNotConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlOrderBy" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlOrderBy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlOrderByList" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAACAAAAAACBAAAAAAAAQAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlOrderByList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlSelect" Collapsed="true">
+    <Position X="22" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoACACQAgAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlSelect.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlSelectAll" Collapsed="true">
+    <Position X="26.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlSelectAll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlSource" Collapsed="true">
+    <Position X="31" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlSource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlSubSelect" Collapsed="true">
+    <Position X="31" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAIAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlSubSelect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rafy.Domain.ORM.SqlTree.SqlTable" Collapsed="true">
+    <Position X="28.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAIAAAAAAAAAAAQAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\SqlTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlNode" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlSelect" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlConstraint" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlSource" Collapsed="true">
+    <Position X="5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlLiteral" Collapsed="true">
+    <Position X="2.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\Interfaces.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rafy.Domain.ORM.SqlTree.ISqlColumn" Collapsed="true">
+    <Position X="7.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAoAAAAAAABAQAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\ORM\Rdb\Sql\Tree\ISqlColumn.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

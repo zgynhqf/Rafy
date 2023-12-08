@@ -129,7 +129,7 @@ namespace UT
                 where: f.Exists(f.Query(
                     from: t1,
                     where: t1.Column(InvoiceItem.InvoiceIdProperty).Equal(t.Column(Entity.IdProperty))
-            ))
+                ))
             );
             return (InvoiceList)this.QueryData(q);
         }

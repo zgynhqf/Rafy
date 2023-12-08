@@ -19,12 +19,12 @@ using System.Text;
 namespace Rafy.Domain.ORM.SqlTree
 {
     /// <summary>
-    /// 表示查询结果中的一个列。
+    /// 表示一个列。
     /// </summary>
-    public interface ISqlSelectionColumn //: ISqlNode
+    public interface ISqlColumn //: ISqlNode //不继承是因为 ISqlNode 是内部的，不想公开。但是内部实现时，需要保证实现了 ISqlColumn 的，都必须实现 ISqlNode。
     {
         /// <summary>
-        /// 只能是 <see cref="SqlTable"/>、<see cref="SqlSubSelect"/>
+        /// 目前实现有： <see cref="SqlTable"/>、<see cref="SqlSubSelect"/>、<see cref="RdbTableInfo"/>
         /// </summary>
         IHasName Table { get; }
 

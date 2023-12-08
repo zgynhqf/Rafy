@@ -31,9 +31,9 @@ namespace Rafy.MultiTenancy.Core.DataInterception
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        protected override IQuery VisitQuery(IQuery node)
+        protected override IQueryNode VisitQuery(IQuery node)
         {
-            var query = base.VisitQuery(node);
+            var query = base.VisitQuery(node) as IQuery;
 
             var meta = query.MainTable.EntityRepository.EntityMeta;
             var property = meta.ManagedProperties.GetCompiledProperties().Find(TenantAwareEntityExtension.TenantIdProperty);

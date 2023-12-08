@@ -67,7 +67,7 @@ namespace Rafy.Domain
                             }
                             //如果是引用变更了，并且只有一个 RefPath，则不需要处理。
                             //因为这个已经在属性刚变更时的处理函数中实时处理过了。
-                            else if (path.RefPathes.Count > 1)
+                            else if (path.RefPaths.Count > 1)
                             {
                                 this.UpdateRedundancyByIntermidateRef(entity, path, refProperty, dbEntity);
                             }
@@ -120,7 +120,7 @@ namespace Rafy.Domain
         [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         private void UpdateRedundancyByValue(Entity entity, ReferenceValuePath path, object newValue, Lazy<Entity> dbEntity)
         {
-            this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, dbEntity);
+            this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPaths, dbEntity);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Rafy.Domain
 
             //只要从开始到 refChanged 前一个
             var refPathes = new List<ConcreteProperty>(5);
-            foreach (var refProperty in path.RefPathes)
+            foreach (var refProperty in path.RefPaths)
             {
                 if (refProperty.Property == refChanged.RefKeyProperty) break;
                 refPathes.Add(refProperty);
@@ -156,7 +156,7 @@ namespace Rafy.Domain
         {
             var newValue = entity.GetRefKey(refChanged);
 
-            this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPathes, dbEntity);
+            this.UpdateRedundancy(entity, path.Redundancy, newValue, path.RefPaths, dbEntity);
         }
 
         /// <summary>

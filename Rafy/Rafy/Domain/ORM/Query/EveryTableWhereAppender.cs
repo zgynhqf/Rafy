@@ -52,7 +52,7 @@ namespace Rafy.Domain.ORM.Query
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        protected override IQuery VisitQuery(IQuery node)
+        protected override IQueryNode VisitQuery(IQuery node)
         {
             if (node.Selection != null)
             {
@@ -86,7 +86,7 @@ namespace Rafy.Domain.ORM.Query
             return node;
         }
 
-        protected override ITableSource VisitTableSource(ITableSource node)
+        protected override IQueryNode VisitTableSource(ITableSource node)
         {
             if (_tableSourceList != null)
             {

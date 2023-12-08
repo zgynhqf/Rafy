@@ -36,10 +36,9 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 列的信息
         /// </summary>
-        public IRdbColumnInfo Info
-        {
-            get { return _columnInfo; }
-        }
+        public IRdbColumnInfo Info => _columnInfo;
+
+        public ColumnMeta Meta => _columnInfo.Meta;
 
         public bool IsLOB
         {
@@ -49,17 +48,6 @@ namespace Rafy.Domain.ORM
         public bool IsReadOnly
         {
             get { return _columnInfo.Property.IsReadOnly; }
-        }
-
-        /// <summary>
-        /// 此方法用于判断是否需要将本列在 Insert 语句中插入。
-        /// </summary>
-        /// <param name="withIdentity">表示当前的 Insert 语句是需要强制插入 Identity 列的。</param>
-        /// <returns></returns>
-        public virtual bool ShouldInsert(bool withIdentity)
-        {
-            //默认情况下，Identity 都不应该在 Insert 语句中插入。
-            return withIdentity || !_columnInfo.IsIdentity;
         }
 
         /// <summary>

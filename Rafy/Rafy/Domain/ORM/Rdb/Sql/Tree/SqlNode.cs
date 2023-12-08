@@ -55,7 +55,6 @@ namespace Rafy.Domain.ORM.SqlTree
         SqlArray,
         SqlSelect,
         SqlTable,
-        SqlSelectionColumn,
         SqlColumn,
         SqlJoin,
         SqlOrderBy,
