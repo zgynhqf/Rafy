@@ -187,7 +187,6 @@
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyList.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyList_Full.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReadOnly.snippet" />
-    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyRedundancy.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReference.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyReferenceCombined.snippet" />
     <EmbeddedResource Include="_CodeSnippets\Rafy_Property_CoerceGetValue.snippet" />
@@ -204,9 +203,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionList.snippet">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionRedundancy.snippet">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="_CodeSnippets\Rafy_PropertyExtensionReference.snippet" />
