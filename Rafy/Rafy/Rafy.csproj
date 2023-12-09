@@ -3,6 +3,7 @@
   <PropertyGroup>
     <!--https://docs.microsoft.com/zh-cn/dotnet/core/tutorials/libraries-->
     <!--https://docs.microsoft.com/zh-cn/dotnet/standard/frameworks-->
+    <!--https://learn.microsoft.com/zh-cn/dotnet/standard/net-standard?tabs=net-standard-2-0-->
     <!--目前还需要支持 NET451 及 NetStandard2.0，因为 Windows 7 上只能安装到 NET452，而 NetStandard2.0 最低只支持 NET462-->
     <TargetFrameworks>netstandard2.0;net451;</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
