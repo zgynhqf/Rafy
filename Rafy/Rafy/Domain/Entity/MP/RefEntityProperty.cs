@@ -25,7 +25,7 @@ namespace Rafy.Domain
     /// 引用实体属性的实体标记
     /// </summary>
     /// <typeparam name="TRefEntity">引用实体的类型</typeparam>
-    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefProperty, IRefEntityPropertyInternal
+    public sealed class RefEntityProperty<TRefEntity> : Property<Entity>, IRefProperty, IRefPropertyInternal
         where TRefEntity : Entity
     {
         private IManagedProperty _refKeyProperty;
@@ -110,7 +110,7 @@ namespace Rafy.Domain
             }
         }
 
-        Entity IRefEntityPropertyInternal.Load(object keyValue, Entity owner)
+        Entity IRefPropertyInternal.Load(object keyValue, Entity owner)
         {
             //通过自定义 Loader 获取实体。
             if (_loader != null)
@@ -143,7 +143,7 @@ namespace Rafy.Domain
     /// <returns>返回对应的引用实体。</returns>
     public delegate Entity RefEntityLoader(object keyValue, IManagedProperty refEntityKeyProperty, Entity owner);
 
-    internal interface IRefEntityPropertyInternal
+    internal interface IRefPropertyInternal
     {
         /// <summary>
         /// 加载某个 keyValue 对应的引用实体。

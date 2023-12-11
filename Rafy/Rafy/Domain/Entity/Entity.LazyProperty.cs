@@ -259,7 +259,7 @@ namespace Rafy.Domain
                 var keyValue = this.GetProperty(entityProperty.RefKeyProperty);
                 if (entityProperty.KeyProvider.IsAvailable(keyValue))
                 {
-                    value = (entityProperty as IRefEntityPropertyInternal).Load(keyValue, this);
+                    value = (entityProperty as IRefPropertyInternal).Load(keyValue, this);
                     if (value != null)
                     {
                         base.LoadProperty(entityProperty, value);
