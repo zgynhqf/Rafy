@@ -169,6 +169,13 @@ namespace UT
         }
 
         [RepositoryQuery]
+        public virtual Book GetByName(string name)
+        {
+            var sql = @"SELECT TOP 1 * FROM BOOK";
+            return (Book)(this.DataProvider as RdbDataProvider).QueryData(sql);
+        }
+
+        [RepositoryQuery]
         public virtual BookList GetWithEager1()
         {
             var args = new ORMQueryArgs

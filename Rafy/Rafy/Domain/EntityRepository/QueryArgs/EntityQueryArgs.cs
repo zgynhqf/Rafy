@@ -100,7 +100,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 如果 <see cref="IEntityQueryArgs.FetchingFirst"/> 为真，则重新修改 <see cref="PagingInfo"/>。
         /// </summary>
-        private void MergePagingAndFirst()
+        internal virtual void MergePagingAndFirst()
         {
             if (this.QueryType == RepositoryQueryType.First)
             {

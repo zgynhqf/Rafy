@@ -71,6 +71,11 @@ namespace Rafy.Domain.ORM
             set { this._parameters = value; }
         }
 
+        internal override void MergePagingAndFirst()
+        {
+            //自定义 SQL，不需要在 First 时使用数据库分页。
+        }
+
         #region ISelectArgs 成员
 
         Type ISqlSelectArgs.EntityType

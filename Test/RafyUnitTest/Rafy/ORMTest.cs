@@ -686,6 +686,16 @@ namespace RafyUnitTest
             }
         }
 
+        /// <summary>
+        /// 开发者自己编写的 SQL 时，不能添加 TOP 1 导致查询失败。
+        /// </summary>
+        [TestMethod]
+        public void ORM_Query_GetFirst_SqlTop_NotOnUserSql()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            repo.GetByName(string.Empty);
+        }
+
         [TestMethod]
         public void ORM_Query_GetAll()
         {
