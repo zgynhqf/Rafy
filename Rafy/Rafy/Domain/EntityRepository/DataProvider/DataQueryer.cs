@@ -582,7 +582,7 @@ namespace Rafy.Domain
 
                 #region 加载所有的引用实体。
 
-                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity((Type)refProperty.RefEntityType, true);
+                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(refProperty.RefEntityType, true);
                 var refList = keyPropertyOfRefEntity == Entity.IdProperty ?
                     targetRepo.GetByIdList(keyList.ToArray()) :
                     targetRepo.GetBy(new CommonQueryCriteria
@@ -608,11 +608,11 @@ namespace Rafy.Domain
                         tmp.Add(p);
                         return false;
                     });
-                    sortedList = tmp.OrderBy((Func<Entity, object>)(e => e.GetRefNullableKey((IManagedProperty)refProperty))).ToList();
+                    sortedList = tmp.OrderBy(e => e.GetRefNullableKey(refProperty)).ToList();
                 }
                 else
                 {
-                    sortedList = list.OrderBy((Func<Entity, object>)(e => e.GetRefNullableKey((IManagedProperty)refProperty))).ToList();
+                    sortedList = list.OrderBy(e => e.GetRefNullableKey(refProperty)).ToList();
                 }
 
                 var sortedRefList = refList.OrderBy(e => e.GetProperty(keyPropertyOfRefEntity)).ToList();
@@ -630,7 +630,7 @@ namespace Rafy.Domain
                 {
                     var entity = sortedList[i];
 
-                    var refKey = entity.GetRefNullableKey((IManagedProperty)refProperty);
+                    var refKey = entity.GetRefNullableKey(refProperty);
                     if (keyProvider.IsAvailable(refKey))
                     {
                         //必须把该对象处理完成后，才能跳出下面的循环。
@@ -638,24 +638,10 @@ namespace Rafy.Domain
                         {
                             if (object.Equals(refKey, refEntity.GetProperty(keyPropertyOfRefEntity)))
                             {
-
-/* Unmerged change from project 'Rafy (netstandard2.0)'
-Before:
-                                entity.LoadProperty(refEntityProperty, refEntity);
-After:
                                 entity.LoadProperty(refProperty, refEntity);
-*/
-                                entity.LoadProperty((IManagedProperty)refProperty, (object)refEntity);
                                 if (needSerialize)
                                 {
-
-/* Unmerged change from project 'Rafy (netstandard2.0)'
-Before:
-                                    entity.SetSerializable(refEntityProperty, true);
-After:
                                     entity.SetSerializable(refProperty, true);
-*/
-                                    entity.SetSerializable((IManagedProperty)refProperty, true);
                                 }
                                 break;
                             }

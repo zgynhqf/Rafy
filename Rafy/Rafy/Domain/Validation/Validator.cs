@@ -210,8 +210,7 @@ namespace Rafy.Domain.Validation
             {
                 foreach (var child in target.GetLoadedChildren())
                 {
-                    var list = child.Value as EntityList;
-                    if (list != null)
+                    if (child.Value is EntityList list)
                     {
                         list.EachNode(childEntity =>
                         {

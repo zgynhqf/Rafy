@@ -36,12 +36,12 @@ namespace Rafy.Domain.Validation
         {
             var property = e.Property;
 
-            bool isNull = false;
+            bool isNull;
 
             if (RefPropertyHelper.IsRefKeyProperty(property, out var refP))
             {
                 var key = entity.GetRefNullableKey(refP);
-                isNull = refP.KeyProvider.IsAvailable(key);
+                isNull = !refP.KeyProvider.IsAvailable(key);
             }
             else
             {
