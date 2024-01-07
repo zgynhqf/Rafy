@@ -25,7 +25,6 @@ namespace Rafy.Domain
     /// <summary>
     /// 以 Int 作为主键的实体基类。
     /// </summary>
-    [EntityKeyType(KeyTypeName = "System.Int32")]
     public abstract class IntEntity : Entity<int>
     {
         //protected IntEntity()

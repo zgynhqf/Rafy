@@ -157,7 +157,7 @@ namespace Rafy.MetaModel
 
             //标识属性的真实类型。
             //entityMeta.IdType 的设置，使用 EntityKeyTypeAttribute 实现，而不是创建一个新实体来实现。否则会因为开发者编写的实体的构造器出问题，导致元数据无法创建成功。
-            entityMeta.IdType = EntityKeyTypeAttribute.GetKeyType(entityMeta.EntityType);
+            entityMeta.IdType = GetKeyType(entityMeta.EntityType);
 
             //聚合关系设置
             if (parentMeta != null)
@@ -197,6 +197,24 @@ namespace Rafy.MetaModel
             this.AddPrime(entityMeta);
 
             return entityMeta;
+        }
+
+        private static Type GetKeyType(Type entityType)
+        {
+            while (true)
+            {
+                if (entityType == null) break;
+                if (entityType.IsGenericType && entityType.GetGenericTypeDefinition() == typeof(Entity<>))
+                {
+                    return entityType.GetGenericArguments()[0];
+                }
+
+                entityType = entityType.BaseType;
+            }
+
+            //如果实体类没有继承自 Entity<TKey>，则直接使用化一个对象。
+            var instance = Activator.CreateInstance(entityType, true) as IEntityWithId;
+            return instance.IdProvider.KeyType;
         }
 
         /// <summary>

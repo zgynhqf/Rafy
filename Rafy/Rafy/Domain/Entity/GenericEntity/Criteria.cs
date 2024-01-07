@@ -30,11 +30,8 @@ namespace Rafy.Domain
     /// 如果不使用这个类做基类的查询条件类，也可以在 WPF 下运行正常。但是无法在 Web 下运行。
     /// </summary>
     [Serializable]
-    [EntityKeyType(KeyTypeName = "System.Object")]
-    public abstract class Criteria : Entity, ILoadOptionsCriteria
+    public abstract class Criteria : Entity<object>, ILoadOptionsCriteria
     {
-        private static IKeyProvider KeyProviderField = KeyProviders.Get(typeof(object));
-
         private PagingInfo _p;
 
         /// <summary>
@@ -74,11 +71,6 @@ namespace Rafy.Domain
                 "当类型 {0} 用于本地过滤查询时，需要重写 Filter 方法以实现过滤逻辑。",
                 this.GetType().FullName
                 ));
-        }
-
-        protected override IKeyProvider IdProvider
-        {
-            get { return KeyProviderField; }
         }
     }
 

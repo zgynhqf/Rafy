@@ -25,7 +25,6 @@ namespace Rafy.Domain
     /// <summary>
     /// 以 string 作为主键的实体基类。
     /// </summary>
-    [EntityKeyType(KeyTypeName = "System.String")]
     public abstract class StringEntity : Entity<string>
     {
         //static StringEntity()
