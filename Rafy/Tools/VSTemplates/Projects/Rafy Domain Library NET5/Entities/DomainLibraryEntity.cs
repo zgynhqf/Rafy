@@ -17,7 +17,7 @@ namespace $domainNamespace$
 {
     public abstract class $domainName$Entity : LongEntity { }
 
-    public abstract class $domainName$EntityList : EntityList { }
+    public abstract class $domainName$EntityList<TEntity> : EntityList<TEntity> where TEntity : Entity { }
 
     public abstract class $domainName$EntityRepository : EntityRepository
     {

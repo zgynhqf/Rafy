@@ -44,7 +44,7 @@ namespace $domainNamespace$
     /// <summary>
     /// $domainEntityLabel$ 列表类。
     /// </summary>
-    public partial class $domainEntityName$List : $domainBaseEntityName$List { }$repositoryCode$
+    public partial class $domainEntityName$List : $domainBaseEntityName$List<$domainEntityName$> { }$repositoryCode$
 
     /// <summary>
     /// $domainEntityLabel$ 配置类。
