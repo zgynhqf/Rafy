@@ -223,7 +223,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在列表中的实体，不论其的状态如何变换，都不会影响 EntityList 中的项的个数，除非直接操作 EntityList。
+        /// 在列表中的实体，不论其的状态如何变换，都不会影响 IEntityList 中的项的个数，除非直接操作 IEntityList。
         /// </summary>
         [TestMethod]
         public void ET_PersistenceStatus_Delete_ParentListItemsNotChanged()

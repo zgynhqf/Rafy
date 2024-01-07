@@ -18,17 +18,17 @@ namespace UT
         /// <param name="value">对应的属性值，如果是字符串属性，会使用包含查询。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        public virtual EntityList GetBySingleProperty(ConcreteProperty property, object value)
+        public virtual IEntityList GetBySingleProperty(ConcreteProperty property, object value)
         {
             var q = QueryFactory.Instance.Query(this.Repository);
             var op = property.Property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
             q.AddConstraintIf(property.Property, op, value);
 
-            return (EntityList)this.QueryData(q);
+            return (IEntityList)this.QueryData(q);
         }
 
         [RepositoryQuery]
-        public virtual EntityList GetBy(SinglePropertyCriteira criteria)
+        public virtual IEntityList GetBy(SinglePropertyCriteira criteria)
         {
             var property = Repository.EntityMeta.ManagedProperties
                 .GetNonReadOnlyCompiledProperties().Find(criteria.PropertyName);
@@ -38,7 +38,7 @@ namespace UT
                 var op = property.PropertyType == typeof(string) ? PropertyOperator.Contains : PropertyOperator.Equal;
                 q.AddConstraintIf(property, op, criteria.Value);
 
-                return (EntityList)this.QueryData(q);
+                return (IEntityList)this.QueryData(q);
             }
 
             return Repository.NewList();

@@ -93,7 +93,7 @@ namespace Rafy.RBAC.Old
         #endregion
     }
 
-    public partial class OrgPositionUserList : EntityList { }
+    public partial class OrgPositionUserList : InheritableEntityList { }
 
     public partial class OrgPositionUserRepository : EntityRepository
     {

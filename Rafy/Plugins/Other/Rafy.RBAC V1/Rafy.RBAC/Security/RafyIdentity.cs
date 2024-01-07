@@ -90,7 +90,7 @@ namespace Rafy.RBAC.Old.Security
         }
     }
 
-    public partial class RafyIdentityList : EntityList { }
+    public partial class RafyIdentityList : InheritableEntityList { }
 
     public partial class RafyIdentityRepository : EntityRepository
     {

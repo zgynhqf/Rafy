@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120220
@@ -40,7 +40,7 @@ namespace Rafy.Web.EntityDataPortal
         /// <param name="repository">如果没有显式指定 Repository，则会根据 json 中的 _model 属性来查找对应的实体仓库。</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        internal static EntityList JsonToEntityList(JObject jEntityList, EntityRepository repository = null)
+        internal static IEntityList JsonToEntityList(JObject jEntityList, EntityRepository repository = null)
         {
             return ListReader.JsonToEntity(jEntityList, repository);
         }

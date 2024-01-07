@@ -14,6 +14,6 @@ namespace Rafy.Domain
         /// 需要保存的列表。
         /// </summary>
         [ServiceInput, ServiceOutput]
-        EntityList EntityList { get; set; }
+        IEntityList EntityList { get; set; }
     }
 }

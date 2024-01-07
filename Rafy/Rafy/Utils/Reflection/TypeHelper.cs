@@ -279,19 +279,15 @@ namespace Rafy.Reflection
         /// <param name="valueType">
         /// Original type of the value.
         /// </param>
-        /// 
         /// <param name="value">
         /// The value to coerce.
         /// </param>
         /// <remarks>
         /// <para>
-        /// If the desired type is a primitive type or Decimal, 
-        /// empty string and null values will result in a 0 
-        /// or equivalent.
+        /// If the desired type is a primitive type or Decimal, empty string and null values will result in a 0 or equivalent.
         /// </para>
         /// <para>
-        /// If the desired type is a Nullable type, empty string
-        /// and null values will result in a null result.
+        /// If the desired type is a Nullable type, empty string and null values will result in a null result.
         /// </para>
         /// <para>
         /// If the desired type is an enum the value's ToString()

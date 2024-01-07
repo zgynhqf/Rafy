@@ -33,7 +33,7 @@ namespace Rafy.RBAC.GroupManagement
     {
     }
 
-    public abstract class GroupManagementEntityList : EntityList { }
+    public abstract class GroupManagementEntityList : InheritableEntityList { }
 
     public abstract class GroupManagementEntityRepository : EntityRepository
     {

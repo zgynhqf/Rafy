@@ -25,7 +25,7 @@ namespace Rafy.Domain
     /// </summary>
     /// <typeparam name="TEntityList"></typeparam>
     public sealed class ListProperty<TEntityList> : Property<TEntityList>, IListProperty, IProperty
-        where TEntityList : EntityList
+        where TEntityList : IEntityList
     {
         private Type _listEntityType;
 

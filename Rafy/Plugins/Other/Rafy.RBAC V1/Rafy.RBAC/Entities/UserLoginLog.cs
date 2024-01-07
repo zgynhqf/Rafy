@@ -92,7 +92,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class UserLoginLogList : EntityList { }
+    public partial class UserLoginLogList : InheritableEntityList { }
 
     public partial class UserLoginLogRepository : EntityRepository
     {

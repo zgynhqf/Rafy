@@ -342,9 +342,9 @@ namespace Rafy.Domain
                         else
                         {
                             var listProperty = property as IListProperty;
-                            var sourceList = source.GetProperty(listProperty) as EntityList;
+                            var sourceList = source.GetProperty(listProperty) as IEntityList;
 
-                            EntityList children = null;
+                            IEntityList children = null;
                             if (childrenRecur)
                             {
                                 children = this.LoadLazyList(listProperty, true);
@@ -395,7 +395,7 @@ namespace Rafy.Domain
             {
                 foreach (var child in this.GetLoadedChildren())
                 {
-                    var list = child.Value as EntityList;
+                    var list = child.Value as IEntityList;
                     if (list != null)
                     {
                         list.SetParentEntity(this);
@@ -497,7 +497,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TChild"></typeparam>
         /// <returns></returns>
-        EntityList IEntity.GetChildProperty<TChild>()
+        IEntityList IEntity.GetChildProperty<TChild>()
         {
             var properties = this.PropertiesContainer.GetNonReadOnlyCompiledProperties();
             var childProperty = properties.OfType<IListProperty>().FirstOrDefault(listProperty =>

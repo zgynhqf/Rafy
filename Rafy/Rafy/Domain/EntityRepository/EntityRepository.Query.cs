@@ -79,7 +79,7 @@ namespace Rafy.Domain
         /// 如果缓存中没有这些数据，则本方法同时会把数据缓存起来。
         /// </summary>
         /// <returns></returns>
-        public EntityList CacheAll()
+        public IEntityList CacheAll()
         {
             return this.DoCacheAll();
         }
@@ -103,7 +103,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
+        public IEntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             return this.DoGetAll(paging, loadOptions);
         }
@@ -165,7 +165,7 @@ namespace Rafy.Domain
         /// <param name="idList"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByIdList(object[] idList, LoadOptions loadOptions = null)
+        public IEntityList GetByIdList(object[] idList, LoadOptions loadOptions = null)
         {
             return this.DoGetByIdList(idList, loadOptions);
         }
@@ -177,7 +177,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
+        public IEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             return this.DoGetByParentIdList(parentIdList, paging, loadOptions);
         }
@@ -189,7 +189,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
+        public IEntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null)
         {
             return this.DoGetByParentId(parentId, paging, loadOptions);
         }
@@ -199,7 +199,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        public EntityList GetBy(CommonQueryCriteria criteria)
+        public IEntityList GetBy(CommonQueryCriteria criteria)
         {
             return this.DoGetBy(criteria);
         }
@@ -229,7 +229,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        public EntityList GetBy(ODataQueryCriteria criteria)
+        public IEntityList GetBy(ODataQueryCriteria criteria)
         {
             return this.DoGetBy(criteria);
         }
@@ -260,7 +260,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
+        public IEntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null)
         {
             if (string.IsNullOrEmpty(treeIndex)) throw new ArgumentNullException(nameof(treeIndex));
 
@@ -274,7 +274,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions = null)
+        public IEntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions = null)
         {
             return this.DoGetAllTreeParents(treeIndex, loadOptions);
         }
@@ -285,7 +285,7 @@ namespace Rafy.Domain
         /// <param name="treePId">需要查找的树节点的Id.</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetByTreePId(object treePId, LoadOptions loadOptions = null)
+        public IEntityList GetByTreePId(object treePId, LoadOptions loadOptions = null)
         {
             return this.DoGetByTreePId(treePId, loadOptions);
         }
@@ -295,7 +295,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public EntityList GetTreeRoots(LoadOptions loadOptions = null)
+        public IEntityList GetTreeRoots(LoadOptions loadOptions = null)
         {
             return this.DoGetTreeRoots(loadOptions);
         }
@@ -328,7 +328,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public EntityList GetBy(object criteria)
+        public IEntityList GetBy(object criteria)
         {
             return this.DoGetBy(criteria);
         }
@@ -359,7 +359,7 @@ namespace Rafy.Domain
         /// 如果缓存没有被启用，则直接查询数据层，返回数据。
         /// </summary>
         /// <returns></returns>
-        protected virtual EntityList DoCacheAll()
+        protected virtual IEntityList DoCacheAll()
         {
             var cache = this.Cache;
             if (cache != null && cache.IsEnabled)
@@ -384,7 +384,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected virtual EntityList DoCacheByParent(Entity parent)
+        protected virtual IEntityList DoCacheByParent(Entity parent)
         {
             var cache = this.Cache;
             if (cache != null && cache.IsEnabled)
@@ -434,7 +434,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        protected virtual EntityList DoGetByParent(Entity parent)
+        protected virtual IEntityList DoGetByParent(Entity parent)
         {
             //默认逻辑为，先尝试使用缓存中的对象。
             return this.DoCacheByParent(parent);
@@ -447,9 +447,9 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetAll(paging, loadOptions);
+            return (IEntityList)_dataProvider.GetAll(paging, loadOptions);
         }
 
         /// <summary>
@@ -494,9 +494,9 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetTreeRoots(LoadOptions loadOptions)
+        protected virtual IEntityList DoGetTreeRoots(LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetTreeRoots(loadOptions);
+            return (IEntityList)_dataProvider.GetTreeRoots(loadOptions);
         }
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByIdList(object[] idList, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetByIdList(object[] idList, LoadOptions loadOptions)
         {
             return _dataProvider.GetByIdList(idList, loadOptions);
         }
@@ -529,7 +529,7 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             return _dataProvider.GetByParentIdList(parentIdList, paging, loadOptions);
         }
@@ -542,9 +542,9 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetByParentId(object parentId, PagingInfo paging, LoadOptions loadOptions)
         {
-            return (EntityList)_dataProvider.GetByParentId(parentId, paging, loadOptions);
+            return (IEntityList)_dataProvider.GetByParentId(parentId, paging, loadOptions);
         }
 
         /// <summary>
@@ -553,9 +553,9 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetBy(CommonQueryCriteria criteria)
+        protected virtual IEntityList DoGetBy(CommonQueryCriteria criteria)
         {
-            return (EntityList)_dataProvider.GetBy(criteria);
+            return (IEntityList)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -586,9 +586,9 @@ namespace Rafy.Domain
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetBy(ODataQueryCriteria criteria)
+        protected virtual IEntityList DoGetBy(ODataQueryCriteria criteria)
         {
-            return (EntityList)_dataProvider.GetBy(criteria);
+            return (IEntityList)_dataProvider.GetBy(criteria);
         }
 
         /// <summary>
@@ -620,7 +620,7 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
         {
             return _dataProvider.GetByTreeParentIndex(treeIndex, loadOptions);
         }
@@ -632,7 +632,7 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetByTreePId(object treePId, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetByTreePId(object treePId, LoadOptions loadOptions)
         {
             return _dataProvider.GetByTreePId(treePId, loadOptions);
         }
@@ -666,7 +666,7 @@ namespace Rafy.Domain
         /// <param name="criteria"></param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetBy(object criteria)
+        protected virtual IEntityList DoGetBy(object criteria)
         {
             //所有无法找到对应单一参数的查询，都会调用此方法。
             //此方法会尝试使用仓库扩展类中编写的查询来响应本次查询。
@@ -696,7 +696,7 @@ namespace Rafy.Domain
         }
 
         [RepositoryQuery]
-        protected virtual EntityList GetByIdOrTreePId(object id)
+        protected virtual IEntityList GetByIdOrTreePId(object id)
         {
             var table = qf.Table(this);
             var query = qf.Query(
@@ -706,7 +706,7 @@ namespace Rafy.Domain
                     table.Column(Entity.TreePIdProperty).Equal(id)
                 ));
 
-            return (EntityList)this.QueryData(query, markTreeFullLoaded: false);
+            return (IEntityList)this.QueryData(query, markTreeFullLoaded: false);
         }
 
         [RepositoryQuery]
@@ -730,7 +730,7 @@ namespace Rafy.Domain
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
         [RepositoryQuery]
-        protected virtual EntityList DoGetAllTreeParents(string treeIndex, LoadOptions loadOptions)
+        protected virtual IEntityList DoGetAllTreeParents(string treeIndex, LoadOptions loadOptions)
         {
             return _dataProvider.GetAllTreeParents(treeIndex, loadOptions);
         }
@@ -780,13 +780,13 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        internal protected void SetRepo(EntityList list)
+        internal protected void SetRepo(IEntityList list)
         {
-            if (list != null)
+            if (list is IEntityListInternal el)
             {
-                list.SetRepo(this);
+                el.SetRepo(this);
 
-                list.EachNode(e =>
+                el.EachNode(e =>
                 {
                     this.SetRepo(e);
                     return false;
@@ -798,12 +798,12 @@ namespace Rafy.Domain
 
         #region IRepositoryInternal
 
-        EntityList IRepositoryInternal.GetLazyListByParent(Entity parent)
+        IEntityList IRepositoryInternal.GetLazyListByParent(Entity parent)
         {
             return this.DoGetByParent(parent);
         }
 
-        EntityList IRepositoryInternal.GetByIdOrTreePId(object id)
+        IEntityList IRepositoryInternal.GetByIdOrTreePId(object id)
         {
             var list = this.GetByIdOrTreePId(id);
             if (list.Count > 0)

@@ -166,7 +166,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    this.SubmitTreeList(component as EntityList, markSaved);
+                    this.SubmitTreeList(component as IEntityList, markSaved);
                 }
             }
             else
@@ -177,7 +177,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    this.SubmitList(component as EntityList, markSaved);
+                    this.SubmitList(component as IEntityListInternal, markSaved);
                 }
             }
         }
@@ -239,7 +239,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list">The list.</param>
         /// <param name="markSaved">if set to <c>true</c> [mark saved].</param>
-        private void SubmitTreeList(EntityList list, bool markSaved)
+        private void SubmitTreeList(IEntityList list, bool markSaved)
         {
             //先保存所有添加、变更的节点。
             for (int i = 0, c = list.Count; i < c; i++)
@@ -268,8 +268,7 @@ namespace Rafy.Domain
 
             #region 加入列表的待删除节点。
 
-            var list = tree as EntityList;
-            if (list != null)
+            if (tree is IEntityListInternal list)
             {
                 var toDeletedList = list.DeletedListField;
                 if (toDeletedList != null)
@@ -332,7 +331,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 保存根对象列表
         /// </summary>
-        private void SubmitList(EntityList list, bool markSaved)
+        private void SubmitList(IEntityListInternal list, bool markSaved)
         {
             var toDelete = list.DeletedListField;
             if (toDelete != null)
@@ -593,7 +592,7 @@ namespace Rafy.Domain
 
             foreach (var childField in entity.GetLoadedChildren())
             {
-                var children = childField.Value as EntityList;
+                var children = childField.Value as IEntityList;
                 if (children != null && children.Count > 0)
                 {
                     //删除所有子。

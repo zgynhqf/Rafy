@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20110215
@@ -175,9 +175,9 @@ namespace Rafy.WPF
         /// <summary>
         /// 列表视图中的实体列表。
         /// </summary>
-        public new EntityList Data
+        public new IEntityList Data
         {
-            get { return base.Data as EntityList; }
+            get { return base.Data as IEntityList; }
             set { base.Data = value; }
         }
 

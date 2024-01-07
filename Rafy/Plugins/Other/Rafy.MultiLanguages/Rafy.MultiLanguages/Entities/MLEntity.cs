@@ -34,7 +34,7 @@ namespace Rafy.MultiLanguages
         //}
     }
 
-    public abstract class MLEntityList : EntityList { }
+    public abstract class MLEntityList : InheritableEntityList { }
 
     [Serializable]
     public abstract class MLEntityRepository : EntityRepository { }

@@ -17,7 +17,7 @@ namespace UT
 {
     public abstract class UnitTest2Entity : IntEntity { }
 
-    public abstract class UnitTest2EntityList : EntityList { }
+    public abstract class UnitTest2EntityList : InheritableEntityList { }
 
     public abstract class UnitTest2EntityRepository : EntityRepository
     {

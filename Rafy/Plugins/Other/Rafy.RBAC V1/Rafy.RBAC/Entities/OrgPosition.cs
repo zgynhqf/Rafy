@@ -106,7 +106,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class OrgPositionList : EntityList
+    public partial class OrgPositionList : InheritableEntityList
     {
     }
 

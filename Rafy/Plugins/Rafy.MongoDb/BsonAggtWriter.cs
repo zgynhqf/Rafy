@@ -163,7 +163,7 @@ namespace Rafy.MongoDb
                     if (value != null)
                     {
                         BsonArray bsonArray = new BsonArray();
-                        var list = value as EntityList;
+                        var list = value as IEntityList;
                         for (int i = 0; i < list.Count; i++)
                         {
                             var child = list[i];

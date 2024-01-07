@@ -31,7 +31,7 @@ namespace Rafy.FileStorage
     {
     }
 
-    public abstract class FileStorageEntityList : EntityList { }
+    public abstract class FileStorageEntityList : InheritableEntityList { }
 
     public abstract class FileStorageEntityRepository : EntityRepository
     {

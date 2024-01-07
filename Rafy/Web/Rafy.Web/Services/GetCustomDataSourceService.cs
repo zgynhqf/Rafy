@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120510 18:35
@@ -41,7 +41,7 @@ namespace Rafy.Web
         /// 数据源实体列表
         /// </summary>
         [ServiceOutput]
-        public EntityList DataSource { get; set; }
+        public IEntityList DataSource { get; set; }
 
         protected override void Execute()
         {
@@ -51,7 +51,7 @@ namespace Rafy.Web
             var mp = this.Entity.PropertiesContainer.GetAvailableProperties().Find(this.DataSourceProperty);
             if (mp != null)
             {
-                var value = this.Entity.GetProperty(mp) as EntityList;
+                var value = this.Entity.GetProperty(mp) as IEntityList;
                 if (value != null)
                 {
                     this.DataSource = value;

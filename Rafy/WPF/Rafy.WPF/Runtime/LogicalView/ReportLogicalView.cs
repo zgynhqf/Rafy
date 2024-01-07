@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120903 21:27
@@ -107,7 +107,7 @@ namespace Rafy.WPF
             }
 
             //如果数据是一个实体列表，则直接把这个列表作为报表的数据源。
-            var entityList = data as EntityList;
+            var entityList = data as IEntityList;
             if (entityList != null)
             {
                 dataSources.Add(new ReportDataSource(em.EntityType.Name, entityList));
@@ -131,7 +131,7 @@ namespace Rafy.WPF
                 }
 
                 //如果数据是一个实体列表，则直接把这个列表作为报表的数据源。
-                var itemEntityList = entityOrList as EntityList;
+                var itemEntityList = entityOrList as IEntityList;
                 if (itemEntityList != null)
                 {
                     dataSources.Add(new ReportDataSource(itemEntityList.EntityType.Name, itemEntityList));

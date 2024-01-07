@@ -68,13 +68,13 @@ namespace Rafy.Domain.ORM.Linq
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            var res = Provider.Execute(this.Expression) as EntityList;
+            var res = Provider.Execute(this.Expression) as IEntityList;
             return res.GetEnumerator();
         }
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            var res = Provider.Execute(this.Expression) as EntityList;
+            var res = Provider.Execute(this.Expression) as IEntityList;
             return new EntityListEnumerator<TEntity>(res);
         }
     }

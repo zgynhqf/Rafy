@@ -32,7 +32,7 @@ namespace Rafy.SystemSettings
     {
     }
 
-    public abstract class SystemSettingsEntityList : EntityList { }
+    public abstract class SystemSettingsEntityList : InheritableEntityList { }
 
     public abstract class SystemSettingsEntityRepository : EntityRepository
     {

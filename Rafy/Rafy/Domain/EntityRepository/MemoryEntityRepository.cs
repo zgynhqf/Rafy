@@ -55,7 +55,7 @@ namespace Rafy.Domain
             return DataProvider._memoryRows.Count;
         }
 
-        protected sealed override EntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
+        protected sealed override IEntityList DoGetAll(PagingInfo paging, LoadOptions loadOptions)
         {
             if (!PagingInfo.IsNullOrEmpty(paging)) { throw new NotSupportedException(); }
 

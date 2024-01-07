@@ -77,7 +77,7 @@ namespace Rafy.Domain
         /// 创建一个全新的列表
         /// </summary>
         /// <returns></returns>
-        public EntityList NewList()
+        public IEntityList NewList()
         {
             var list = NewListFast();
 
@@ -86,9 +86,9 @@ namespace Rafy.Domain
             return list;
         }
 
-        internal EntityList NewListFast()
+        internal IEntityListInternal NewListFast()
         {
-            return Activator.CreateInstance(this.ListType) as EntityList;
+            return Activator.CreateInstance(this.ListType) as IEntityListInternal;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Rafy.Domain
         /// <param name="oldList"></param>
         /// <param name="keySelector"></param>
         /// <returns></returns>
-        internal EntityList NewListOrderBy<TKey>(IEnumerable<Entity> oldList, Func<Entity, TKey> keySelector)
+        internal IEntityList NewListOrderBy<TKey>(IEnumerable<Entity> oldList, Func<Entity, TKey> keySelector)
         {
             if (oldList == null) throw new ArgumentNullException("oldList");
 
@@ -210,7 +210,7 @@ namespace Rafy.Domain
             return null;
         }
 
-        private EntityList GetByExtensions(object criteria)
+        private IEntityList GetByExtensions(object criteria)
         {
             var criteriaType = criteria.GetType();
 
@@ -230,7 +230,7 @@ namespace Rafy.Domain
                             if (parameter.ParameterType == criteriaType)
                             {
                                 //方法找到，直接调用并返回。
-                                var result = method.Invoke(ext, new object[] { criteria }) as EntityList;
+                                var result = method.Invoke(ext, new object[] { criteria }) as IEntityList;
                                 return result;
                             }
                         }
@@ -416,7 +416,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="srcList"></param>
         /// <returns></returns>
-        public EntityList CreateList(IEnumerable srcList)
+        public IEntityList CreateList(IEnumerable srcList)
         {
             return this.CreateList(srcList, false);
         }
@@ -428,7 +428,7 @@ namespace Rafy.Domain
         /// <param name="srcList"></param>
         /// <param name="resetParent">此参数表示是否需要把 srcList 中的每一个实体的 <see cref="IEntity.ParentList"/> 属性设置为新列表，并把实体的 ParentEntity 也设置为新列表的父实体。</param>
         /// <returns></returns>
-        public EntityList CreateList(IEnumerable srcList, bool resetParent)
+        public IEntityList CreateList(IEnumerable srcList, bool resetParent)
         {
             var list = NewListFast();
 

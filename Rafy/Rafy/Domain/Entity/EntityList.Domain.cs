@@ -26,7 +26,7 @@ using Rafy.Reflection;
 
 namespace Rafy.Domain
 {
-    partial class EntityList
+    partial class EntityList<TEntity>
     {
         /// <summary>
         /// 通过 Id 来查找某个实体。

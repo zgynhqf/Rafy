@@ -61,14 +61,14 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions);
+        IEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions);
         /// <summary>
         /// 获取指定 id 集合的实体列表。
         /// </summary>
         /// <param name="idList"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByIdList(object[] idList, LoadOptions loadOptions);
+        IEntityList GetByIdList(object[] idList, LoadOptions loadOptions);
 
         /// <summary>
         /// 递归查找所有树型子
@@ -76,7 +76,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions);
+        IEntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions);
         /// <summary>
         /// 查询所有的根节点。
         /// </summary>

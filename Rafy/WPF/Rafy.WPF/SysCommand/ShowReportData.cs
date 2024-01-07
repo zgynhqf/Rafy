@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120906 11:11
@@ -32,7 +32,7 @@ namespace Rafy.WPF.Command
     {
         public override bool CanExecute(ReportLogicalView view)
         {
-            return view.Data is EntityList;
+            return view.Data is IEntityList;
         }
 
         public override void Execute(ReportLogicalView view)
@@ -46,7 +46,7 @@ namespace Rafy.WPF.Command
                 w.Buttons = ViewDialogButtons.None;
             });
 
-            listView.Data = view.Data as EntityList;
+            listView.Data = view.Data as IEntityList;
             //listView.DataLoader.LoadDataAsync(() => view.Data);
         }
     }

@@ -15,9 +15,9 @@ namespace Rafy.Domain
     public interface IEntity : IManagedPropertyObject, IDomainComponent, IEntityWithId, IEntityWithStatus, IEntityWithManagedProperties, IClonableEntity
     {
         /// <summary>
-        /// 实体所在的当前列表对象。 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList.ResetItemParent"/>。
+        /// 实体所在的当前列表对象。 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList{TEntity}.ResetItemParent"/>。
         /// </summary>
-        EntityList ParentList { get; }
+        IEntityList ParentList { get; }
 
         /// <summary>
         /// 获取组合关系中父对象的引用。
@@ -38,21 +38,111 @@ namespace Rafy.Domain
         /// </summary>
         /// <typeparam name="TChild"></typeparam>
         /// <returns></returns>
-        EntityList GetChildProperty<TChild>();
+        IEntityList GetChildProperty<TChild>();
     }
 
     /// <summary>
     /// 实体列表
     /// </summary>
-    public interface IEntityList : IList<Entity>, IList, IDomainComponent
+    public interface IEntityList : IList<Entity>, IList, IDomainComponent, ITreeComponent
     {
+        /// <summary>
+        /// 是否：在添加每一项时，
+        /// * 设置：实体的 <see cref="IEntity.ParentList"/> 为当前列表；
+        /// * 设置它的父对象为本列表对象的父对象。
+        /// 
+        /// 此属性大部分情况下，应该都是返回 true。
+        /// </summary>
+        bool ResetItemParent { get; set; }
+
+        /// <summary>
+        /// 查询出来的当前列表在数据库中存在的总数据条数。
+        /// 
+        /// 一是用于统计数据条数查询的数据传输。
+        /// 二是是分页时保存所有数据的行数。
+        /// </summary>
+        long TotalCount { get; }
+
+        /// <summary>
+        /// 本列表中已经被移除的所有对象。
+        /// 这些对象将会从仓库中删除。
+        /// </summary>
+        IList<Entity> DeletedList { get; }
+
+        /// <summary>
+        /// 如果支持树型操作，需要重写 TreeId、OrderNo。
+        /// </summary>
+        bool SupportTree { get; }
+
+        /// <summary>
+        /// 是否启用在改变列表元素时，自动生成元素的树型索引功能。
+        /// 默认为 true。
+        /// </summary>
+        bool AutoTreeIndexEnabled { get; set; }
+
+        /// <summary>
+        /// 返回当前的这个列表是否作为树结构中的根节点的集合。
+        /// 注意，如果集合中没有元素时，同样会返回 false。
+        /// 
+        /// 如果本属性是 false 时，那么 IEntityList 中与树相关的功能都不再可用。
+        /// </summary>
+        bool IsTreeRootList { get; }
+
+        /// <summary>
+        /// 当查询 Count 时，调用此方法设置最终查询出的总条数。
+        /// </summary>
+        /// <param name="value"></param>
+        void SetTotalCount(long value);
+
+        /// <summary>
+        /// 通过 Id 来查找某个实体。
+        /// </summary>
+        /// <param name="id">需要查找的实体的 id 值。</param>
+        /// <param name="coreceType">
+        /// 如果传入的 id 的类型与实体的类型不一致，则强制转换为一致的类型。
+        /// 如果不确定传入的类型是否一致，则可以指定这个参数为 true。
+        /// </param>
+        /// <returns></returns>
+        Entity Find(object id, bool coreceType = false);
+
+        /// <summary>
+        /// 复制目标集合中的所有对象。
+        /// * 根据列表中的位置来进行拷贝；
+        /// * 多余的会移除（不进入 DeletedList）；
+        /// * 不够的会生成新的对象；（如果是新构建的实体，持久化状态也完全拷贝。）
+        /// </summary>
+        /// <param name="sourceList"></param>
+        /// <param name="options"></param>
+        void Clone(IEntityList sourceList, CloneOptions options);
+
+        /// <summary>
+        /// 添加一组实体到列表中。
+        /// </summary>
+        /// <param name="collection"></param>
+        void AddRange(IEnumerable<Entity> collection);
+
+        /// <summary>
+        /// 如果当前集合是一个根节点的集合，那么可以使用此方法来重新生成树中所有节点的索引。
+        /// </summary>
+        void ResetTreeIndex();
+
         #region 解决 IList<Entity> 与 IList 的冲突
 
         new int Count { get; }
 
+        new void Clear();
+
         new Entity this[int index] { get; set; }
 
         #endregion
+    }
+
+    internal interface IEntityListInternal : IEntityList
+    {
+        ManagedPropertyObjectList<Entity> DeletedListField { get; set; }
+        void LoadData(IEnumerable srcList);
+        void SetRepo(IRepository repository);
+        void InitListProperty(IListProperty value);
     }
 
     /// <summary>
@@ -160,7 +250,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="listProperty">The list property.</param>
         /// <returns></returns>
-        EntityList GetLazyList(IListProperty listProperty);
+        IEntityList GetLazyList(IListProperty listProperty);
     }
 
     /// <summary>

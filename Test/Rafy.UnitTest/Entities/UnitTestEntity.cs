@@ -18,7 +18,7 @@ namespace UT
 {
     public abstract class UnitTestEntity : IntEntity { }
 
-    public abstract class UnitTestEntityList : EntityList { }
+    public abstract class UnitTestEntityList : InheritableEntityList { }
 
     public abstract class UnitTestEntityRepository : EntityRepository//PropertyQueryRepository
     {
@@ -29,7 +29,7 @@ namespace UT
             get { return QueryFactory.Instance; }
         }
 
-        //internal EntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, EntityList entityList = null)
+        //internal IEntityList QueryList(Action<IPropertyQuery> queryBuider, Predicate<Entity> filter = null, IEntityList entityList = null)
         //{
         //    var query = this.CreatePropertyQuery();
         //    if (queryBuider != null) queryBuider(query);

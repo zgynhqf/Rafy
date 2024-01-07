@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20110217
@@ -253,9 +253,9 @@ namespace Rafy.WPF.Editors
 
             if (rawValues != null)
             {
-                var values = rawValues as EntityList;
+                var values = rawValues as IEntityList;
                 if (values == null) throw new InvalidProgramException(string.Format(
-                    "属性 {0} 的数据源必须是一个 EntityList 类型。", this.Meta));
+                    "属性 {0} 的数据源必须是一个 IEntityList 类型。", this.Meta));
 
                 if (values != this._listView.Data)
                 {

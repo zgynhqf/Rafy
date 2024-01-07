@@ -37,7 +37,7 @@ namespace Rafy.Domain
         /// <param name="propertyInfo">当前属性的元信息</param>
         /// <returns></returns>
         protected TCollection GetLazyList<TCollection>(ListProperty<TCollection> propertyInfo)
-            where TCollection : EntityList
+            where TCollection : class, IEntityList
         {
             return this.LoadLazyList(propertyInfo) as TCollection;
         }
@@ -47,7 +47,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="listProperty">The list property.</param>
         /// <returns></returns>
-        public EntityList GetLazyList(IListProperty listProperty)
+        public IEntityList GetLazyList(IListProperty listProperty)
         {
             return this.LoadLazyList(listProperty);
         }
@@ -58,13 +58,13 @@ namespace Rafy.Domain
         /// <param name="listProperty">The list property.</param>
         /// <param name="loadEmptyData">The list property.</param>
         /// <returns></returns>
-        private EntityList LoadLazyList(IListProperty listProperty, bool loadEmptyData = false)
+        private IEntityList LoadLazyList(IListProperty listProperty, bool loadEmptyData = false)
         {
-            EntityList data = null;
+            IEntityList data = null;
 
             if (this.HasLocalValue(listProperty))
             {
-                data = this.GetProperty(listProperty) as EntityList;
+                data = this.GetProperty(listProperty) as IEntityList;
                 if (data != null) return data;
             }
 

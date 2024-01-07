@@ -53,7 +53,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class ModuleACList : EntityList { }
+    public partial class ModuleACList : InheritableEntityList { }
 
     public partial class ModuleACRepository : MemoryEntityRepository
     {

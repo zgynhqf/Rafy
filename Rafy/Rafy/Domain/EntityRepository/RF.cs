@@ -108,7 +108,7 @@ namespace Rafy.Domain
         /// 保存某个实体列表。
         /// </summary>
         /// <param name="entityList">The entity list.</param>
-        public static void Save(EntityList entityList)
+        public static void Save(IEntityList entityList)
         {
             entityList.GetRepository().Save(entityList);
         }
@@ -258,7 +258,7 @@ namespace Rafy.Domain
         ///// <param name="oldList"></param>
         ///// <param name="keySelector"></param>
         ///// <returns></returns>
-        //public static EntityList NewChildOrderBy<TKey>(EntityList oldList, Func<Entity, TKey> keySelector)
+        //public static IEntityList NewChildOrderBy<TKey>(IEntityList oldList, Func<Entity, TKey> keySelector)
         //{
         //    return oldList.GetRepository().CastTo<EntityRepository>().NewListOrderBy(oldList, keySelector);
         //}

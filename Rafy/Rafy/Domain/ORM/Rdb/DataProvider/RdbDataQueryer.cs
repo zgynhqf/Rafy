@@ -37,7 +37,7 @@ namespace Rafy.Domain.ORM
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
         /// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        protected override void QueryDataCore(ORMQueryArgs args, EntityList entityList)
+        protected override void QueryDataCore(ORMQueryArgs args, IEntityList entityList)
         {
             var dp = RdbDataProvider.Get(this.Repo);
             using (var dba = dp.CreateDbAccesser())
@@ -88,7 +88,7 @@ namespace Rafy.Domain.ORM
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
-        protected virtual void QueryDataCore(SqlQueryArgs args, EntityList entityList)
+        protected virtual void QueryDataCore(SqlQueryArgs args, IEntityList entityList)
         {
             var dataProvider = RdbDataProvider.Get(Repo);
             using (var dba = dataProvider.CreateDbAccesser())

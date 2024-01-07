@@ -47,7 +47,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class PositionList : EntityList { }
+    public partial class PositionList : InheritableEntityList { }
 
     public partial class PositionRepository : EntityRepository
     {

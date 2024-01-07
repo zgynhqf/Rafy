@@ -73,7 +73,7 @@ namespace Rafy.DevTools
         #endregion
     }
 
-    public partial class TestDocumentList : EntityList { }
+    public partial class TestDocumentList : InheritableEntityList { }
 
     public partial class TestDocumentRepository : EntityRepository
     {

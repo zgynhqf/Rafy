@@ -56,7 +56,7 @@ namespace Rafy.Customization
         }
     }
 
-    public partial class ViewConfigurationCommandList : EntityList
+    public partial class ViewConfigurationCommandList : InheritableEntityList
     {
         internal void Add(int parentId, IEnumerable<WebCommand> webCommands)
         {

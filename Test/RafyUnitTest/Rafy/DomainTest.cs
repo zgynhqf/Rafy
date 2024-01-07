@@ -256,7 +256,7 @@ namespace RafyUnitTest
         #region LiteDataTable
 
         /// <summary>
-        /// 自己组装的 liteDataTable 能转换成 entitylist。
+        /// 自己组装的 liteDataTable 能转换成 IEntityList。
         /// </summary>
         [TestMethod]
         public void DT_LiteDataTable_ConvertToEntity()
@@ -296,7 +296,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// liteDateTable 没有扩展属性也能转 entitylist 类型。
+        /// liteDateTable 没有扩展属性也能转 IEntityList 类型。
         /// </summary>
         public void DT_LiteDataTable_ConvertToEntity_NoInheritProperty()
         {
@@ -372,7 +372,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 通过数据库查询的 liteDataTable（不带扩展属性） 能转 entitylist。
+        /// 通过数据库查询的 liteDataTable（不带扩展属性） 能转 IEntityList。
         /// </summary>
         [TestMethod]
         public void DT_LiteDataTable_QueryFromDbAndConvertToEntity()
@@ -394,7 +394,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 扩展属性映射到数据库，那么 liteDateTable 转换成 entitylist 值应该保持一致。
+        /// 扩展属性映射到数据库，那么 liteDateTable 转换成 IEntityList 值应该保持一致。
         /// </summary>
         [TestMethod]
         public void DT_LiteDataTable_QueryFromDbAndConvertToEntity_HasInheritProperty()
@@ -409,7 +409,7 @@ namespace RafyUnitTest
 
                 var table = repo.GetAllInTable();
                 var invoiceList = table.ToEntityList<InvoiceList>(false);
-                Assert.AreEqual(true, invoiceList[0].GetIsPhantom(), "继承属性映射到数据库，那么 liteDateTable 转换成 entitylist 值应该保持一致");
+                Assert.AreEqual(true, invoiceList[0].GetIsPhantom(), "继承属性映射到数据库，那么 liteDateTable 转换成 IEntityList 值应该保持一致");
             }
         }
 

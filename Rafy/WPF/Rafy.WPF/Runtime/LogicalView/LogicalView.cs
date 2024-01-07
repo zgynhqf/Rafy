@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：周金根
  * 创建时间：2009
@@ -344,7 +344,7 @@ namespace Rafy.WPF
         /// 通过实体类的列表子属性获取懒加载数据。
         /// </summary>
         /// <returns></returns>
-        private EntityList GetRawChildrenData()
+        private IEntityList GetRawChildrenData()
         {
             return this._parent.Current.GetLazyList(
                 this._childBlock.ChildrenProperty as IListProperty

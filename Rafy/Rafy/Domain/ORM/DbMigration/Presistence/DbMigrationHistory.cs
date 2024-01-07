@@ -94,7 +94,7 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
     }
 
-    public partial class DbMigrationHistoryList : EntityList { }
+    public partial class DbMigrationHistoryList : EntityList<DbMigrationHistory> { }
 
     public partial class DbMigrationHistoryRepository : EntityRepository
     {

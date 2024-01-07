@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20110215
@@ -116,7 +116,7 @@ namespace Rafy.WPF
                 oldEntity.PropertyChanged -= Current_PropertyChanged;
             }
 
-            if (newValue is EntityList)
+            if (newValue is IEntityList)
             {
                 throw new InvalidOperationException("详细面板的全部数据只支持设置为单一实体。");
             }

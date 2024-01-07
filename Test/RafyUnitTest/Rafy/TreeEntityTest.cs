@@ -46,7 +46,7 @@ namespace RafyUnitTest
         /// <summary>
         /// 保存实体列表，会保存整个树。
         /// 
-        /// 查询出的 EntityList 应该只有根节点。
+        /// 查询出的 IEntityList 应该只有根节点。
         /// 
         /// 查询出的结构应该正确。
         /// </summary>
@@ -71,7 +71,7 @@ namespace RafyUnitTest
                 repo.Save(list);
 
                 var list2 = repo.GetAll();
-                Assert.IsTrue(list2.Count == 2, "查询出的 EntityList 应该只有根节点。");
+                Assert.IsTrue(list2.Count == 2, "查询出的 IEntityList 应该只有根节点。");
                 Assert.IsTrue(list2[0].Name == "001.", "查询出的结构应该正确。");
                 Assert.IsTrue(list2[0].TreeChildren.Count == 1, "查询出的结构应该正确。");
                 Assert.IsTrue(list2[0].TreeChildren[0].TreeIndex == "001.001.", "查询出的结构应该正确。");
@@ -116,7 +116,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中添加的节点，可以被保存。
+        /// 在 IEntityList 中添加的节点，可以被保存。
         /// </summary>
         [TestMethod]
         public void TET_Save_Add_ByEntityList()
@@ -233,7 +233,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中删除的节点，可以被保存。
+        /// 在 IEntityList 中删除的节点，可以被保存。
         /// </summary>
         [TestMethod]
         public void TET_Save_Remove_ByEntityList()
@@ -1170,7 +1170,7 @@ namespace RafyUnitTest
         #region 结构 - 索引 TreeIndex
 
         /// <summary>
-        /// 在 EntityList 中添加节点，节点生成相应的 TreeIndex。
+        /// 在 IEntityList 中添加节点，节点生成相应的 TreeIndex。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_RootListAdd()
@@ -1187,7 +1187,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在非根节点的 EntityList 中添加节点，不会修改添加节点的 TreeIndex。
+        /// 在非根节点的 IEntityList 中添加节点，不会修改添加节点的 TreeIndex。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_LeafListAdd()
@@ -1215,7 +1215,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中某位置插入节点，节点之后的所有节点的 TreeIndex 变更。
+        /// 在 IEntityList 中某位置插入节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_Insert()
@@ -1235,7 +1235,7 @@ namespace RafyUnitTest
         }
 
         /// <summary>
-        /// 在 EntityList 中删除节点，节点之后的所有节点的 TreeIndex 变更。
+        /// 在 IEntityList 中删除节点，节点之后的所有节点的 TreeIndex 变更。
         /// </summary>
         [TestMethod]
         public void TET_Struc_TreeIndex_EntityList_Remove()

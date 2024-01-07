@@ -129,7 +129,7 @@ namespace Rafy.DataTableMigration.Services
         /// </summary>
         /// <param name="repository">表示当前 entityList 对应的仓库。</param>
         /// <param name="entityList">表示一个领域对象的集合。</param>
-        public void RemoveOriginData(IRepository repository, EntityList entityList)
+        public void RemoveOriginData(IRepository repository, IEntityList entityList)
         {
             entityList.EachNode(t =>
             {
@@ -154,7 +154,7 @@ namespace Rafy.DataTableMigration.Services
         /// <param name="repository">实体仓储</param>
         /// <param name="component">实体集合</param>
         /// <param name="isSupportTree">是否是树形实体</param>
-        public void SaveToHistory(IRepository repository, EntityList component, bool isSupportTree)
+        public void SaveToHistory(IRepository repository, IEntityList component, bool isSupportTree)
         {
             if (isSupportTree)
             {
@@ -241,7 +241,7 @@ namespace Rafy.DataTableMigration.Services
             {
                 foreach (var childField in entity.GetLoadedChildren())
                 {
-                    var children = childField.Value as EntityList;
+                    var children = childField.Value as IEntityList;
                     if (children != null && children.Count > 0)
                     {
                         ChangeEntityPersistenceStatus(children, persistenceStatus);

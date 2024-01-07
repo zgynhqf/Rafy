@@ -37,7 +37,7 @@ namespace Rafy.Domain
     /// </summary>
     /// <typeparam name="TEntityList">The type of the entity list.</typeparam>
     public class ListPropertyMetadata<TEntityList> : PropertyMetadata<TEntityList>, IListPropertyMetadata, IRafyListPropertyMetadata
-        where TEntityList : EntityList
+        where TEntityList : IEntityList
     {
         private ListLoaderProvider _dataProvider;
 
@@ -77,5 +77,5 @@ namespace Rafy.Domain
     /// </summary>
     /// <param name="owner">The owner.</param>
     /// <returns></returns>
-    public delegate EntityList ListLoaderProvider(Entity owner);
+    public delegate IEntityList ListLoaderProvider(Entity owner);
 }

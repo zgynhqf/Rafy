@@ -57,7 +57,7 @@ namespace Rafy.Domain
                 switch (fetchType)
                 {
                     case RepositoryQueryType.List:
-                        var list = invocation.ReturnValue as EntityList;
+                        var list = invocation.ReturnValue as IEntityList;
                         repo.SetRepo(list);
                         break;
                     case RepositoryQueryType.First:
@@ -89,9 +89,9 @@ namespace Rafy.Domain
 
             var fetchType = RepositoryQueryType.List;
             var returnType = invocation.Method.ReturnType;
-            if (returnType.IsClass)
+            if (!returnType.IsValueType)
             {
-                if (typeof(EntityList).IsAssignableFrom(returnType))
+                if (typeof(IEntityList).IsAssignableFrom(returnType))
                 {
                     fetchType = RepositoryQueryType.List;
                 }

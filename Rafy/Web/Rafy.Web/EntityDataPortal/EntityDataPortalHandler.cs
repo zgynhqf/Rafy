@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120220
@@ -194,7 +194,7 @@ namespace Rafy.Web
             return jEntity;
         }
 
-        private static EntityList QueryEntityListCore(HttpRequest request, EntityRepository repo, PagingInfo pagingInfo)
+        private static IEntityList QueryEntityListCore(HttpRequest request, EntityRepository repo, PagingInfo pagingInfo)
         {
             /*********************** 代码块解释 *********************************
              * 
@@ -205,7 +205,7 @@ namespace Rafy.Web
              * 
             **********************************************************************/
 
-            EntityList entities = null;
+            IEntityList entities = null;
 
             var filter = request.GetQueryStringOrDefault("filter", string.Empty);
             if (!string.IsNullOrEmpty(filter))
@@ -236,7 +236,7 @@ namespace Rafy.Web
                             //使用 Criteria 查询数据库
                             var criteria = ParseCriteria(filters, pagingInfo);
 
-                            entities = MethodCaller.CallMethod(repo, EntityConvention.GetByCriteriaMethod, criteria) as EntityList;
+                            entities = MethodCaller.CallMethod(repo, EntityConvention.GetByCriteriaMethod, criteria) as IEntityList;
                             break;
                         default:
                             break;
@@ -319,7 +319,7 @@ namespace Rafy.Web
             return res;
         }
 
-        private static EntityList QueryByMethod(EntityRepository repo, string methodName, object[] parameters, PagingInfo pagingInfo)
+        private static IEntityList QueryByMethod(EntityRepository repo, string methodName, object[] parameters, PagingInfo pagingInfo)
         {
             //找到对应的查询方法
             MethodInfo queryMethod = null;
@@ -352,9 +352,9 @@ namespace Rafy.Web
             ConvertParametersType(methodParameters, parameters);
 
             var res = queryMethod.Invoke(repo, parameters);
-            if (!(res is EntityList)) throw new InvalidProgramException(string.Format("Web 客户端调用的 {0}.{1} 方法必须返回实体的列表类型。", repo.GetType(), methodName));
+            if (!(res is IEntityList)) throw new InvalidProgramException(string.Format("Web 客户端调用的 {0}.{1} 方法必须返回实体的列表类型。", repo.GetType(), methodName));
 
-            return res as EntityList;
+            return res as IEntityList;
         }
 
         private static void ConvertParametersType(ParameterInfo[] methodParameters, object[] parameters)
@@ -395,7 +395,7 @@ namespace Rafy.Web
 
         #endregion
 
-        private static EntityList JumpToPageInMemory(EntityRepository repo, EntityList raw, PagingInfo pageInfo)
+        private static IEntityList JumpToPageInMemory(EntityRepository repo, IEntityList raw, PagingInfo pageInfo)
         {
             if (raw.Count <= pageInfo.PageSize)
             {

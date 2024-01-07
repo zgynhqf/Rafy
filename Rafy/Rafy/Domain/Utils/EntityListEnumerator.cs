@@ -27,7 +27,7 @@ namespace Rafy.Domain
     {
         private IEnumerator<Entity> _core;
 
-        public EntityListEnumerator(EntityList list)
+        public EntityListEnumerator(IEntityList list)
         {
             _core = list.GetEnumerator();
         }

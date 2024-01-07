@@ -10,6 +10,12 @@
  * 
 *******************************************************/
 
+3.96.4450
+    ★★公布、★重要、！修改接口、！删除接口、添加接口
+        EntiyList 更新为泛型版本。
+            （原因：开发者 EntityList 的遍历会更方便；另外，在 VS2022 中，可以在调试时查看列表的表格，并可以导出为 Excel；）
+        添加 InheritableEntityList 类为原来的非泛型版本的 EntityList。方便开发者在列表需要继承时，可以使用此类。
+
 3.95.4404
     BUG修复
         自定义 SQL，不需要在 First 时使用数据库分页。
@@ -281,7 +287,7 @@
     重构
         EntityRepository.Save 使用 Clone 方法来进行值拷贝。
         Entity.Clone
-        EntityList.Clone
+        IEntityList.Clone
         TreeChildren.Clone
         Entity.SetParentEntity
         MPO.SetProperty&LoadProperty 需要比对默认值，如果是默认值，就不需要存储了。
@@ -369,7 +375,7 @@
             * 保持实体的状态的设计为一种简单易理解的状态，更易被开发者接受：
             * - 三种实体的状态对应数据库的操作：（CDU）；
             * - 这些状态的数据在保存后，都会变更到 Unchanged 的状态。
-            * - 不论实体的状态如何变换，都不会影响 EntityList 中的项的个数，除非直接操作 EntityList。
+            * - 不论实体的状态如何变换，都不会影响 IEntityList 中的项的个数，除非直接操作 IEntityList。
             * - 删除后的实体，在保存后的状态是 Unchanged，同样表示这个实体已经持久化到数据库中（只不过持久化操作是删除）。
             *      这时，如果再修改实体的属性时，状态会变更到 Modified。此类数据再进行保存，会因为数据库中没有相应的数据，而导致更新失效。
             *      （如果是幽灵删除则会更新成功……）（当然，其实这种场景较少。）
@@ -555,7 +561,7 @@
         ODataQueryCriteria 添加 MarkTreeFullLoaded 属性。
         RF.TransactionScope 方法添加 IsolationLevel level 参数。
     BUG修复
-        由于 Id 使用了 Long 型，所以相应的 PageNumber、PageCount、EntityList.TotalCount、查询方法等，都应该使用 Long 型。
+        由于 Id 使用了 Long 型，所以相应的 PageNumber、PageCount、IEntityList.TotalCount、查询方法等，都应该使用 Long 型。
         LinqQuery 支持 LongCount 方法。
         解决 Clone 时没有 Clone 引用实体的问题。
         解决“MethodCaller 处理虚方法的被重写时错误”的问题。

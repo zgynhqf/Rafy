@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：2010
@@ -50,7 +50,7 @@ namespace Rafy.WPF.Command
             }
             else if (parent.ComponentType == TreeComponentType.NodeList)
             {
-                parentList = parent as EntityList;
+                parentList = parent as IEntityList;
             }
             return parentList;
         }

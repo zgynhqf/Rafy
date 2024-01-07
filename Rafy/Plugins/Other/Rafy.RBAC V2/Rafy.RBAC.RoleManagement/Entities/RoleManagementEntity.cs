@@ -11,7 +11,7 @@ namespace Rafy.RBAC.RoleManagement
     {
     }
 
-    public abstract class RoleManagementEntityList : EntityList
+    public abstract class RoleManagementEntityList : InheritableEntityList
     {
     }
 

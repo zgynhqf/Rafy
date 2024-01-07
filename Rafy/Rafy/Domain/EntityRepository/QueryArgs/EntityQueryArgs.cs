@@ -68,7 +68,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 加载的列表对象
         /// </summary>
-        public EntityList EntityList { get; internal set; }
+        public IEntityList EntityList { get; internal set; }
 
         /// <summary>
         /// 对查询出来的对象进行内存级别的过滤器，默认为 null。

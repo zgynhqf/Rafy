@@ -29,9 +29,9 @@ namespace Rafy.Domain.Caching
 
         private ICache Cache => Utils.Caching.Cache.Default;
 
-        //public EntityList CacheAll(Type entityType, Func<EntityList> ifNotExists = null)
+        //public IEntityList CacheAll(Type entityType, Func<IEntityList> ifNotExists = null)
         //{
-        //    EntityList result = null;
+        //    IEntityList result = null;
 
         //    //目前只是在客户端使用了缓存。
         //    if (RafyEnvironment.IsOnClient())
@@ -41,7 +41,7 @@ namespace Rafy.Domain.Caching
         //        {
         //            var className = entityType.Name;
         //            var key = "AggregateRootCache_CacheAll";
-        //            result = this._cache.Get(key, className) as EntityList;
+        //            result = this._cache.Get(key, className) as IEntityList;
 
         //            if (result == null && ifNotExists != null)
         //            {

@@ -48,7 +48,7 @@ namespace Rafy.DevTools.DbManagement
         #endregion
     }
 
-    public partial class DbSettingItemList : EntityList
+    public partial class DbSettingItemList : InheritableEntityList
     {
     }
 

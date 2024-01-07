@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：李智
  * 创建日期：2009
@@ -90,7 +90,7 @@ namespace Rafy.WPF.Command
                     {
                         if (this._currentView == null) { return false; }
 
-                        var list = this._currentView.Data as EntityList;
+                        var list = this._currentView.Data;
                         this._isDealingTree = list != null && list.SupportTree;
                     }
                     return this._isDealingTree.Value;
@@ -192,7 +192,7 @@ namespace Rafy.WPF.Command
                 throw new NotImplementedException();//huqf
                 //if (currentObject == null) throw new ArgumentNullException("currentObject");
 
-                //var treeList = this._currentView.Data as EntityList;
+                //var treeList = this._currentView.Data as IEntityList;
 
                 ////是否已经选择了一个非根的树节点
                 //bool selectedChildNode = currentObject != null && currentObject.TreeParent != null;

@@ -25,91 +25,91 @@ namespace Rafy.Accounts
     {
         #region 强类型公有接口
 
-        /// <summary>
-        /// 获取或设置指定位置的实体。
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public new User this[int index]
-        {
-            get
-            {
-                return base[index] as User;
-            }
-            set
-            {
-                base[index] = value;
-            }
-        }
+        ///// <summary>
+        ///// 获取或设置指定位置的实体。
+        ///// </summary>
+        ///// <param name="index"></param>
+        ///// <returns></returns>
+        //public new User this[int index]
+        //{
+        //    get
+        //    {
+        //        return base[index] as User;
+        //    }
+        //    set
+        //    {
+        //        base[index] = value;
+        //    }
+        //}
 
-        /// <summary>
-        /// 获取本实体列表的迭代器。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new IEnumerator<User> GetEnumerator()
-        {
-            return new EntityListEnumerator<User>(this);
-        }
+        ///// <summary>
+        ///// 获取本实体列表的迭代器。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public new IEnumerator<User> GetEnumerator()
+        //{
+        //    return new EntityListEnumerator<User>(this);
+        //}
 
-        /// <summary>
-        /// 返回子实体的强类型迭代接口，方便使用 Linq To Object 操作。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public IEnumerable<User> Concrete()
-        {
-            return this.Cast<User>();
-        }
+        ///// <summary>
+        ///// 返回子实体的强类型迭代接口，方便使用 Linq To Object 操作。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public IEnumerable<User> Concrete()
+        //{
+        //    return this.Cast<User>();
+        //}
 
-        /// <summary>
-        /// 添加指定的实体到集合中。
-        /// </summary>
-        [DebuggerStepThrough]
-        public void Add(User entity)
-        {
-            base.Add(entity);
-        }
+        ///// <summary>
+        ///// 添加指定的实体到集合中。
+        ///// </summary>
+        //[DebuggerStepThrough]
+        //public void Add(User entity)
+        //{
+        //    base.Add(entity);
+        //}
 
-        /// <summary>
-        /// 判断本集合是否包含指定的实体。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public bool Contains(User entity)
-        {
-            return base.Contains(entity);
-        }
+        ///// <summary>
+        ///// 判断本集合是否包含指定的实体。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public bool Contains(User entity)
+        //{
+        //    return base.Contains(entity);
+        //}
 
-        /// <summary>
-        /// 判断指定的实体在本集合中的索引号。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public int IndexOf(User entity)
-        {
-            return base.IndexOf(entity);
-        }
+        ///// <summary>
+        ///// 判断指定的实体在本集合中的索引号。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public int IndexOf(User entity)
+        //{
+        //    return base.IndexOf(entity);
+        //}
 
-        /// <summary>
-        /// 在指定的位置插入实体。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public void Insert(int index, User entity)
-        {
-            base.Insert(index, entity);
-        }
+        ///// <summary>
+        ///// 在指定的位置插入实体。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public void Insert(int index, User entity)
+        //{
+        //    base.Insert(index, entity);
+        //}
 
-        /// <summary>
-        /// 在集合中删除指定的实体。返回是否成功删除。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public bool Remove(User entity)
-        {
-            return base.Remove(entity);
-        }
+        ///// <summary>
+        ///// 在集合中删除指定的实体。返回是否成功删除。
+        ///// </summary>
+        ///// <returns></returns>
+        //[DebuggerStepThrough]
+        //public bool Remove(User entity)
+        //{
+        //    return base.Remove(entity);
+        //}
 
         #endregion
     }

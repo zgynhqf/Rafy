@@ -127,7 +127,7 @@ namespace Rafy.RBAC.Old.Audit
         #endregion
     }
 
-    public partial class AuditItemList : EntityList { }
+    public partial class AuditItemList : InheritableEntityList { }
 
     public partial class AuditItemRepository : EntityRepository
     {

@@ -20,7 +20,7 @@ namespace Rafy.RBAC.DataPermissionManagement
     {
     }
 
-    public abstract class DataPermissionManagementEntityList : EntityList { }
+    public abstract class DataPermissionManagementEntityList : InheritableEntityList { }
 
     public abstract class DataPermissionManagementEntityRepository : EntityRepository
     {

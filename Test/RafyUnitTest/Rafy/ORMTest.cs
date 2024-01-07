@@ -3057,7 +3057,7 @@ namespace RafyUnitTest
                 var items = taskRepo.GetByParentId(user.Id, pagingInfo);
                 Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
                 Assert.IsTrue(pagingInfo.TotalCount == user.TestTreeTaskList.Count, "pagingInfo.TotalCount 总条数不一致。");
-                Assert.IsTrue(items.TotalCount == user.TestTreeTaskList.Count, "EntityList.TotalCount 总条数不一致。");
+                Assert.IsTrue(items.TotalCount == user.TestTreeTaskList.Count, "IEntityList.TotalCount 总条数不一致。");
             }
         }
 
@@ -3091,7 +3091,7 @@ namespace RafyUnitTest
                 items = taskRepo.GetByParentId(user.Id, pagingInfo);
                 Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
                 Assert.IsTrue(pagingInfo.TotalCount == user.TestTreeTaskList.Count, "pagingInfo.TotalCount 总条数不一致。");
-                Assert.IsTrue(items.TotalCount == user.TestTreeTaskList.Count, "EntityList.TotalCount 总条数不一致。");
+                Assert.IsTrue(items.TotalCount == user.TestTreeTaskList.Count, "IEntityList.TotalCount 总条数不一致。");
             }
         }
 
@@ -3138,7 +3138,7 @@ namespace RafyUnitTest
                 var items = taskRepo.GetByParentId(user.Id, pagingInfo);
                 Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
                 Assert.IsTrue(pagingInfo.TotalCount == 6, "分页的 TotalCount 只对根节点起作用。");
-                Assert.IsTrue(items.TotalCount == 6, "EntityList.TotalCount 总条数不一致。");
+                Assert.IsTrue(items.TotalCount == 6, "IEntityList.TotalCount 总条数不一致。");
             }
         }
 
@@ -3164,7 +3164,7 @@ namespace RafyUnitTest
 
                 Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
                 Assert.IsTrue(pagingInfo.TotalCount == rowsCount, "pagingInfo.TotalCount 总条数不一致。");
-                Assert.IsTrue(items.TotalCount == rowsCount, "EntityList.TotalCount 总条数不一致。");
+                Assert.IsTrue(items.TotalCount == rowsCount, "IEntityList.TotalCount 总条数不一致。");
             }
         }
 
@@ -3194,7 +3194,7 @@ namespace RafyUnitTest
                 items = roleRepo.GetByRawSql(sql, parameters, pagingInfo);
                 Assert.IsTrue(items.Count == 2, "分页查询的结果应该只有两条。");
                 Assert.IsTrue(pagingInfo.TotalCount == rowsCount, "pagingInfo.TotalCount 总条数不一致。");
-                Assert.IsTrue(items.TotalCount == rowsCount, "EntityList.TotalCount 总条数不一致。");
+                Assert.IsTrue(items.TotalCount == rowsCount, "IEntityList.TotalCount 总条数不一致。");
             }
         }
 

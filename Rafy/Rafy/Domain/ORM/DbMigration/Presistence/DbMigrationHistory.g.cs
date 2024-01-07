@@ -21,98 +21,98 @@ using Rafy.Domain.ORM;
 
 namespace Rafy.Domain.ORM.DbMigration.Presistence
 {
-    partial class DbMigrationHistoryList
-    {
-        #region 强类型公有接口
+    //partial class DbMigrationHistoryList
+    //{
+    //    #region 强类型公有接口
 
-        /// <summary>
-        /// 获取或设置指定位置的实体。
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public new DbMigrationHistory this[int index]
-        {
-            get
-            {
-                return base[index] as DbMigrationHistory;
-            }
-            set
-            {
-                base[index] = value;
-            }
-        }
+    //    /// <summary>
+    //    /// 获取或设置指定位置的实体。
+    //    /// </summary>
+    //    /// <param name="index"></param>
+    //    /// <returns></returns>
+    //    public new DbMigrationHistory this[int index]
+    //    {
+    //        get
+    //        {
+    //            return base[index] as DbMigrationHistory;
+    //        }
+    //        set
+    //        {
+    //            base[index] = value;
+    //        }
+    //    }
 
-        /// <summary>
-        /// 获取本实体列表的迭代器。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public new IEnumerator<DbMigrationHistory> GetEnumerator()
-        {
-            return new EntityListEnumerator<DbMigrationHistory>(this);
-        }
+    //    /// <summary>
+    //    /// 获取本实体列表的迭代器。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public new IEnumerator<DbMigrationHistory> GetEnumerator()
+    //    {
+    //        return new EntityListEnumerator<DbMigrationHistory>(this);
+    //    }
 
-        /// <summary>
-        /// 返回子实体的强类型迭代接口，方便使用 Linq To Object 操作。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public IEnumerable<DbMigrationHistory> Concrete()
-        {
-            return this.Cast<DbMigrationHistory>();
-        }
+    //    /// <summary>
+    //    /// 返回子实体的强类型迭代接口，方便使用 Linq To Object 操作。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public IEnumerable<DbMigrationHistory> Concrete()
+    //    {
+    //        return this.Cast<DbMigrationHistory>();
+    //    }
 
-        /// <summary>
-        /// 添加指定的实体到集合中。
-        /// </summary>
-        [DebuggerStepThrough]
-        public void Add(DbMigrationHistory entity)
-        {
-            base.Add(entity);
-        }
+    //    /// <summary>
+    //    /// 添加指定的实体到集合中。
+    //    /// </summary>
+    //    [DebuggerStepThrough]
+    //    public void Add(DbMigrationHistory entity)
+    //    {
+    //        base.Add(entity);
+    //    }
 
-        /// <summary>
-        /// 判断本集合是否包含指定的实体。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public bool Contains(DbMigrationHistory entity)
-        {
-            return base.Contains(entity);
-        }
+    //    /// <summary>
+    //    /// 判断本集合是否包含指定的实体。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public bool Contains(DbMigrationHistory entity)
+    //    {
+    //        return base.Contains(entity);
+    //    }
 
-        /// <summary>
-        /// 判断指定的实体在本集合中的索引号。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public int IndexOf(DbMigrationHistory entity)
-        {
-            return base.IndexOf(entity);
-        }
+    //    /// <summary>
+    //    /// 判断指定的实体在本集合中的索引号。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public int IndexOf(DbMigrationHistory entity)
+    //    {
+    //        return base.IndexOf(entity);
+    //    }
 
-        /// <summary>
-        /// 在指定的位置插入实体。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public void Insert(int index, DbMigrationHistory entity)
-        {
-            base.Insert(index, entity);
-        }
+    //    /// <summary>
+    //    /// 在指定的位置插入实体。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public void Insert(int index, DbMigrationHistory entity)
+    //    {
+    //        base.Insert(index, entity);
+    //    }
 
-        /// <summary>
-        /// 在集合中删除指定的实体。返回是否成功删除。
-        /// </summary>
-        /// <returns></returns>
-        [DebuggerStepThrough]
-        public bool Remove(DbMigrationHistory entity)
-        {
-            return base.Remove(entity);
-        }
+    //    /// <summary>
+    //    /// 在集合中删除指定的实体。返回是否成功删除。
+    //    /// </summary>
+    //    /// <returns></returns>
+    //    [DebuggerStepThrough]
+    //    public bool Remove(DbMigrationHistory entity)
+    //    {
+    //        return base.Remove(entity);
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 
     partial class DbMigrationHistoryRepository
     {

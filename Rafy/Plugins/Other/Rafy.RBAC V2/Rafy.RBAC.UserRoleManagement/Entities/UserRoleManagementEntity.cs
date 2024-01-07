@@ -25,7 +25,7 @@ namespace Rafy.RBAC.UserRoleManagement
     {
     }
 
-    public abstract class UserRoleManagementEntityList : EntityList { }
+    public abstract class UserRoleManagementEntityList : InheritableEntityList { }
 
     public abstract class UserRoleManagementEntityRepository : EntityRepository
     {

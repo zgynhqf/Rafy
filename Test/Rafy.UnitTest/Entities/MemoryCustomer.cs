@@ -59,7 +59,7 @@ namespace UT
         #endregion
     }
 
-    public partial class MemoryCustomerList : EntityList { }
+    public partial class MemoryCustomerList : InheritableEntityList { }
 
     public partial class MemoryCustomerRepository : MemoryEntityRepository
     {

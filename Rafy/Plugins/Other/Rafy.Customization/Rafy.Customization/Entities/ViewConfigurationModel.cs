@@ -333,7 +333,7 @@ namespace Rafy.Customization
         #endregion
     }
 
-    public partial class ViewConfigurationModelList : EntityList { }
+    public partial class ViewConfigurationModelList : InheritableEntityList { }
 
     public partial class ViewConfigurationModelRepository : EntityRepository
     {

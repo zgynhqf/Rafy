@@ -31,7 +31,7 @@ namespace Rafy.MongoDb
             throw new NotSupportedException("不支持查询表格。");
         }
 
-        protected override void QueryDataCore(ORMQueryArgs args, EntityList entityList)
+        protected override void QueryDataCore(ORMQueryArgs args, IEntityList entityList)
         {
             if (args.Filter != null) { throw new NotSupportedException("不支持内在过滤 Filter。"); }
             if (args.LoadOptions != null) { throw new NotSupportedException("不支持定义加载选项 LoadOptions。"); }

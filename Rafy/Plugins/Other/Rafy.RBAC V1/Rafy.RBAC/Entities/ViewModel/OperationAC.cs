@@ -114,7 +114,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class OperationACList : EntityList { }
+    public partial class OperationACList : InheritableEntityList { }
 
     /// <summary>
     /// OperationAc 这个类并不映射数据库，所以所有的查询方法都是在 Repository 中实现的。

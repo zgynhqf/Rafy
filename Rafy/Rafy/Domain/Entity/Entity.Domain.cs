@@ -263,7 +263,7 @@ namespace Rafy.Domain
         /// <summary>
         /// LoadProperty 以最快的方式直接加载值，不发生 PropertyChanged 事件。
         /// 
-        /// 同时，如果该属性是一个组合子实体列表，则还会调用 <see cref="EntityList.SetParentEntity(Entity)"/> 来重置列表中每个实体的引用父实体。
+        /// 同时，如果该属性是一个组合子实体列表，则还会调用 <see cref="EntityList{TEntity}.SetParentEntity(Entity)"/> 来重置列表中每个实体的引用父实体。
         /// </summary>
         /// <param name="property"></param>
         /// <param name="value"></param>
@@ -284,7 +284,7 @@ namespace Rafy.Domain
         {
             if (value is IDomainComponent component && property is IListProperty listProperty)
             {
-                var list = value as EntityList;
+                var list = value as IEntityListInternal;
                 list.InitListProperty(listProperty);
 
                 component.SetParent(this);
@@ -325,7 +325,7 @@ namespace Rafy.Domain
         {
             foreach (var field in this.GetLoadedChildren())
             {
-                var children = field.Value as EntityList;
+                var children = field.Value as IEntityList;
                 if (children != null)
                 {
                     children.SetParentEntity(this);
@@ -437,11 +437,11 @@ namespace Rafy.Domain
         /// <summary>
         /// 实体所在的当前列表对象。
         /// 
-        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList.ResetItemParent"/>。
+        /// 虽然一个实体可以存在于多个集合中，但是，它只保留一个主要集合的引用，见：<see cref="EntityList{TEntity}.ResetItemParent"/>。
         /// </summary>
-        EntityList IEntity.ParentList
+        IEntityList IEntity.ParentList
         {
-            get { return _parent as EntityList; }
+            get { return _parent as IEntityList; }
         }
 
         [NonSerialized]

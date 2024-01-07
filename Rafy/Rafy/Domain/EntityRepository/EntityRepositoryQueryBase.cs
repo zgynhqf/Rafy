@@ -160,7 +160,7 @@ namespace Rafy.Domain
         ///// <param name="paging">分页信息。</param>
         ///// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         ///// <returns></returns>
-        //protected EntityList QueryList(FormattedSql sql, PagingInfo paging = null, LoadOptions loadOptions = null)
+        //protected IEntityList QueryList(FormattedSql sql, PagingInfo paging = null, LoadOptions loadOptions = null)
         //{
         //    return Queryer.QueryList(sql, paging, loadOptions);
         //}
@@ -171,7 +171,7 @@ namespace Rafy.Domain
         ///// <param name="args">The arguments.</param>
         ///// <returns></returns>
         ///// <exception cref="System.NotSupportedException">使用内存过滤器的同时，不支持提供分页参数。</exception>
-        //protected EntityList QueryList(SqlQueryArgs args)
+        //protected IEntityList QueryList(SqlQueryArgs args)
         //{
         //    return Queryer.QueryList(args);
         //}
@@ -253,7 +253,7 @@ namespace Rafy.Domain
         /// <param name="batchQueryer">分批进行查询的查询实现。</param>
         /// <param name="batchSize">每一个批次的大小。</param>
         /// <returns></returns>
-        public EntityList QueryInBatches<TParamType>(TParamType[] inParameters, Func<TParamType[], EntityList> batchQueryer, int batchSize = 1000)
+        public IEntityList QueryInBatches<TParamType>(TParamType[] inParameters, Func<TParamType[], IEntityList> batchQueryer, int batchSize = 1000)
         {
             var all = inParameters.Length;
 

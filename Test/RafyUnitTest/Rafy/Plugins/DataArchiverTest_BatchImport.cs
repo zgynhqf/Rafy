@@ -46,7 +46,7 @@ namespace RafyUnitTest
 
     public class BatchImportAggregationArchiver : AggregationArchiver
     {
-        protected override void SaveList(IRepository repository, EntityList entityList)
+        protected override void SaveList(IRepository repository, IEntityList entityList)
         {
             repository.CreateImporter().Save(entityList);
         }

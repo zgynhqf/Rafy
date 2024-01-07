@@ -169,7 +169,7 @@ namespace Rafy.Domain
         /// 默认为 true。
         /// </param>
         /// <returns></returns>
-        public static TEntityList ToEntityList<TEntityList>(this LiteDataTable table, bool columnMapToProperty = true) where TEntityList : EntityList
+        public static TEntityList ToEntityList<TEntityList>(this LiteDataTable table, bool columnMapToProperty = true) where TEntityList : class, IEntityList
         {
             //属性和对应列的键值对集合,为后面填充实体用。
             var propertyMappings = new List<PropertyToColumnMapping>(10);
@@ -224,7 +224,7 @@ namespace Rafy.Domain
         /// 如果传入 false，表示表格中的列数据类型和实体属性数据类型不一致。
         /// </param>
         /// <returns></returns>
-        private static EntityList ConvertEntitiesIntoList(
+        private static IEntityList ConvertEntitiesIntoList(
             LiteDataTable table,
             EntityRepository repo,
             IList<PropertyToColumnMapping> propertyToColumnMappings,

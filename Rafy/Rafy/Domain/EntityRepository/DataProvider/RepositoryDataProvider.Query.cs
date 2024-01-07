@@ -97,7 +97,7 @@ namespace Rafy.Domain
         /// <param name="idList"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByIdList(object[] idList, LoadOptions loadOptions)
+        public virtual IEntityList GetByIdList(object[] idList, LoadOptions loadOptions)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -105,7 +105,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.IdColumn, PropertyOperator.In, idList)
             );
 
-            return (EntityList)this.QueryData(q, null, loadOptions, false);
+            return (IEntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
+        public virtual IEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
             var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
@@ -152,7 +152,7 @@ namespace Rafy.Domain
                 //orderBy: _repository.SupportTree ? null : new List<IOrderBy> { f.OrderBy(parentColumn) }
             );
 
-            var list = (EntityList)this.QueryData(q, paging, loadOptions, true);
+            var list = (IEntityList)this.QueryData(q, paging, loadOptions, true);
 
             return list;
         }
@@ -163,7 +163,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
+        public virtual IEntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions)
         {
             if (string.IsNullOrEmpty(treeIndex)) throw new ArgumentNullException(nameof(treeIndex));
 
@@ -175,7 +175,7 @@ namespace Rafy.Domain
                 where: f.Constraint(table.Column(Entity.TreeIndexProperty), PropertyOperator.Like, childCode)
             );
 
-            var list = (EntityList)this.QueryData(q, null, loadOptions, true);
+            var list = (IEntityList)this.QueryData(q, null, loadOptions, true);
 
             return list;
         }
@@ -186,7 +186,7 @@ namespace Rafy.Domain
         /// <param name="treePId">需要查找的树节点的Id.</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetByTreePId(object treePId, LoadOptions loadOptions)
+        public virtual IEntityList GetByTreePId(object treePId, LoadOptions loadOptions)
         {
             var table = f.Table(_repository);
             var q = f.Query(
@@ -194,7 +194,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreePIdProperty).Equal(treePId)
             );
 
-            return (EntityList)this.QueryData(q, null, loadOptions, false);
+            return (IEntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex">Index of the tree.</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        public virtual EntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions)
+        public virtual IEntityList GetAllTreeParents(string treeIndex, LoadOptions loadOptions)
         {
             var parentIndeces = new List<string>();
             var option = _repository.TreeIndexOption;
@@ -227,7 +227,7 @@ namespace Rafy.Domain
                 where: table.Column(Entity.TreeIndexProperty).In(parentIndeces)
             );
 
-            return (EntityList)this.QueryData(q, null, loadOptions, false);
+            return (IEntityList)this.QueryData(q, null, loadOptions, false);
         }
 
         /// <summary>

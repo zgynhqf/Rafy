@@ -77,13 +77,13 @@ namespace Rafy.Domain
                     {
                         (component as Entity).Clone(result as Entity, mergeCloneOptions);
                     }
-                    else if (component is EntityList)
+                    else if (component is IEntityList)
                     {
-                        (component as EntityList).Clone(result as EntityList, mergeCloneOptions);
+                        (component as IEntityList).Clone(result as IEntityList, mergeCloneOptions);
                     }
                     else
                     {
-                        throw new NotSupportedException("只支持对 Entity、EntityList 进行保存。");
+                        throw new NotSupportedException("只支持对 Entity、IEntityList 进行保存。");
                     }
 
                     component.MarkSaved();

@@ -60,7 +60,7 @@ namespace Rafy.Domain
                 {
                     foreach (var item in _current.GetLoadedChildren())
                     {
-                        var list = item.Value as EntityList;
+                        var list = item.Value as IEntityList;
                         if (list != null)
                         {
                             this.Push(list);
@@ -140,8 +140,7 @@ namespace Rafy.Domain
 
                 if (this.IncludeDeletedItems)
                 {
-                    var el = nodes as EntityList;
-                    if (el != null)
+                    if (nodes is IEntityListInternal el)
                     {
                         this.PushList(el.DeletedListField);
                     }
@@ -183,10 +182,10 @@ namespace Rafy.Domain
             return res;
         }
 
-        public static CompositionEnumerator Create(IList<Entity> entityList, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
+        public static CompositionEnumerator Create(IList<Entity> IEntityList, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
         {
             var res = Create(includesChildren, includesTreeChildren, includeDeletedItems);
-            res.Push(entityList);
+            res.Push(IEntityList);
             return res;
         }
 

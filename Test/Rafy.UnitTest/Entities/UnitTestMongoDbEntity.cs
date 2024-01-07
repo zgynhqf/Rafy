@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建日期：20230303
@@ -34,7 +34,7 @@ namespace UT
     /// </summary>
     public abstract class UnitTestMongoDbEntity : StringEntity { }
 
-    public abstract class UnitTestMongoDbEntityList : EntityList { }
+    public abstract class UnitTestMongoDbEntityList : InheritableEntityList { }
 
     public abstract class UnitTestMongoDbEntityRepository : EntityRepository
     {

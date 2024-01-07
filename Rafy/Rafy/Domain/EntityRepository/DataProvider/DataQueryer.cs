@@ -189,7 +189,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="args">The arguments.</param>
         /// <param name="entityList">The entity list.</param>
-        protected abstract void QueryDataCore(ORMQueryArgs args, EntityList entityList);
+        protected abstract void QueryDataCore(ORMQueryArgs args, IEntityList entityList);
 
         /// <summary>
         /// 默认的查询规则：
@@ -260,7 +260,7 @@ namespace Rafy.Domain
         /// <param name="args"></param>
         /// <param name="entityList"></param>
         /// <param name="oldCount"></param>
-        protected void EagerLoadOnCompleted(EntityQueryArgs args, EntityList entityList, int oldCount)
+        protected void EagerLoadOnCompleted(EntityQueryArgs args, IEntityList entityList, int oldCount)
         {
             if (entityList.Count > 0)
             {
@@ -408,7 +408,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <param name="loadOptionsProperties">所有需要贪婪加载的属性。</param>
-        private void EagerLoad(EntityList list, IList<ConcreteProperty> loadOptionsProperties)
+        private void EagerLoad(IEntityList list, IList<ConcreteProperty> loadOptionsProperties)
         {
             if (list.Count > 0 && loadOptionsProperties.Count > 0)
             {
@@ -458,7 +458,7 @@ namespace Rafy.Domain
         /// <param name="list"></param>
         /// <param name="listProperty">贪婪加载的列表子属性。</param>
         /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
-        private void EagerLoadChildren(EntityList list, IListProperty listProperty, List<ConcreteProperty> loadOptionsProperties)
+        private void EagerLoadChildren(IEntityList list, IListProperty listProperty, List<ConcreteProperty> loadOptionsProperties)
         {
             //查询一个大的实体集合，包含列表中所有实体所需要的所有子实体。
             var idList = new List<object>(10);
@@ -562,7 +562,7 @@ namespace Rafy.Domain
         /// <param name="list"></param>
         /// <param name="refProperty">贪婪加载的引用属性。</param>
         /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
-        private void EagerLoadRef(EntityList list, IRefProperty refProperty, List<ConcreteProperty> loadOptionsProperties)
+        private void EagerLoadRef(IEntityList list, IRefProperty refProperty, List<ConcreteProperty> loadOptionsProperties)
         {
             //查询一个大的实体集合，包含列表中所有实体所需要的所有引用实体。
             var keyProvider = refProperty.KeyProvider;
@@ -679,7 +679,7 @@ namespace Rafy.Domain
             return ReturnForRepository(args.EntityList, args.Invocation.QueryType);
         }
 
-        private static object ReturnForRepository(EntityList list, RepositoryQueryType queryType)
+        private static object ReturnForRepository(IEntityList list, RepositoryQueryType queryType)
         {
             switch (queryType)
             {
@@ -701,7 +701,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        private static Entity DisconnectFirst(EntityList list)
+        private static Entity DisconnectFirst(IEntityList list)
         {
             Entity res = null;
 

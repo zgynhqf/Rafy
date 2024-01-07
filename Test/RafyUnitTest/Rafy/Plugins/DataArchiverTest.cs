@@ -404,11 +404,11 @@ namespace RafyUnitTest
             return new AggregationArchiver();
         }
 
-        private static void AssertAllDataMigrated(EntityList rawList, IRepository repository)
+        private static void AssertAllDataMigrated(IEntityList rawList, IRepository repository)
         {
             Assert.AreEqual(0, repository.CountAll(), "执行数据归档后聚合根的数目为 0");
 
-            EntityList migratedList = null;
+            IEntityList migratedList = null;
             using (RdbDataProvider.RedirectDbSetting(DbSettingName, BackUpDbSettingName))
             {
                 migratedList = repository.GetAll();

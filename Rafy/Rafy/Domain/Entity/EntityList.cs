@@ -14,11 +14,13 @@
 *******************************************************/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Rafy;
 using Rafy.Domain.Caching;
 using Rafy.ManagedProperty;
@@ -28,20 +30,21 @@ namespace Rafy.Domain
 {
     /// <summary>
     /// 所有实体集合类的基类。
-    /// <para>使用 <see cref="EntityList"/> 与使用 <see cref="List{T}"/> 的区别在于：</para>
-    /// <para>在 <see cref="EntityList"/> 中移除的实体，都会被此列表记住在 <see cref="DeletedList"/> 中，在最终保存列表时，这些被移除的实体会被从持久层删除。</para>
-    /// <para>在 <see cref="EntityList"/> 中添加实体时：</para>
+    /// <para>使用 <see cref="EntityList{TEntity}"/> 与使用 <see cref="List{T}"/> 的区别在于：</para>
+    /// <para>在 <see cref="EntityList{TEntity}"/> 中移除的实体，都会被此列表记住在 <see cref="DeletedList"/> 中，在最终保存列表时，这些被移除的实体会被从持久层删除。</para>
+    /// <para>在 <see cref="EntityList{TEntity}"/> 中添加实体时：</para>
     /// <para>* 列表会把该实体的父列表设计为本列表（见：<see cref="Parent"/> 属性）；</para>
     /// <para>* 列表会把该实体的组合父实体设置为本列表的父实体；</para>
     /// <para>* 如果实体是树型实体，那么还会为实体生成相应的 <see cref="Entity.TreeIndex"/>。</para>
     /// <para>
-    /// 另外，需要注意的是：仓库的所有数据查询，都是通过 EntityList 来实现数据传输的。包括：FetchCount（查询数据条数，见：<see cref="EntityList.TotalCount"/>属性）、FetchFirst（查询单条数据）、FetchList（查询数据列表）。
+    /// 另外，需要注意的是：仓库的所有数据查询，都是通过 EntityList 来实现数据传输的。包括：FetchCount（查询数据条数，见：<see cref="TotalCount"/>属性）、FetchFirst（查询单条数据）、FetchList（查询数据列表）。
     /// </para>
-    /// <para>综上，<see cref="EntityList"/> 主要用于实现领域实体的列表行为、树列表行为以及数据的传输；如果需要对大量数据进行简单的列表操作，请使用更简单的 <see cref="List{T}"/> 泛型即可。把任意列表转换为<see cref="EntityList"/>，可使用 <see cref="EntityRepository.CreateList(System.Collections.IEnumerable, bool)"/> 方法。</para>
+    /// <para>综上，<see cref="EntityList{TEntity}"/> 主要用于实现领域实体的列表行为、树列表行为以及数据的传输；如果需要对大量数据进行简单的列表操作，请使用更简单的 <see cref="List{T}"/> 泛型即可。把任意列表转换为<see cref="IEntityList"/>，可使用 <see cref="EntityRepository.CreateList(System.Collections.IEnumerable, bool)"/> 方法。</para>
     /// </summary>
     [Serializable]
-    public abstract partial class EntityList : ManagedPropertyObjectList<Entity>,
-        IEntityList, IDirtyAware, IDomainComponent
+    public abstract partial class EntityList<TEntity> : ManagedPropertyObjectList<TEntity>,
+        IEntityList, IDirtyAware, IDomainComponent, IEntityListInternal
+        where TEntity : Entity
     {
         #region FindRepository
 
@@ -61,7 +64,7 @@ namespace Rafy.Domain
         {
             if (!this._repositoryLoaded)
             {
-                var entityType = EntityMatrix.FindByList(this.GetType()).EntityType;
+                var entityType = this.FindEntityType();
                 this._repository = RepositoryFactoryHost.Factory.FindByEntity(entityType);
 
                 this._repositoryLoaded = true;
@@ -81,6 +84,12 @@ namespace Rafy.Domain
 
             return repo;
         }
+
+        /// <summary>
+        /// 子类可重写此方法，实现列表对应实体类型的查找逻辑。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Type FindEntityType() { return typeof(TEntity); }
 
         #endregion
 
@@ -177,12 +186,13 @@ namespace Rafy.Domain
         public IDisposable MovingItems()
         {
             _movingItems = true;
-            return new MovingItemsDisposable { Owner = this };
+            return new MovingItemsDisposable<TEntity> { Owner = this };
         }
 
-        private class MovingItemsDisposable : IDisposable
+        private class MovingItemsDisposable<T> : IDisposable
+            where T : Entity
         {
-            internal EntityList Owner;
+            internal EntityList<T> Owner;
             public void Dispose()
             {
                 Owner._movingItems = false;
@@ -214,7 +224,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        protected override void SetItem(int index, Entity item)
+        protected override void SetItem(int index, TEntity item)
         {
             if (!_movingItems)
             {
@@ -263,7 +273,7 @@ namespace Rafy.Domain
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
         /// <exception cref="System.InvalidOperationException">当前列表中已经存在这个实体，添加操作不可用。</exception>
-        protected override void InsertItem(int index, Entity item)
+        protected override void InsertItem(int index, TEntity item)
         {
             if (item == null) throw new ArgumentNullException("item");
 
@@ -376,7 +386,7 @@ namespace Rafy.Domain
                 var repo = this.FindRepository();
                 if (repo != null) return repo.EntityType;
 
-                return EntityMatrix.FindByList(this.GetType()).EntityType;
+                return this.FindEntityType();
             }
         }
 
@@ -412,7 +422,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="sourceList"></param>
         /// <param name="options"></param>
-        public void Clone(EntityList sourceList, CloneOptions options)
+        public void Clone(IEntityList sourceList, CloneOptions options)
         {
             var repo = this.FindRepository();
             var entityType = this.EntityType;
@@ -443,9 +453,10 @@ namespace Rafy.Domain
                 base.RemoveItem(sourceList.Count);
             }
 
-            if (sourceList._repository != null)
+            var s = sourceList as EntityList<TEntity>;
+            if (s._repository != null)
             {
-                this.SetRepo(sourceList._repository);
+                this.SetRepo(s._repository);
             }
         }
 
@@ -477,6 +488,8 @@ namespace Rafy.Domain
             parent.RouteByList(this, arg);
         }
 
+        #region IEntityList
+
         /// <summary>
         /// 把指定的实体集合都回到本集合中来。
         /// </summary>
@@ -484,6 +497,102 @@ namespace Rafy.Domain
         public void AddRange(IEnumerable<Entity> list)
         {
             foreach (var item in list) { this.Add(item); }
+        }
+
+        bool ICollection<Entity>.IsReadOnly => this.Items.IsReadOnly;
+
+        public void Add(Entity entity)
+        {
+            if (!(entity is TEntity te)) throw new ArgumentException(nameof(entity));
+            base.Add(te);
+        }
+
+        public int IndexOf(Entity item)
+        {
+            if (!(item is TEntity te)) throw new ArgumentException(nameof(item));
+            return base.IndexOf(te);
+        }
+
+        public void Insert(int index, Entity item)
+        {
+            if (!(item is TEntity te)) throw new ArgumentException(nameof(item));
+            base.Insert(index, te);
+        }
+
+        public bool Contains(Entity item)
+        {
+            if (!(item is TEntity te)) throw new ArgumentException(nameof(item));
+            return base.Contains(te);
+        }
+
+        public void CopyTo(Entity[] array, int arrayIndex)
+        {
+            for (int i = 0, c = this.Count; i < c; i++)
+            {
+                array[arrayIndex + i] = this[i];
+            }
+        }
+
+        public bool Remove(Entity item)
+        {
+            if (!(item is TEntity te)) throw new ArgumentException(nameof(item));
+            return base.Remove(te);
+        }
+
+        IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator()
+        {
+            return base.GetEnumerator();
+        }
+
+        Entity IEntityList.this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value as TEntity; }
+        }
+
+        Entity IList<Entity>.this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value as TEntity; }
+        }
+
+        ManagedPropertyObjectList<Entity> IEntityListInternal.DeletedListField
+        {
+            get => this.DeletedListField;
+            set => this.DeletedListField = value;
+        }
+
+        void IEntityListInternal.LoadData(IEnumerable srcList)
+        {
+            this.LoadData(srcList);
+        }
+
+        void IEntityListInternal.SetRepo(IRepository repository)
+        {
+            this.SetRepo(repository);
+        }
+        
+        void IEntityListInternal.InitListProperty(IListProperty value)
+        {
+            this.InitListProperty(value);
+        }
+
+        //Entity IEntityListInternal.EachNode(Func<Entity, bool> action, bool includeDeletedItems)
+        //{
+        //    return this.EachNode(action, includeDeletedItems);
+        //}
+
+        #endregion
+    }
+
+    /// <summary>
+    /// 在某些列表需要继承的场景下，才需要使用此类。
+    /// </summary>
+    public abstract class InheritableEntityList : EntityList<Entity>, IEntityList
+    {
+        protected override Type FindEntityType()
+        {
+            return EntityMatrix.FindByList(this.GetType()).EntityType;
         }
     }
 }

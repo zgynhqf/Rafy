@@ -395,7 +395,7 @@ namespace Rafy.Domain
         /// <param name="propertyExp">The property exp.</param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), new ListPropertyMeta(), HasManyType.Composition);
         }
@@ -408,7 +408,7 @@ namespace Rafy.Domain
         /// <param name="meta"></param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta meta)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), meta, HasManyType.Composition);
         }
@@ -422,13 +422,13 @@ namespace Rafy.Domain
         /// <param name="hasManyType"></param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterList<TEntityList>(Expression<Func<TEntity, TEntityList>> propertyExp, ListPropertyMeta meta, HasManyType hasManyType)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListCore<TEntityList>(GetPropertyName(propertyExp), meta, hasManyType);
         }
 
         private static ListProperty<TEntityList> RegisterListCore<TEntityList>(string propertyName, ListPropertyMeta args, HasManyType hasManyType)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             var meta = new ListPropertyMetadata<TEntityList>(args.DataProvider);
 
@@ -453,7 +453,7 @@ namespace Rafy.Domain
         /// <param name="declareType">Type of the declare.</param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListExtensionCore<TEntityList>(propertyName, declareType, new ListPropertyMeta(), HasManyType.Composition);
         }
@@ -467,7 +467,7 @@ namespace Rafy.Domain
         /// <param name="meta">The meta.</param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta, HasManyType.Composition);
         }
@@ -482,13 +482,13 @@ namespace Rafy.Domain
         /// <param name="hasManyType"></param>
         /// <returns></returns>
         public static ListProperty<TEntityList> RegisterListExtension<TEntityList>(string propertyName, Type declareType, ListPropertyMeta meta, HasManyType hasManyType)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             return RegisterListExtensionCore<TEntityList>(propertyName, declareType, meta, hasManyType);
         }
 
         private static ListProperty<TEntityList> RegisterListExtensionCore<TEntityList>(string propertyName, Type declareType, ListPropertyMeta args, HasManyType hasManyType)
-            where TEntityList : EntityList
+            where TEntityList : IEntityList
         {
             var meta = new ListPropertyMetadata<TEntityList>(args.DataProvider);
 

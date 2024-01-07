@@ -166,7 +166,7 @@ namespace Rafy.Domain
         /// <param name="addIntoDeletedList">是否在删除完成后，添加到删除列表中。</param>
         private void RemoveFromParentList(bool addIntoDeletedList)
         {
-            var parentList = (this as IEntity).ParentList;
+            var parentList = (this as IEntity).ParentList as IEntityListInternal;
             if (parentList != null)
             {
                 //由于当前节点可能是 parentList 中的第一个，所以不能使用 IsTreeRootList 属性来直接检测是否在根节点集合中。
@@ -578,7 +578,7 @@ namespace Rafy.Domain
                                 _nodes.Add(entity);
                             }
 
-                            /*修复Entitylist使用TreeChildren属性Clone时TreeIndex错误问题
+                            /*修复EntityList使用TreeChildren属性Clone时TreeIndex错误问题
                              *原因是TreeChildren中实体Clone时会TreePId改变触发OnTreePIdChanged事件，
                              * OnTreePIdChanged事件中会处理entity._treeParent为空并且
                              * _treeParent.Id不等于新的克隆值时，需要重新设置TreeParent值
@@ -887,7 +887,7 @@ namespace Rafy.Domain
                     switch (ocp.ComponentType)
                     {
                         case TreeComponentType.NodeList:
-                            return (ocp as EntityList).AutoTreeIndexEnabled;
+                            return (ocp as IEntityList).AutoTreeIndexEnabled;
                         case TreeComponentType.Node:
                             ocp = ocp.TreeComponentParent;
                             if (ocp != null)
@@ -895,11 +895,11 @@ namespace Rafy.Domain
                                 switch (ocp.ComponentType)
                                 {
                                     case TreeComponentType.NodeList:
-                                        return (ocp as EntityList).AutoTreeIndexEnabled;
+                                        return (ocp as IEntityList).AutoTreeIndexEnabled;
                                     case TreeComponentType.TreeChildren:
                                         return (ocp as EntityTreeChildren).IsAutoTreeIndexEnabled();
                                     default:
-                                        throw new InvalidProgramException("实体的 TreeComponentParent 只能是 EntityList 或 EntityTreeChildren 两种类型。");
+                                        throw new InvalidProgramException("实体的 TreeComponentParent 只能是 IEntityList 或 EntityTreeChildren 两种类型。");
                                 }
                             }
                             break;

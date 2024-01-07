@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120220
@@ -171,11 +171,11 @@ namespace Rafy.Web
                 //TODO：这里可能存在问题：当一个非默认的视图请求这个服务得到一个默认视图的实体数据时，可能会因为列不一致而出现问题。
                 var defaultVM = UIModel.Views.CreateBaseView(model);
 
-                if (value is EntityList)
+                if (value is IEntityList)
                 {
                     var listRes = new EntityJsonList { model = model };
 
-                    EntityJsonConverter.EntityToJson(defaultVM, value as EntityList, listRes.entities);
+                    EntityJsonConverter.EntityToJson(defaultVM, value as IEntityList, listRes.entities);
                     listRes.total = listRes.entities.Count;
 
                     value = listRes;

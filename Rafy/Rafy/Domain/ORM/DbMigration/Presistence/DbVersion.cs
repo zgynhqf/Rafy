@@ -29,7 +29,7 @@ namespace Rafy.Domain.ORM.DbMigration.Presistence
         }
     }
 
-    public partial class DbVersionList : EntityList
+    public partial class DbVersionList : EntityList<DbVersion>
     {
         protected DbVersionList() { }
     }

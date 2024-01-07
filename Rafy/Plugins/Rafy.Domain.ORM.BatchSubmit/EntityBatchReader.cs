@@ -57,7 +57,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
             }
             else
             {
-                var list = _entityOrList as EntityList;
+                var list = _entityOrList as IEntityListInternal;
                 var batch = this.FindBatch(list.EntityType);
                 ReadToBatchRecur(list, batch);
             }
@@ -77,7 +77,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
             return _batches;
         }
 
-        private void ReadToBatchRecur(EntityList entityList, EntityBatch batch)
+        private void ReadToBatchRecur(IEntityListInternal entityList, EntityBatch batch)
         {
             var deletedList = entityList.DeletedListField;
             if (deletedList != null)
@@ -120,7 +120,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
 
                         foreach (var child in entity.GetLoadedChildren())
                         {
-                            var list = child.Value as EntityList;
+                            var list = child.Value as IEntityList;
                             if (list != null && list.Count > 0) { list.Clear(); }
                         }
                     }
@@ -142,7 +142,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
             //遍历所有子属性，读取孩子列表
             foreach (var child in entity.GetLoadedChildren())
             {
-                var children = child.Value as EntityList;
+                var children = child.Value as IEntityListInternal;
                 //所有孩子列表中的实体，都加入到对应的实体列表中。
                 //并递归读取孩子的孩子实体。
                 var childBatch = this.FindBatch(children.EntityType);

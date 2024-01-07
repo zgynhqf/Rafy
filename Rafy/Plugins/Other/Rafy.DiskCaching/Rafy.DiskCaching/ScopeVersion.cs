@@ -93,7 +93,7 @@ namespace Rafy.Domain.Caching
         }
     }
 
-    public partial class ScopeVersionList : EntityList
+    public partial class ScopeVersionList : InheritableEntityList
     {
         public DateTime ServerTime { get; set; }
     }

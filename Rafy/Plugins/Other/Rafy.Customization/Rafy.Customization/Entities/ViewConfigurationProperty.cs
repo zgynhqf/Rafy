@@ -85,7 +85,7 @@ namespace Rafy.Customization
         All = DropDownList | List | Detail
     }
 
-    public partial class ViewConfigurationPropertyList : EntityList { }
+    public partial class ViewConfigurationPropertyList : InheritableEntityList { }
 
     public partial class ViewConfigurationPropertyRepository : EntityRepository
     {

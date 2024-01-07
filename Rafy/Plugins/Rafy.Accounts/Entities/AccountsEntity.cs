@@ -47,7 +47,7 @@ namespace Rafy.Accounts
         //#endregion
     }
 
-    public abstract class AccountsEntityList : EntityList { }
+    public abstract class AccountsEntityList<TEntity> : EntityList<TEntity> where TEntity : Entity { }
 
     public abstract class AccountsEntityRepository : EntityRepository
     {

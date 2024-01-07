@@ -308,7 +308,7 @@ namespace UT
         //    return this.FetchCount(r => r.FetchByCustom(name, pagingInfo));
         //}
 
-        //private EntityList FetchByCustom(string name, PagingInfo pagingInfo)
+        //private IEntityList FetchByCustom(string name, PagingInfo pagingInfo)
         //{
         //    return this.QueryList(q =>
         //    {
@@ -326,7 +326,7 @@ namespace UT
         //{
         //    return this.FetchList();
         //}
-        //protected EntityList FetchBy()
+        //protected IEntityList FetchBy()
         //{
         //    return this.QueryList(null as Action<IPropertyQuery>);
         //}
@@ -335,7 +335,7 @@ namespace UT
         //{
         //    return this.FetchList(nameAscending);
         //}
-        //protected EntityList FetchBy(bool nameAscending)
+        //protected IEntityList FetchBy(bool nameAscending)
         //{
         //    return this.QueryList(q =>
         //    {
@@ -356,7 +356,7 @@ namespace UT
         //{
         //    return this.FetchList(name, age);
         //}
-        //protected EntityList FetchBy(string name, int age)
+        //protected IEntityList FetchBy(string name, int age)
         //{
         //    return this.QueryList(q =>
         //    {
@@ -370,7 +370,7 @@ namespace UT
         //    return this.FetchList(name, age, pagingInfo);
         //}
 
-        //protected EntityList FetchBy(string name, int age, PagingInfo pagingInfo)
+        //protected IEntityList FetchBy(string name, int age, PagingInfo pagingInfo)
         //{
         //    return this.QueryList(q =>
         //    {

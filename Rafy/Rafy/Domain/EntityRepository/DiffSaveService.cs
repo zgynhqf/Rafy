@@ -210,7 +210,7 @@ namespace Rafy.Domain
 
                 //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
                 if (!diffEntity.HasLocalValue(mp)) continue;
-                var children = diffEntity.GetProperty(mp) as EntityList;
+                var children = diffEntity.GetProperty(mp) as IEntityList;
                 if (children == null) continue;
 
                 for (int i = children.Count - 1; i >= 0; i--)
@@ -243,11 +243,11 @@ namespace Rafy.Domain
                 //如果是懒加载属性，并且没有加载数据时，不需要遍历此属性值
                 if (!oldEntity.HasLocalValue(mp)) continue;
 
-                var children = oldEntity.GetProperty(mp) as EntityList;
+                var children = oldEntity.GetProperty(mp) as IEntityList;
                 if (children == null) continue;
 
                 //清除已删除数据
-                children.CastTo<EntityList>().DeletedList.Clear();
+                children.CastTo<IEntityList>().DeletedList.Clear();
 
                 //所有子对象，都标记为已保存
                 for (int i = children.Count - 1; i >= 0; i--)

@@ -78,7 +78,7 @@ namespace Rafy.Domain
         /// 创建一个全新的实体列表对象
         /// </summary>
         /// <returns></returns>
-        EntityList NewList();
+        IEntityList NewList();
 
         /// <summary>
         /// 统计仓库中所有的实体数量
@@ -122,7 +122,7 @@ namespace Rafy.Domain
         /// 如果缓存中没有这些数据，则本方法同时会把数据缓存起来。
         /// </summary>
         /// <returns></returns>
-        EntityList CacheAll();
+        IEntityList CacheAll();
 
         /// <summary>
         /// 通过Id获取指定的实体对象
@@ -147,7 +147,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null);
+        IEntityList GetAll(PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 获取指定 id 集合的实体列表。
@@ -155,7 +155,7 @@ namespace Rafy.Domain
         /// <param name="idList">The identifier list.</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByIdList(object[] idList, LoadOptions loadOptions = null);
+        IEntityList GetByIdList(object[] idList, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过父对象的 Id 列表查询所有的实体。
@@ -164,7 +164,7 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null);
+        IEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过父对象 Id 分页查询子对象的集合。
@@ -173,14 +173,14 @@ namespace Rafy.Domain
         /// <param name="paging">分页信息。</param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null);
+        IEntityList GetByParentId(object parentId, PagingInfo paging = null, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询实体列表。
         /// </summary>
         /// <param name="criteria">常用查询条件。</param>
         /// <returns></returns>
-        EntityList GetBy(CommonQueryCriteria criteria);
+        IEntityList GetBy(CommonQueryCriteria criteria);
 
         /// <summary>
         /// 通过 CommonQueryCriteria 来查询唯一实体。
@@ -209,7 +209,7 @@ namespace Rafy.Domain
         /// <param name="treeIndex"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null);
+        IEntityList GetByTreeParentIndex(string treeIndex, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 获取指定节点的直接子节点。
@@ -217,7 +217,7 @@ namespace Rafy.Domain
         /// <param name="treePId"></param>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetByTreePId(object treePId, LoadOptions loadOptions = null);
+        IEntityList GetByTreePId(object treePId, LoadOptions loadOptions = null);
 
         /// <summary>
         /// 查询所有的根节点。
@@ -226,7 +226,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="loadOptions">数据加载时选项（贪婪加载等）。</param>
         /// <returns></returns>
-        EntityList GetTreeRoots(LoadOptions loadOptions = null);
+        IEntityList GetTreeRoots(LoadOptions loadOptions = null);
 
         /// <summary>
         /// 查询某个实体的某个属性的值。
@@ -352,9 +352,9 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        EntityList GetLazyListByParent(Entity parent);
+        IEntityList GetLazyListByParent(Entity parent);
 
-        EntityList GetByIdOrTreePId(object id);
+        IEntityList GetByIdOrTreePId(object id);
 
         //DbTable DbTable { get; }
 
@@ -362,6 +362,6 @@ namespace Rafy.Domain
 
         //EntityQueryProvider LinqProvider { get; }
 
-        //EntityList QueryListByLinq(IQueryable queryable);
+        //IEntityList QueryListByLinq(IQueryable queryable);
     }
 }

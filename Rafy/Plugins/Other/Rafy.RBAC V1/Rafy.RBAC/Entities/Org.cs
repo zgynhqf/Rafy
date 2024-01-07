@@ -75,7 +75,7 @@ namespace Rafy.RBAC.Old
         //#endregion
     }
 
-    public partial class OrgList : EntityList { }
+    public partial class OrgList : InheritableEntityList { }
 
     public partial class OrgRepository : EntityRepository
     {

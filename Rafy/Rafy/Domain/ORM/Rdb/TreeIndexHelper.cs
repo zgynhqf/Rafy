@@ -41,10 +41,10 @@ namespace Rafy.Domain.ORM
                 //先清空所有的 TreeIndex
                 ClearAllTreeIndex(repository);
 
-                var all = repository.GetTreeRoots();
+                var all = repository.GetTreeRoots() as IEntityListInternal;
                 if (all.Count > 0)
                 {
-                    (all as ITreeComponent).LoadAllNodes(LoadAllNodesMethod.ByTreePId);
+                    all.LoadAllNodes(LoadAllNodesMethod.ByTreePId);
 
                     //如果加载的过程中，第一个节点刚好是根节点，
                     //则加载完成后是一棵完整的树，Index 也生成完毕，不需要再次处理。

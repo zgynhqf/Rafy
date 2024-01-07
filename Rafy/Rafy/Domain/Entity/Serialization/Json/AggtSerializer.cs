@@ -162,7 +162,7 @@ namespace Rafy.Domain.Serialization.Json
             }
             else
             {
-                this.SerializeOuterList(entityOrList as EntityList);
+                this.SerializeOuterList(entityOrList as IEntityList);
             }
         }
 
@@ -282,7 +282,7 @@ namespace Rafy.Domain.Serialization.Json
                     if (this.SerializeAggt && value != null)
                     {
                         this.WritePropertyName(property.Name);
-                        this.SerializeList(value as EntityList);
+                        this.SerializeList(value as IEntityList);
                     }
                     break;
                 case PropertyCategory.LOB:
@@ -350,7 +350,7 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
-        private void SerializeList(EntityList entityList)
+        private void SerializeList(IEntityList entityList)
         {
             _writer.WriteStartArray();
             for (int i = 0, c = entityList.Count; i < c; i++)
@@ -362,10 +362,10 @@ namespace Rafy.Domain.Serialization.Json
         }
 
         /// <summary>
-        /// 序列化最外层的 EntityList。需要处理分页的信息。
+        /// 序列化最外层的 IEntityList。需要处理分页的信息。
         /// </summary>
         /// <param name="entityList"></param>
-        private void SerializeOuterList(EntityList entityList)
+        private void SerializeOuterList(IEntityList entityList)
         {
             if (this.OutputListTotalCount)
             {

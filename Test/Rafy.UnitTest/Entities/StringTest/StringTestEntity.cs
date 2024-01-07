@@ -40,7 +40,7 @@ namespace UT
     {
     }
 
-    public abstract class StringTestEntityList : EntityList { }
+    public abstract class StringTestEntityList : InheritableEntityList { }
 
     public abstract class StringTestEntityRepository : EntityRepository
     {

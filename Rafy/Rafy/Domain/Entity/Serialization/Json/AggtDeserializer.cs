@@ -78,7 +78,7 @@ namespace Rafy.Domain.Serialization.Json
                 return this.DeserializeEntity(type, jObject);
             }
 
-            if (type.IsSubclassOf(typeof(EntityList)))
+            if (typeof(IEntityList).IsAssignableFrom(type))
             {
                 var jArray = JArray.Parse(json);
                 return this.DeserializeList(type, jArray);
@@ -132,13 +132,13 @@ namespace Rafy.Domain.Serialization.Json
         /// <param name="listType"></param>
         /// <param name="jArray"></param>
         /// <returns></returns>
-        public EntityList DeserializeList(Type listType, JArray jArray)
+        public IEntityList DeserializeList(Type listType, JArray jArray)
         {
             var entityType = EntityMatrix.FindByList(listType).EntityType;
             var repo = RF.Find(entityType);
 
             //构造或查询出数据对应的实体列表。
-            EntityList list = null;
+            IEntityList list = null;
             if (_creationMode == UpdatedEntityCreationMode.RequeryFromRepository)
             {
                 //先从数据库中找出所有提供了 Id 的实体。
@@ -350,7 +350,7 @@ namespace Rafy.Domain.Serialization.Json
         private void DeserializeList(Entity entity, IListProperty listProperty, JArray jArray)
         {
             //构造 List 对象
-            EntityList list = null;
+            IEntityList list = null;
             if (entity.HasLocalValue(listProperty) || entity.IsNew)
             {
                 list = entity.GetLazyList(listProperty);
@@ -392,7 +392,7 @@ namespace Rafy.Domain.Serialization.Json
             }
         }
 
-        private static Entity FindOrCreate(EntityList list, JObject jEntity)
+        private static Entity FindOrCreate(IEntityList list, JObject jEntity)
         {
             var id = TryGetId(jEntity);
             Entity child = null;

@@ -50,9 +50,9 @@ namespace Rafy.Domain.Caching
         /// 使用Cache获取所有对象。
         /// </summary>
         /// <returns></returns>
-        internal EntityList FindAll()
+        internal IEntityList FindAll()
         {
-            EntityList list = null;
+            IEntityList list = null;
 
             var table = this.GetCachedTable();
             if (table != null)
@@ -68,9 +68,9 @@ namespace Rafy.Domain.Caching
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        internal EntityList FindByParent(Entity parent)
+        internal IEntityList FindByParent(Entity parent)
         {
-            EntityList children = null;
+            IEntityList children = null;
 
             var smallTable = this.GetCachedTableByParent(parent);
             if (smallTable != null)
@@ -111,7 +111,7 @@ namespace Rafy.Domain.Caching
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        private EntityList ConvertTable(IList<Entity> table)
+        private IEntityList ConvertTable(IList<Entity> table)
         {
             var converter = this._repository as IRepositoryInternal;
 

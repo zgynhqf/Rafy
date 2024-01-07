@@ -17,7 +17,7 @@ namespace Rafy.UnitTest.RuntimeLoad
 {
     public abstract class RuntimeLoadEntity : LongEntity { }
 
-    public abstract class RuntimeLoadEntityList : EntityList { }
+    public abstract class RuntimeLoadEntityList : InheritableEntityList { }
 
     public abstract class RuntimeLoadEntityRepository : EntityRepository
     {

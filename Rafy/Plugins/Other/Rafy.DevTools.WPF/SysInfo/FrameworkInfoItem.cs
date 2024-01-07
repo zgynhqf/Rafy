@@ -66,7 +66,7 @@ namespace Rafy.DevTools.SysInfo
         #endregion
     }
 
-    public partial class FrameworkInfoItemList : EntityList
+    public partial class FrameworkInfoItemList : InheritableEntityList
     {
         internal void CreateItems()
         {

@@ -461,7 +461,7 @@
 //    }
 
 //    [Serializable]
-//    public abstract class MultiTenancyTestDomainEntityList : EntityList { }
+//    public abstract class MultiTenancyTestDomainEntityList : InheritableEntityList { }
 
 //    public abstract class MultiTenancyTestDomainEntityRepository : EntityRepository
 //    {

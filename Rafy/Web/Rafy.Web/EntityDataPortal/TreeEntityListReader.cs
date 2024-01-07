@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
  * 
  * 作者：胡庆访
  * 创建时间：20120220
@@ -34,7 +34,7 @@ namespace Rafy.Web.EntityDataPortal
             this.ReadDeleteList();
         }
 
-        protected void ReadRootList(JObject changeSet, EntityList list)
+        protected void ReadRootList(JObject changeSet, IEntityList list)
         {
             var p = changeSet.Property("roots");
             if (p != null)

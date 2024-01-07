@@ -538,7 +538,7 @@ namespace UT
         //{
         //    return this.FetchList(price);
         //}
-        //private EntityList FetchBy(double? price)
+        //private IEntityList FetchBy(double? price)
         //{
         //    var q = this.CreateLinqQuery();
         //    q = q.Where(e => e.Price == price);

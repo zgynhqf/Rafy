@@ -83,7 +83,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class OrgPositionOperationDenyList : EntityList { }
+    public partial class OrgPositionOperationDenyList : InheritableEntityList { }
 
     public partial class OrgPositionOperationDenyRepository : EntityRepository
     {

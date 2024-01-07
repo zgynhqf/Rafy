@@ -23,7 +23,7 @@ using Rafy;
 
 namespace Rafy.Domain
 {
-    partial class EntityList
+    partial class EntityList<TEntity>
     {
         #region Count
 

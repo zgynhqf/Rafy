@@ -127,7 +127,7 @@ namespace Rafy.DataArchiver
         /// </summary>
         /// <param name="repository">实体仓储</param>
         /// <param name="entitiesToMigrate">实体集合</param>
-        private void BackupToHistory(IRepository repository, EntityList entitiesToMigrate)
+        private void BackupToHistory(IRepository repository, IEntityList entitiesToMigrate)
         {
             var options = CloneOptions.NewComposition(CloneValueMethod.LoadProperty);
             options.Actions |= CloneActions.IdProperty;//Id 也需要拷贝。
@@ -150,9 +150,9 @@ namespace Rafy.DataArchiver
         /// <summary>
         /// 从原始表中移除聚合。
         /// </summary>
-        /// <param name="repository">表示当前 <see cref="EntityList" /> 对应的仓库。</param>
+        /// <param name="repository">表示当前 <see cref="IEntityList" /> 对应的仓库。</param>
         /// <param name="entityList">表示一个领域对象的集合。</param>
-        private void DeleteOriginalData(IRepository repository, EntityList entityList)
+        private void DeleteOriginalData(IRepository repository, IEntityList entityList)
         {
             entityList.Clear();
 
@@ -167,7 +167,7 @@ namespace Rafy.DataArchiver
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="entityList"></param>
-        protected virtual void SaveList(IRepository repository, EntityList entityList)
+        protected virtual void SaveList(IRepository repository, IEntityList entityList)
         {
             repository.Save(entityList);
         }

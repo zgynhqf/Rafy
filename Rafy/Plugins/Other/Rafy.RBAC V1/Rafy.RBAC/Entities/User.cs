@@ -74,7 +74,7 @@ namespace Rafy.RBAC.Old
         }
     }
 
-    public partial class UserList : EntityList { }
+    public partial class UserList : InheritableEntityList { }
 
     public partial class UserRepository : EntityRepository
     {

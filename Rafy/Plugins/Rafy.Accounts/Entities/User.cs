@@ -156,7 +156,7 @@ namespace Rafy.Accounts
     /// <summary>
     /// 系统中的用户 列表类。
     /// </summary>
-    public partial class UserList : AccountsEntityList { }
+    public partial class UserList : AccountsEntityList<User> { }
 
     /// <summary>
     /// 系统中的用户 仓库类。

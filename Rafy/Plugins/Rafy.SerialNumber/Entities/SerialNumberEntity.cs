@@ -47,7 +47,7 @@ namespace Rafy.SerialNumber
         //#endregion
     }
 
-    public abstract class SerialNumberEntityList : EntityList { }
+    public abstract class SerialNumberEntityList : InheritableEntityList { }
 
     public abstract class SerialNumberEntityRepository : EntityRepository
     {

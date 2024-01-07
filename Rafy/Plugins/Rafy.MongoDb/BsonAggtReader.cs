@@ -29,7 +29,7 @@ namespace Rafy.MongoDb
     /// </summary>
     internal class BsonAggtReader
     {
-        public void ReadData(List<BsonDocument> documents, EntityList list, EntityRepository repository)
+        public void ReadData(List<BsonDocument> documents, IEntityList list, EntityRepository repository)
         {
             foreach (var doc in documents)
             {
@@ -129,7 +129,7 @@ namespace Rafy.MongoDb
         private void LoadChildren(Entity entity, IListProperty listProperty, BsonArray jArray)
         {
             //构造 List 对象
-            EntityList list = null;
+            IEntityList list = null;
             if (entity.HasLocalValue(listProperty) || entity.PersistenceStatus == PersistenceStatus.New)
             {
                 list = entity.GetLazyList(listProperty);
