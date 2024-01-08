@@ -35,7 +35,7 @@ namespace Rafy.WPF.Command
             {
                 var selection = view.SelectedEntities;
 
-                var toSelect = view.Data.Except(selection).ToArray();
+                var toSelect = view.Data.Linq.Except(selection).ToArray();
 
                 selection.Clear();
                 foreach (var item in toSelect) { selection.Add(item); }

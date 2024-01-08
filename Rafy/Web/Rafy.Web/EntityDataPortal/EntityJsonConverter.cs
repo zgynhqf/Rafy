@@ -45,7 +45,7 @@ namespace Rafy.Web.EntityDataPortal
             return ListReader.JsonToEntity(jEntityList, repository);
         }
 
-        internal static void EntityToJson(EntityViewMeta evm, IEnumerable<Entity> entities, IList<EntityJson> list)
+        internal static void EntityToJson(EntityViewMeta evm, IEntityList entities, IList<EntityJson> list)
         {
             foreach (var entity in entities)
             {

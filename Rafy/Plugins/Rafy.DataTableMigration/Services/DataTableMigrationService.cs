@@ -12,7 +12,9 @@
 *******************************************************/
 
 #if NETSTANDARD2_0
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rafy.DataTableMigration.Contexts;
@@ -100,7 +102,7 @@ namespace Rafy.DataTableMigration.Services
                     loadOptionsOptions.LoadWithTreeChildren();
                 }
 
-                if (isHasChild||isSupportTree)
+                if (isHasChild || isSupportTree)
                 {
                     condition.LoadOptions = loadOptionsOptions;
                 }
@@ -173,9 +175,8 @@ namespace Rafy.DataTableMigration.Services
             else
             {
                 ChangeEntityPersistenceStatus(component, PersistenceStatus.New);
-                using (
-                    RdbDataProvider.RedirectDbSetting(DataTableMigrationPlugin.DbSettingName,
-                        DataTableMigrationPlugin.BackUpDbSettingName))
+                using (RdbDataProvider.RedirectDbSetting(DataTableMigrationPlugin.DbSettingName, 
+                    DataTableMigrationPlugin.BackUpDbSettingName))
                 {
                     repository.Save(component);
                 }
@@ -233,12 +234,12 @@ namespace Rafy.DataTableMigration.Services
         /// </summary>
         /// <param name="entityList"></param>
         /// <param name="persistenceStatus"></param>
-        private void ChangeEntityPersistenceStatus(IList<Entity> entityList, PersistenceStatus persistenceStatus)
+        private void ChangeEntityPersistenceStatus(IList entityList, PersistenceStatus persistenceStatus)
         {
-            entityList.ForEach(item => item.PersistenceStatus = persistenceStatus);
-
-            foreach (var entity in entityList)
+            foreach (Entity entity in entityList)
             {
+                entity.PersistenceStatus = persistenceStatus;
+
                 foreach (var childField in entity.GetLoadedChildren())
                 {
                     var children = childField.Value as IEntityList;
@@ -247,9 +248,9 @@ namespace Rafy.DataTableMigration.Services
                         ChangeEntityPersistenceStatus(children, persistenceStatus);
                     }
                 }
-
             }
         }
     }
 }
+
 #endif

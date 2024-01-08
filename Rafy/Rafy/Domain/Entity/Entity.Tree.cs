@@ -470,7 +470,7 @@ namespace Rafy.Domain
         /// 防止重入、设置父子关系
         [Serializable]
         [DebuggerDisplay("{DebuggerDisplay}")]
-        public sealed class EntityTreeChildren : IList<ITreeEntity>, IList<Entity>, ITreeComponent
+        public sealed class EntityTreeChildren : IList<Entity>, IList, ITreeComponent
         {
             #region 字段
 
@@ -726,7 +726,7 @@ namespace Rafy.Domain
                     var repo = _owner.GetRepository();
                     var children = repo.GetByTreePId(_owner.Id);
 
-                    this.MergeFullTree(children.ToList());
+                    this.MergeFullTree(children.Linq.ToList());
                 }
             }
 
@@ -780,7 +780,7 @@ namespace Rafy.Domain
                         }
 
                         var children = repo.GetByTreeParentIndex(treeIndex);
-                        this.MergeFullTree(children.ToList());
+                        this.MergeFullTree(children.Linq.ToList());
                     }
                     else
                     {
@@ -1370,60 +1370,6 @@ namespace Rafy.Domain
                 return this.GetEnumerator();
             }
 
-            int IList<ITreeEntity>.IndexOf(ITreeEntity item)
-            {
-                return this.IndexOf(item as Entity);
-            }
-
-            void IList<ITreeEntity>.Insert(int index, ITreeEntity item)
-            {
-                this.Insert(index, item as Entity);
-            }
-
-            void ICollection<ITreeEntity>.Add(ITreeEntity item)
-            {
-                this.Add(item as Entity);
-            }
-
-            bool ICollection<ITreeEntity>.Contains(ITreeEntity item)
-            {
-                return this.Contains(item as Entity);
-            }
-
-            void ICollection<ITreeEntity>.CopyTo(ITreeEntity[] array, int arrayIndex)
-            {
-                this.Load();
-                if (_nodes == null) return;
-
-                for (int i = 0, c = _nodes.Count, c2 = array.Length; i < c && arrayIndex < c2; i++, arrayIndex++)
-                {
-                    array[arrayIndex] = _nodes[i];
-                }
-            }
-
-            bool ICollection<ITreeEntity>.Remove(ITreeEntity item)
-            {
-                return this.Remove(item as Entity);
-            }
-
-            IEnumerator<ITreeEntity> IEnumerable<ITreeEntity>.GetEnumerator()
-            {
-                return this.GetEnumerator();
-            }
-
-            ITreeEntity IList<ITreeEntity>.this[int index]
-            {
-                get
-                {
-                    return this[index];
-                }
-
-                set
-                {
-                    this[index] = value as Entity;
-                }
-            }
-
             ITreeComponent ITreeComponent.TreeComponentParent
             {
                 get { return _owner; }
@@ -1443,6 +1389,51 @@ namespace Rafy.Domain
                         return string.Format("Loaded！  Count:{0}  Owner:{1}", this.Count, _owner);
                     }
                     return string.Format("Unloaded！  Owner:{0}", _owner);
+                }
+            }
+
+            bool IList.IsFixedSize => (_nodes as IList).IsFixedSize;
+
+            object ICollection.SyncRoot => (_nodes as IList).SyncRoot;
+
+            bool ICollection.IsSynchronized => (_nodes as IList).IsSynchronized;
+
+            object IList.this[int index] { get => this[index]; set => this[index] = value as Entity; }
+
+            int IList.Add(object value)
+            {
+                this.Add(value as Entity);
+                return this.Count - 1;
+            }
+
+            bool IList.Contains(object value)
+            {
+                return this.Contains(value as Entity);
+            }
+
+            int IList.IndexOf(object value)
+            {
+                return this.IndexOf(value as Entity);
+            }
+
+            void IList.Insert(int index, object value)
+            {
+                this.Insert(index, value as Entity);
+            }
+
+            void IList.Remove(object value)
+            {
+                this.Remove(value as Entity);
+            }
+
+            void ICollection.CopyTo(Array array, int arrayIndex)
+            {
+                this.Load();
+                if (_nodes == null) return;
+
+                for (int i = 0, c = _nodes.Count, c2 = array.Length; i < c && arrayIndex < c2; i++, arrayIndex++)
+                {
+                    array.SetValue(_nodes[i], arrayIndex);
                 }
             }
 

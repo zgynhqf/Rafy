@@ -131,9 +131,9 @@ namespace Rafy.Domain.Caching
         /// 如果缓存中不存在，或者缓存数据已经过期，则调用 GetAll 方法获取数据，并把最终数据加入到缓存中。
         /// </summary>
         /// <returns></returns>
-        internal override IList<Entity> GetCachedTable()
+        internal override IEntityList GetCachedTable()
         {
-            IList<Entity> result = null;
+            IEntityList result = null;
 
             var sd = this.ClientCacheDefinition;
             if (sd != null)
@@ -142,7 +142,7 @@ namespace Rafy.Domain.Caching
                 var key = CacheAllKey;
 
                 //如果内存不存在此数据，则尝试使用硬盘缓存获取
-                result = this.Cache.Get(key, className) as IList<Entity>;
+                result = this.Cache.Get(key, className) as IEntityList;
                 if (result == null)
                 {
                     result = this._repository.GetAll();
@@ -161,16 +161,16 @@ namespace Rafy.Domain.Caching
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <returns></returns>
-        internal override IList<Entity> GetCachedTableByParent(Entity parent)
+        internal override IEntityList GetCachedTableByParent(Entity parent)
         {
-            IList<Entity> result = null;
+            IEntityList result = null;
 
             var sd = this.ClientCacheDefinition;
             if (sd != null)
             {
                 var className = sd.Class.Name;
                 var key = string.Format(CacheByParentKeyFormat, parent.Id);
-                result = this.Cache.Get(key, className) as IList<Entity>;
+                result = this.Cache.Get(key, className) as IEntityList;
 
                 if (result == null)
                 {

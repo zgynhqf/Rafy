@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.Domain;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Collections;
 
 namespace Rafy.Web.EntityDataPortal
 {
@@ -60,7 +61,7 @@ namespace Rafy.Web.EntityDataPortal
             }
         }
 
-        protected void ReadTreeEntityRecur(IList<Entity> list, JObject item, Entity treeParent)
+        protected void ReadTreeEntityRecur(IList list, JObject item, Entity treeParent)
         {
             //先把 TreeChildren、isNew 两个属性从集合中删除，这样后面拷贝所有属性时就不用拷贝这两个属性。
             var treeChildrenProperty = item.Property("TreeChildren");

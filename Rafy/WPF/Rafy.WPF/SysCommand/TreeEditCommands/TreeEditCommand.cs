@@ -40,9 +40,9 @@ namespace Rafy.WPF.Command
             return view.Data != null;
         }
 
-        internal static IList<Entity> GetParentList(ITreeComponent node)
+        internal static IList GetParentList(ITreeComponent node)
         {
-            IList<Entity> parentList = null;
+            IList parentList = null;
             var parent = node.TreeComponentParent;
             if (parent.ComponentType == TreeComponentType.TreeChildren)
             {
@@ -138,7 +138,7 @@ namespace Rafy.WPF.Command
                 var node = view.Current;
 
                 //找到这个实体所在层级的列表
-                IList<Entity> context = null;
+                IList context = null;
                 if (node.TreeParent == null)
                 {
                     context = view.Data;
@@ -152,7 +152,7 @@ namespace Rafy.WPF.Command
                 {
                     return context[0] != node;
                 }
-                return context.Last() != node;
+                return context[context.Count - 1] != node;
             }
 
             return false;
@@ -262,10 +262,10 @@ namespace Rafy.WPF.Command
 
         private static Entity FindPreviousNode(Entity node)
         {
-            IList<Entity> parentList = GetParentList(node);
+            var parentList = GetParentList(node);
 
             var i = parentList.IndexOf(node);
-            if (i > 0) { return parentList[i - 1]; }
+            if (i > 0) { return parentList[i - 1] as Entity; }
 
             return null;
         }

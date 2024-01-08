@@ -53,7 +53,7 @@ namespace Rafy.Domain
             return count;
         }
 
-        internal static void MarkTreeFullLoaded(IList<Entity> nodes)
+        internal static void MarkTreeFullLoaded(IList nodes)
         {
             for (int i = 0, c = nodes.Count; i < c; i++)
             {
@@ -79,7 +79,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="tree"></param>
         /// <param name="nodes"></param>
-        internal static void FullAddIntoList(ITreeComponent tree, IList<Entity> nodes)
+        internal static void FullAddIntoList(ITreeComponent tree, IList nodes)
         {
             tree.LoadAllNodes();
             tree.EachNode(e =>
@@ -95,7 +95,7 @@ namespace Rafy.Domain
         /// <param name="list">The list.</param>
         /// <param name="nodes">The nodes.</param>
         /// <param name="indexOption">The index option.</param>
-        internal static void LoadTreeData(IList<Entity> list, IEnumerable nodes, TreeIndexOption indexOption)
+        internal static void LoadTreeData(IList list, IEnumerable nodes, TreeIndexOption indexOption)
         {
             /*********************** 代码块解释 *********************************
              * 树节点加载算法：
@@ -112,7 +112,7 @@ namespace Rafy.Domain
                 var treePId = entity.TreePId;
                 if (treePId == null)
                 {
-                    bool isRootList = list.Count == 0 || list[0].TreePId == null;
+                    bool isRootList = list.Count == 0 || (list[0] as Entity).TreePId == null;
                     if (isRootList)
                     {
                         list.Add(entity);
@@ -143,7 +143,7 @@ namespace Rafy.Domain
             }
         }
 
-        private static bool TryAddToList(IList<Entity> list, Entity node, TreeIndexOption indexOption)
+        private static bool TryAddToList(IList list, Entity node, TreeIndexOption indexOption)
         {
             //由于开发者做一些模糊搜索数据时，可能会将满足同一匹配条件的实体查询出来显示。
             //但是这些树，可能无法组成一棵树。这时，也需要把这些实体全部都显示出来。

@@ -27,6 +27,7 @@ using UT;
 using Rafy.UnitTest;
 using Rafy.ManagedProperty;
 using Rafy.DataPortal;
+using Rafy.Accounts;
 
 namespace RafyUnitTest
 {
@@ -972,6 +973,46 @@ namespace RafyUnitTest
         #endregion
 
         #region 列表
+
+        /// <summary>
+        /// 编译期语法测试：测试开发者可以正常使用 Linq 扩展方法
+        /// </summary>
+        [TestMethod]
+        public void ET_EntityList_CanUseLinq()
+        {
+            var list = new UserList();
+            list.FirstOrDefault(e => e.RealName == "");
+        }
+
+        [TestMethod]
+        public void ET_EntityList_CanUseLinq_Interface()
+        {
+            var list = new UserList() as IEntityList;
+            list.Linq.FirstOrDefault(e => e.Id != null);
+        }
+
+        /// <summary>
+        /// 编译期语法测试：测试开发者可以使用 foreach，且使用 var 即可，而不需要强制转换为 Entity
+        /// </summary>
+        [TestMethod]
+        public void ET_EntityList_CanUseForeach()
+        {
+            var list = new UserList();
+            foreach (var item in list)
+            {
+                item.RealName = "";
+            }
+        }
+
+        [TestMethod]
+        public void ET_EntityList_CanUseForeach_Interface()
+        {
+            var list2 = new UserList() as IEntityList;
+            foreach (var item in list2)
+            {
+                item.Id = null;
+            }
+        }
 
         /// <summary>
         /// 当置换元素时，不能把元素的状态改变了。

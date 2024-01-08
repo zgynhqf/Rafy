@@ -19,6 +19,7 @@ using System.Text;
 using Rafy;
 using Newtonsoft.Json.Linq;
 using Rafy.Domain;
+using System.Collections;
 
 namespace Rafy.Web.EntityDataPortal
 {
@@ -77,7 +78,7 @@ namespace Rafy.Web.EntityDataPortal
 
         protected abstract void ReadCore();
 
-        protected void ReadList(JObject changeSet, string jsonListName, IList<Entity> list)
+        protected void ReadList(JObject changeSet, string jsonListName, IList list)
         {
             var p = changeSet.Property(jsonListName);
             if (p != null)

@@ -417,15 +417,15 @@ namespace RafyUnitTest
             AssertAggtEqual(rawList, migratedList, repository);
         }
 
-        private static void AssertAggtEqual(IList<Entity> rawList, IList<Entity> migratedList, IRepository repository)
+        private static void AssertAggtEqual(IList rawList, IList migratedList, IRepository repository)
         {
             Assert.AreEqual(rawList.Count, migratedList.Count, "迁移前后，实体列表的个数应该相同。" + repository.EntityType.FullName);
 
             var properties = repository.EntityMeta.ManagedProperties.GetNonReadOnlyCompiledProperties();
             for (int j = 0, c2 = rawList.Count; j < c2; j++)
             {
-                var raw = rawList[j];
-                var migrated = migratedList[j];
+                var raw = rawList[j] as Entity;
+                var migrated = migratedList[j] as Entity;
 
                 //对比所有的属性。
                 for (int i = 0, c = properties.Count; i < c; i++)

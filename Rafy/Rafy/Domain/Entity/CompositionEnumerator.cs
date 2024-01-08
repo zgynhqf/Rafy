@@ -132,7 +132,7 @@ namespace Rafy.Domain
         /// 将指定的元素，加入的遍历列表中。
         /// </summary>
         /// <param name="nodes"></param>
-        public void Push(IList<Entity> nodes)
+        public void Push(IEntityList nodes)
         {
             if (nodes != null)
             {
@@ -148,7 +148,7 @@ namespace Rafy.Domain
             }
         }
 
-        private void PushList(IList<Entity> nodes)
+        private void PushList(IList nodes)
         {
             if (nodes != null)
             {
@@ -157,7 +157,7 @@ namespace Rafy.Domain
                 //倒序加入。
                 for (int i = nodes.Count - 1; i >= 0; i--)
                 {
-                    _stack.Push(nodes[i]);
+                    _stack.Push(nodes[i] as Entity);
                 }
             }
         }
@@ -182,10 +182,10 @@ namespace Rafy.Domain
             return res;
         }
 
-        public static CompositionEnumerator Create(IList<Entity> IEntityList, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
+        public static CompositionEnumerator Create(IEntityList entityList, bool includesChildren = true, bool includesTreeChildren = true, bool includeDeletedItems = false)
         {
             var res = Create(includesChildren, includesTreeChildren, includeDeletedItems);
-            res.Push(IEntityList);
+            res.Push(entityList);
             return res;
         }
 

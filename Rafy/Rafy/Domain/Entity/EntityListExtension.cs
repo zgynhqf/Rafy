@@ -28,7 +28,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static DataTable ToDataTable(this IList<Entity> list)
+        public static DataTable ToDataTable(this IEntityList list)
         {
             DataTable table = new DataTable();
 

@@ -490,16 +490,27 @@ namespace Rafy.Domain
 
         #region IEntityList
 
+        IReadOnlyList<Entity> IEntityList.Linq => this;
+
+        Entity IEntityList.this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value as TEntity; }
+        }
+
+        IEnumerator<Entity> IEntityList.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
         /// <summary>
         /// 把指定的实体集合都回到本集合中来。
         /// </summary>
-        /// <param name="list">The list.</param>
-        public void AddRange(IEnumerable<Entity> list)
+        /// <param name="entityList">The list.</param>
+        public void AddRange(IEnumerable entityList)
         {
-            foreach (var item in list) { this.Add(item); }
+            foreach (Entity item in entityList) { this.Add(item); }
         }
-
-        bool ICollection<Entity>.IsReadOnly => this.Items.IsReadOnly;
 
         public void Add(Entity entity)
         {
@@ -539,23 +550,6 @@ namespace Rafy.Domain
             return base.Remove(te);
         }
 
-        IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator()
-        {
-            return base.GetEnumerator();
-        }
-
-        Entity IEntityList.this[int index]
-        {
-            get { return this[index]; }
-            set { this[index] = value as TEntity; }
-        }
-
-        Entity IList<Entity>.this[int index]
-        {
-            get { return this[index]; }
-            set { this[index] = value as TEntity; }
-        }
-
         ManagedPropertyObjectList<Entity> IEntityListInternal.DeletedListField
         {
             get => this.DeletedListField;
@@ -571,16 +565,11 @@ namespace Rafy.Domain
         {
             this.SetRepo(repository);
         }
-        
+
         void IEntityListInternal.InitListProperty(IListProperty value)
         {
             this.InitListProperty(value);
         }
-
-        //Entity IEntityListInternal.EachNode(Func<Entity, bool> action, bool includeDeletedItems)
-        //{
-        //    return this.EachNode(action, includeDeletedItems);
-        //}
 
         #endregion
     }
@@ -588,7 +577,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 在某些列表需要继承的场景下，才需要使用此类。
     /// </summary>
-    public abstract class InheritableEntityList : EntityList<Entity>, IEntityList
+    public abstract class InheritableEntityList : EntityList<Entity>, IEntityList, IList<Entity>
     {
         protected override Type FindEntityType()
         {

@@ -55,7 +55,7 @@ namespace Rafy.WPF
         /// <rereturns>返回是否成功找到目标行。</rereturns>
         public static bool SetCurrentById(this ListLogicalView listView, object id)
         {
-            var item = listView.Data
+            var item = listView.Data.Linq
                 .FirstOrDefault(entity => entity.Id.Equals(id));
 
             listView.Current = item;

@@ -308,7 +308,7 @@ namespace Rafy.Domain
         /// </summary>
         /// <param name="allEntities"></param>
         /// <param name="fromIndex">从这个索引号开始的实体，才会被通知加载。</param>
-        private void OnDbLoaded(IList<Entity> allEntities, int fromIndex = 0)
+        private void OnDbLoaded(IEntityList allEntities, int fromIndex = 0)
         {
             for (int i = fromIndex, c = allEntities.Count; i < c; i++)
             {
@@ -493,7 +493,7 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    sortedList = list.OrderBy(e => e.Id).ToList();
+                    sortedList = list.Linq.OrderBy(e => e.Id).ToList();
                 }
 
                 #endregion
@@ -612,10 +612,10 @@ namespace Rafy.Domain
                 }
                 else
                 {
-                    sortedList = list.OrderBy(e => e.GetRefNullableKey(refProperty)).ToList();
+                    sortedList = list.Linq.OrderBy(e => e.GetRefNullableKey(refProperty)).ToList();
                 }
 
-                var sortedRefList = refList.OrderBy(e => e.GetProperty(keyPropertyOfRefEntity)).ToList();
+                var sortedRefList = refList.Linq.OrderBy(e => e.GetProperty(keyPropertyOfRefEntity)).ToList();
 
                 #endregion
 

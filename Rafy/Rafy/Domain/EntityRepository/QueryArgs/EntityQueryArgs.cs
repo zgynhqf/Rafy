@@ -21,6 +21,7 @@ using Rafy.Data;
 using Rafy.Domain.ORM.SqlTree;
 using Rafy.Domain.ORM.Query;
 using Rafy.ManagedProperty;
+using System.Collections;
 
 namespace Rafy.Domain
 {
@@ -63,7 +64,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 如果是内存加载，则使用这个列表。
         /// </summary>
-        internal IList<Entity> MemoryList;
+        internal List<Entity> MemoryList;
 
         /// <summary>
         /// 加载的列表对象
@@ -116,9 +117,9 @@ namespace Rafy.Domain
             }
         }
 
-        IList<Entity> IEntityQueryArgs.List
+        IList IEntityQueryArgs.List
         {
-            get { return this.MemoryList ?? this.EntityList; }
+            get { return this.MemoryList as IList ?? this.EntityList; }
         }
 
         /// <summary>

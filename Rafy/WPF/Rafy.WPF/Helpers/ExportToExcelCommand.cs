@@ -171,7 +171,7 @@ namespace Rafy.WPF
         /// </summary>
         /// <param name="view"></param>
         /// <returns></returns>
-        protected virtual IList<Entity> FindModels(ListLogicalView view)
+        protected virtual IEntityList FindModels(ListLogicalView view)
         {
             return view.Data;
         }

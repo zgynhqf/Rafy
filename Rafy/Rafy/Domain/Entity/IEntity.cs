@@ -44,7 +44,7 @@ namespace Rafy.Domain
     /// <summary>
     /// 实体列表
     /// </summary>
-    public interface IEntityList : IList<Entity>, IList, IDomainComponent, ITreeComponent
+    public interface IEntityList : IList, IDomainComponent, ITreeComponent
     {
         /// <summary>
         /// 是否：在添加每一项时，
@@ -116,23 +116,28 @@ namespace Rafy.Domain
         void Clone(IEntityList sourceList, CloneOptions options);
 
         /// <summary>
-        /// 添加一组实体到列表中。
-        /// </summary>
-        /// <param name="collection"></param>
-        void AddRange(IEnumerable<Entity> collection);
-
-        /// <summary>
         /// 如果当前集合是一个根节点的集合，那么可以使用此方法来重新生成树中所有节点的索引。
         /// </summary>
         void ResetTreeIndex();
 
-        #region 解决 IList<Entity> 与 IList 的冲突
+        #region 方便使用的列表成员
 
-        new int Count { get; }
+        /// <summary>
+        /// 由于一个类型无法同时实现两个 <see cref="IEnumerable{T}"/> 泛型。
+        /// 所以实体列表选择不直接实现 <see cref="IEnumerable{Entity}"/>，而是由属性来表达，这样也能方便开发者使用 Linq 方法。
+        /// 内部实现时，是直接返回当前列表对象。
+        /// </summary>
+        IReadOnlyList<Entity> Linq { get; }
 
-        new void Clear();
+        /// <summary>
+        /// 添加一组实体到列表中。
+        /// </summary>
+        /// <param name="entityList"></param>
+        void AddRange(IEnumerable entityList);
 
         new Entity this[int index] { get; set; }
+
+        new IEnumerator<Entity> GetEnumerator(); 
 
         #endregion
     }

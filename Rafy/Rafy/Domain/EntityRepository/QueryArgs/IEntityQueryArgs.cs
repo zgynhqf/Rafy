@@ -18,6 +18,7 @@ using Rafy.Domain;
 using Rafy;
 using Rafy.Data;
 using Rafy.Domain.ORM.Query;
+using System.Collections;
 
 namespace Rafy.Domain
 {
@@ -29,7 +30,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 用于存储结果的实体列表
         /// </summary>
-        IList<Entity> List { get; }
+        IList List { get; }
 
         /// <summary>
         /// 是否只查询一个实体。

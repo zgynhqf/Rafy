@@ -102,16 +102,16 @@ namespace Rafy.Domain.Caching
             return null;
         }
 
-        internal abstract IList<Entity> GetCachedTable();
+        internal abstract IEntityList GetCachedTable();
 
-        internal abstract IList<Entity> GetCachedTableByParent(Entity parent);
+        internal abstract IEntityList GetCachedTableByParent(Entity parent);
 
         /// <summary>
         /// 把一个 table 转换为新的实体列表
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        private IEntityList ConvertTable(IList<Entity> table)
+        private IEntityList ConvertTable(IEntityList table)
         {
             var converter = this._repository as IRepositoryInternal;
 

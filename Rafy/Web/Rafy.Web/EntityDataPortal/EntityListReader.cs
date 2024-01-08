@@ -18,6 +18,7 @@ using System.Text;
 using Rafy.Domain;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Collections;
 
 namespace Rafy.Web.EntityDataPortal
 {
@@ -43,7 +44,7 @@ namespace Rafy.Web.EntityDataPortal
             }
         }
 
-        protected void ReadCreateList(JObject changeSet, IList<Entity> list)
+        protected void ReadCreateList(JObject changeSet, IList list)
         {
             var p = changeSet.Property("c");//toCreate
             if (p != null)

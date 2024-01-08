@@ -801,7 +801,7 @@ namespace Rafy.Domain.ORM
         /// <param name="memoryPagingInfo">内存分页信息：如果不是只取一行数据，则这个参数表示列表内存分页的信息，只在需要进行内存分页时会用到。</param>
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         internal protected void FillDataIntoList(
-            IDataReader reader, List<IManagedProperty> readProperties, IList<Entity> list,
+            IDataReader reader, List<IManagedProperty> readProperties, IList list,
             bool fetchingFirst, PagingInfo memoryPagingInfo, bool markTreeFullLoaded)
         {
             //如果正在分页，而且支持数据库层面的分页，则不使用内存分页。
@@ -844,7 +844,7 @@ namespace Rafy.Domain.ORM
         /// <param name="markTreeFullLoaded">如果某次查询结果是一棵完整的子树，那么必须设置此参数为 true ，才可以把整个树标记为完整加载。</param>
         /// <param name="pagingInfo">对根节点进行分页的信息。</param>
         private void FillTreeIntoList(
-            IDataReader reader, List<IManagedProperty> readProperties, IList<Entity> list, bool markTreeFullLoaded,
+            IDataReader reader, List<IManagedProperty> readProperties, IList list, bool markTreeFullLoaded,
             PagingInfo pagingInfo)
         {
             var entities = this.ReadToEntity(reader, readProperties);

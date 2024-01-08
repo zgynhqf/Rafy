@@ -406,7 +406,7 @@ namespace Rafy.Web
 
             var list = repo.NewList();
 
-            var pagedList = raw.JumpToPage(pageInfo);
+            var pagedList = raw.Linq.JumpToPage(pageInfo);
 
             foreach (var entity in pagedList)
             {

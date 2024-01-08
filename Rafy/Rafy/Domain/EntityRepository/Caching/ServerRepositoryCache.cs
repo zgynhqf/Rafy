@@ -31,14 +31,14 @@ namespace Rafy.Domain.Caching
         /// </summary>
         public override bool IsEnabled => _repository.EntityMeta.ServerCacheEnabled;
 
-        internal override IList<Entity> GetCachedTable()
+        internal override IEntityList GetCachedTable()
         {
             var className = _repository.EntityType.Name;
 
             return this.Cache.Get(CacheAllKey, () => _repository.GetAll(), className);
         }
 
-        internal override IList<Entity> GetCachedTableByParent(Entity parent)
+        internal override IEntityList GetCachedTableByParent(Entity parent)
         {
             var className = _repository.EntityType.Name;
             var parentId = parent.Id;

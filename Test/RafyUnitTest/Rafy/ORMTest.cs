@@ -822,8 +822,8 @@ namespace RafyUnitTest
 
                 var bookList = repo.QueryInBatches(idList, ids => repo.GetByComplicateIn(ids));
                 Assert.AreEqual(bookList.Count, idList.Length);
-                Assert.IsTrue(bookList.Any(e => e.Id.Equals(idList[0])), "第一个 Id 的数据必须查询出来。");
-                Assert.IsTrue(bookList.Any(e => e.Id.Equals(idList[idList.Length - 1])), "最后一个 Id 的数据必须查询出来。");
+                Assert.IsTrue(bookList.Linq.Any(e => e.Id.Equals(idList[0])), "第一个 Id 的数据必须查询出来。");
+                Assert.IsTrue(bookList.Linq.Any(e => e.Id.Equals(idList[idList.Length - 1])), "最后一个 Id 的数据必须查询出来。");
             }
         }
 
