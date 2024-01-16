@@ -2017,6 +2017,21 @@ namespace RafyUnitTest
             }
         }
 
+        [TestMethod]
+        public void ORM_LinqQuery_ValueIn_Collection()
+        {
+            var repo = RF.ResolveInstance<BookRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                RF.Save(new Book { Name = "1" });
+                RF.Save(new Book { Name = "2" });
+                RF.Save(new Book { Name = "3" });
+                RF.Save(new Book { Name = "4" });
+                var list = repo.LinqGetByBookNameInCollection(new List<string> { "1", "3" });
+                Assert.IsTrue(list.Count == 2);
+            }
+        }
+
         /// <summary>
         /// 使用 And 连接两个分别使用 Or 连接的条件组合。
         /// </summary>

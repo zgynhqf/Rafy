@@ -96,9 +96,13 @@ namespace Rafy.Domain.ORM.Linq
                 {
                     processed = VisitMethod_Enumerable(exp);
                 }
-                else if (methodType.IsGenericType && methodType.GetGenericTypeDefinition() == typeof(List<>))
+                else if (methodType.IsGenericType)
                 {
-                    processed = VisitMethod_List(exp);
+                    var genericType = methodType.GetGenericTypeDefinition();
+                    if (genericType == typeof(List<>) || genericType == typeof(ICollection<>))
+                    {
+                        processed = VisitMethod_Collection(exp);
+                    }
                 }
             }
 
@@ -237,7 +241,7 @@ namespace Rafy.Domain.ORM.Linq
             return false;
         }
 
-        private bool VisitMethod_List(MethodCallExpression exp)
+        private bool VisitMethod_Collection(MethodCallExpression exp)
         {
             switch (exp.Method.Name)
             {

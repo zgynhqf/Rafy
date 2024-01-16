@@ -10,13 +10,15 @@
  * 
 *******************************************************/
 
-3.96.4460
+3.96.4461
     ★★公布、★重要、！修改接口、！删除接口、添加接口
         EntiyList 更新为泛型版本。
             （原因：开发者 EntityList 的遍历会更方便；另外，在 VS2022 中，可以在调试时查看列表的表格，并可以导出为 Excel；）
         添加 InheritableEntityList 类为原来的非泛型版本的 EntityList。方便开发者在列表需要继承时，可以使用此类。
     ！删除接口
         删除：EntityKeyTypeAttribute。
+    添加功能
+        Linq 中需要识别 ICollection<T>.Contains 方法。
 
 3.95.4404
     BUG修复

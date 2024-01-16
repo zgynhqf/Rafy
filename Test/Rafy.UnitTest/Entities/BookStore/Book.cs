@@ -228,6 +228,14 @@ namespace UT
         }
 
         [RepositoryQuery]
+        public virtual BookList LinqGetByBookNameInCollection(ICollection<string> names)
+        {
+            var q = this.CreateLinqQuery();
+            q = q.Where(c => names.Contains(c.Name));
+            return (BookList)this.QueryData(q);
+        }
+
+        [RepositoryQuery]
         public virtual LiteDataTable GetLOB(bool withLOB, bool hasTablePrefix)
         {
             ConditionalSql sql = null;
