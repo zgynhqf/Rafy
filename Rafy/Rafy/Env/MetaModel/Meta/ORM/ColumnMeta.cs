@@ -171,7 +171,7 @@ namespace Rafy.MetaModel
     }
 
     /// <summary>
-    /// 引用的关系的属性值时，值的处理、获取方式。
+    /// 引用关系中的引用值属性，它的值的处理、获取方式。
     /// </summary>
     public enum ReferenceValueDataMode
     {
