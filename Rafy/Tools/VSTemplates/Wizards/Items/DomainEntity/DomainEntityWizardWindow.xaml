@@ -51,7 +51,7 @@
         <TextBox x:Name="txtDomainName" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="4"
                 Margin="4" Height="23" />
         <CheckBox x:Name="cbGenerateRepository" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="5"
-                VerticalAlignment="Center" Height="14" Width="16" />
+                VerticalAlignment="Center" Height="14" Width="16" IsChecked="True" />
         <Button x:Name="btnContinue" Content="确定" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="7"
                 VerticalAlignment="Center" Margin="0,14,5,14" Width="80" Click="btnContinue_Click" IsDefault="True"
                 Height="20" />
