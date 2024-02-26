@@ -20,6 +20,7 @@
       <Compile Include=".g.cs\Book.g.cs" />
       <Compile Include=".g.cs\BookCategory.g.cs" />
       <Compile Include=".g.cs\BookLoc.g.cs" />
+      <Compile Include=".g.cs\BookLocSlot.g.cs" />
       <Compile Include=".g.cs\Building.g.cs" />
       <Compile Include=".g.cs\C.g.cs" />
       <Compile Include=".g.cs\Car.g.cs" />

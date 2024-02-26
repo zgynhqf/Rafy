@@ -29,6 +29,12 @@ namespace UT
 
         #region 组合子属性
 
+        public static readonly ListProperty<BookLocSlotList> BookLocSlotListProperty = P<BookLoc>.RegisterList(e => e.BookLocSlotList);
+        public BookLocSlotList BookLocSlotList
+        {
+            get { return this.GetLazyList(BookLocSlotListProperty); }
+        }
+
         #endregion
 
         #region 一般属性

@@ -377,6 +377,36 @@ namespace RafyUnitTest
         }
 
         [TestMethod]
+        public void ORM_Query_EagerLoad_Children_RefKeyProperty()
+        {
+            var repo = RF.ResolveInstance<BookLocRepository>();
+            using (RF.TransactionScope(repo))
+            {
+                var bookLoc1 = new BookLoc { Code = "bl1" };
+                var bookLoc2 = new BookLoc { Code = "bl2" };
+                bookLoc1.BookLocSlotList.Add(new BookLocSlot());
+                bookLoc1.BookLocSlotList.Add(new BookLocSlot());
+                bookLoc2.BookLocSlotList.Add(new BookLocSlot());
+                bookLoc2.BookLocSlotList.Add(new BookLocSlot());
+                RF.Save(bookLoc1);
+                RF.Save(bookLoc2);
+
+                //查询的数据访问测试。
+                var oldCount = DbAccesserInterceptor.ThreadDbAccessedCount;
+                var all = repo.GetAll(loadOptions: new LoadOptions().LoadWith(BookLoc.BookLocSlotListProperty));
+                var newCount = DbAccesserInterceptor.ThreadDbAccessedCount;
+                Assert.AreEqual(2, newCount - oldCount, "应该只进行了指定次的数据库查询。");
+
+                //无懒加载测试。
+                foreach (var b in all)
+                {
+                    foreach (var item in b.BookLocSlotList) { }
+                }
+                Assert.AreEqual(DbAccesserInterceptor.ThreadDbAccessedCount, newCount, "由于数据已经全部加载完成，所以这里不会发生懒加载。");
+            }
+        }
+
+        [TestMethod]
         public void ORM_Query_EagerLoad_RefKeyProperty()
         {
             var repo = RF.ResolveInstance<BookRepository>();

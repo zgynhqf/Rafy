@@ -460,18 +460,21 @@ namespace Rafy.Domain
         /// <param name="loadOptionsProperties">所有还需要贪婪加载的属性。</param>
         private void EagerLoadChildren(IEntityList list, IListProperty listProperty, List<ConcreteProperty> loadOptionsProperties)
         {
+            var childrenRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
+            var parentRefProperty = RefPropertyHelper.Find(childrenRepo.EntityMeta.FindParentReferenceProperty(true).ManagedProperty);
+            var parentKeyProperty = parentRefProperty.RefKeyProperty;
+            var keyPropertyOfEntity = parentRefProperty.KeyPropertyOfRefEntity;
+
             //查询一个大的实体集合，包含列表中所有实体所需要的所有子实体。
-            var idList = new List<object>(10);
+            var keyList = new List<object>(10);
             list.EachNode(e =>
             {
-                idList.Add(e.Id);
+                keyList.Add(e.GetProperty(keyPropertyOfEntity));
                 return false;
             });
-            if (idList.Count > 0)
+            if (keyList.Count > 0)
             {
-                var targetRepo = RepositoryFactoryHost.Factory.FindByEntity(listProperty.ListEntityType, true);
-
-                var allChildren = targetRepo.GetByParentIdList(idList.ToArray());
+                var allChildren = childrenRepo.GetByParentIdList(keyList.ToArray());
 
                 //继续递归加载它的贪婪属性。
                 this.EagerLoad(allChildren, loadOptionsProperties);
@@ -489,33 +492,31 @@ namespace Rafy.Domain
                         sortedParents.Add(p);
                         return false;
                     });
-                    sortedList = sortedParents.OrderBy(e => e.Id).ToList();
+                    sortedList = sortedParents.OrderBy(e => e.GetProperty(keyPropertyOfEntity)).ToList();
                 }
                 else
                 {
-                    sortedList = list.Linq.OrderBy(e => e.Id).ToList();
+                    sortedList = list.Linq.OrderBy(e => e.GetProperty(keyPropertyOfEntity)).ToList();
                 }
 
                 #endregion
 
                 #region 使用一次主循环就把所有的子实体都加载到父实体中。
-                //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
-                var parentProperty = RefPropertyHelper.Find(targetRepo.EntityMeta.FindParentReferenceProperty(true).ManagedProperty);
-                var parentKeyProperty = parentProperty.RefKeyProperty;
 
+                //把大的实体集合，根据父实体 Id，分拆到每一个父实体的子集合中。
                 //一次循环就能完全加载的前提是因为父集合按照 Id 排序，子集合按照父 Id 排序。
                 int pIndex = 0, pLength = sortedList.Count;
                 var parent = sortedList[pIndex];
-                var children = targetRepo.NewList();
+                var children = childrenRepo.NewList();
                 for (int i = 0, c = allChildren.Count; i < c; i++)
                 {
                     var child = allChildren[i];
-                    var childPId = child.GetProperty(parentKeyProperty);
+                    var childPKey = child.GetProperty(parentKeyProperty);
 
                     //必须把该子对象处理完成后，才能跳出下面的循环。
                     while (true)
                     {
-                        if (object.Equals(childPId, parent.Id))
+                        if (object.Equals(childPKey, parent.GetProperty(keyPropertyOfEntity)))
                         {
                             children.Add(child);
                             break;
@@ -537,7 +538,7 @@ namespace Rafy.Domain
 
                             //并同时更新变量。
                             parent = sortedList[pIndex];
-                            children = targetRepo.NewList();
+                            children = childrenRepo.NewList();
                         }
                     }
                 }
@@ -548,7 +549,7 @@ namespace Rafy.Domain
                 while (pIndex < pLength)
                 {
                     parent = sortedList[pIndex];
-                    parent.LoadProperty(listProperty, targetRepo.NewList());
+                    parent.LoadProperty(listProperty, childrenRepo.NewList());
                     pIndex++;
                 }
 

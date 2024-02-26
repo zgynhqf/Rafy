@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" HideNonsenceLabels="false">
+<Document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" HideNonsenceLabels="false">
   <EntityTypes>
     <EntityTypeElement FullName="UT.Book" Left="286" Top="38" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
@@ -21,12 +21,12 @@
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.SectionOwner" Left="527" Top="277" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.SectionOwner" Left="481.40000000000003" Top="364.2" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
-    <EntityTypeElement FullName="UT.BookCategory" Label="书籍类别" Left="579" Top="39" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
+    <EntityTypeElement FullName="UT.BookCategory" Label="书籍类别" Left="530.19999999999993" Top="16.600000000000023" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
         <PropertyElement Name="Code" PropertyType="String" />
@@ -42,6 +42,11 @@
     <EntityTypeElement FullName="UT.Favorate" Label="收藏项" Left="26" Top="72" Width="0" Height="0" HideProperties="true" IsAggtRoot="true">
       <Properties>
         <PropertyElement Name="Name" PropertyType="String" />
+      </Properties>
+    </EntityTypeElement>
+    <EntityTypeElement FullName="UT.BookLocSlot" Label="书籍货架位置" Left="571.99999999999977" Top="268.80000000000007" Width="0" Height="0" HideProperties="true" IsAggtRoot="false">
+      <Properties>
+        <PropertyElement Name="BookLocCode" PropertyType="String" />
       </Properties>
     </EntityTypeElement>
   </EntityTypes>
@@ -78,6 +83,12 @@
       <ToPointY xsi:nil="true" />
     </ConnectionElement>
     <ConnectionElement From="UT.Favorate" To="UT.Book" Label="Book" Hidden="false" LabelVisible="true" ConnectionType="NullableReference">
+      <FromPointX xsi:nil="true" />
+      <FromPointY xsi:nil="true" />
+      <ToPointX xsi:nil="true" />
+      <ToPointY xsi:nil="true" />
+    </ConnectionElement>
+    <ConnectionElement From="UT.BookLocSlot" To="UT.BookLoc" Label="BookLocSlotList" Hidden="false" LabelVisible="true" ConnectionType="Composition">
       <FromPointX xsi:nil="true" />
       <FromPointY xsi:nil="true" />
       <ToPointX xsi:nil="true" />

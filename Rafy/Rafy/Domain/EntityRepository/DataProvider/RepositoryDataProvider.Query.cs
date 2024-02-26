@@ -141,7 +141,7 @@ namespace Rafy.Domain
         public virtual IEntityList GetByParentIdList(object[] parentIdList, PagingInfo paging, LoadOptions loadOptions)
         {
             var parentProperty = _repository.EntityMeta.FindParentReferenceProperty(true);
-            var mp = (parentProperty.ManagedProperty as IRefProperty).RefKeyProperty;
+            var mp = RefPropertyHelper.Find(parentProperty.ManagedProperty).RefKeyProperty;
 
             var table = f.Table(_repository);
             var parentColumn = table.Column(mp);
