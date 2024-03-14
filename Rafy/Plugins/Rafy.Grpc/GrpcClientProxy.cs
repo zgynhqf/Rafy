@@ -49,10 +49,22 @@ namespace Rafy.Grpc
             return (DataPortalResult)response;
         }
 
+        /// <summary>
+        /// 获取服务端地址。
+        /// 子类可重写此方法实现获取服务地址的逻辑。例如，可以使用 Consul 等服务发现。
+        /// 默认实现为读取 JM:Grpc:GrpcClientProxy:Taget 配置。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetServerAddress()
+        {
+            return ConfigurationHelper.GetAppSettingOrDefault("Rafy:Grpc:GrpcClientProxy:Taget", "127.0.0.1:9007");
+        }
+
         private GrpcClient GetClient()
         {
             var client = new GrpcClient();
-            client.Target = ConfigurationHelper.GetAppSettingOrDefault("Rafy:Grpc:GrpcClientProxy:Taget", "127.0.0.1:9007");
+
+            client.Target = this.GetServerAddress();
 
             return client;
         }
