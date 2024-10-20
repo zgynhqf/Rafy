@@ -97,7 +97,7 @@ namespace Rafy.Threading
         {
             action = action.WrapByCurrentPrinciple();
 
-            await Task.Run(() => action());
+            await Task.Run(action);
         }
 
         /// <summary>
