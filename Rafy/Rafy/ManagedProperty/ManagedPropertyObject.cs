@@ -19,22 +19,23 @@
  * 
 *******************************************************/
 
+using Newtonsoft.Json.Linq;
+using Rafy;
+using Rafy.Reflection;
+using Rafy.Serialization;
+using Rafy.Serialization.Mobile;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Security.Permissions;
-using System.Security;
-using Rafy.Serialization.Mobile;
-using System.Reflection;
-using Rafy.Reflection;
-using Rafy;
-using System.Runtime.Serialization;
-using System.Runtime;
 using System.Diagnostics;
-using Rafy.Serialization;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime;
+using System.Runtime.Serialization;
+using System.Security;
+using System.Security.Permissions;
+using System.Text;
 
 namespace Rafy.ManagedProperty
 {
@@ -874,24 +875,34 @@ namespace Rafy.ManagedProperty
         {
             get
             {
-                var res = this.GetType().Name;
-
                 //尝试读取Name属性。
-                var nameProperty = this.PropertiesContainer.GetAvailableProperties().Find("Name");
-                if (nameProperty != null)
+                var nameValue = this.GetNameIfExists();
+                if (nameValue != null)
                 {
-                    if (!this.IsDisabled(nameProperty))
-                    {
-                        var value = this.GetProperty(nameProperty);
-                        if (value != null)
-                        {
-                            res += " Name:" + value;
-                        }
-                    }
+                    return "Name:" + nameValue;
                 }
 
-                return res;
+                return this.ToString();
             }
+        }
+
+        internal object GetNameIfExists()
+        {
+            //尝试读取Name属性。
+            var nameProperty = this.PropertiesContainer.GetAvailableProperties().Find("Name");
+            if (nameProperty != null)
+            {
+                if (!this.IsDisabled(nameProperty))
+                {
+                    var value = this.GetProperty(nameProperty);
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

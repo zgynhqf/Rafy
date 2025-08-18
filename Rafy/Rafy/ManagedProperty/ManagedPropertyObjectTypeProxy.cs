@@ -11,11 +11,14 @@
  * 
 *******************************************************/
 
+using Rafy.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Rafy.ManagedProperty
@@ -42,6 +45,35 @@ namespace Rafy.ManagedProperty
                     return _mpo._compiledFields
                         .OrderBy(f => f.Property.Name)
                         .ToList();
+                }
+            }
+
+            //[DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+            public List<KeyValuePair<string, object>> CLRProperties
+            {
+                get
+                {
+                    var res = new List<KeyValuePair<string, object>>();
+
+                    var mpProperties = _mpo.PropertiesContainer.GetCompiledProperties();
+
+                    var hierarchy = TypeHelper.GetHierarchy(_mpo.GetType(), typeof(ManagedPropertyObject));
+
+                    foreach (var type in hierarchy)
+                    {
+                        if (type.Namespace == "Rafy.Domain") break;
+
+                        var clrProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
+                        for (int i = 0, c = clrProperties.Length; i < c; i++)
+                        {
+                            var clrProperty = clrProperties[i];
+                            if (mpProperties.Find(clrProperty.Name) != null) continue;
+
+                            res.Add(new KeyValuePair<string, object>(clrProperty.Name, clrProperty.GetValue(_mpo)));
+                        }
+                    }
+
+                    return res;
                 }
             }
 

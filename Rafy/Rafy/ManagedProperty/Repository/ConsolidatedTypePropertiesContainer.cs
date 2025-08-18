@@ -75,7 +75,7 @@ namespace Rafy.ManagedProperty
 
         /// <summary>
         /// 获取编译时属性列表。
-        /// 此集合包含只读属性，如果想遍历
+        /// 此集合包含只读属性。
         /// </summary>
         /// <returns></returns>
         public ManagedPropertyList GetCompiledProperties()

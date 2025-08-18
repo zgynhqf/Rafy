@@ -34,12 +34,17 @@ namespace Rafy.Domain
         {
             get
             {
-                var name = base.DebuggerDisplay;
+                var display = $"Id:{this.Id}";
 
-                if (this is IHasName) { name += " IHasName:" + (this as IHasName).Name; }
-                if (this.SupportTree) { name += " TreeIndex:" + this.TreeIndex; }
+                if (this is IHasName) { display += " IHasName:" + (this as IHasName).Name; }
+                else
+                {
+                    var name = this.GetNameIfExists();
+                    if (name != null) display += $" Name:{name}";
+                }
+                if (this.SupportTree) { display += " TreeIndex:" + this.TreeIndex; }
 
-                return name + " Id:" + this.Id;
+                return display;
             }
         }
 
