@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -33,6 +34,7 @@ namespace Rafy.ManagedProperty
                 _mpo = mpo;
             }
 
+            [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
             public List<ManagedPropertyField> CompiledProperties
             {
                 get
@@ -88,6 +90,16 @@ namespace Rafy.ManagedProperty
                     return _mpo._dynamics;
                 }
             }
+
+            ///// <summary>
+            ///// 调试器显示文本。
+            ///// </summary>
+            //internal string DebuggerDisplay => _mpo.DebuggerDisplay;
+
+            //public override string ToString()
+            //{
+            //    return _mpo.DebuggerDisplay;
+            //}
         }
     }
 }

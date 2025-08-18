@@ -30,7 +30,7 @@ namespace Rafy.Domain
         /// <summary>
         /// 调试器显示文本。
         /// </summary>
-        internal new string DebuggerDisplay
+        internal override string DebuggerDisplay
         {
             get
             {

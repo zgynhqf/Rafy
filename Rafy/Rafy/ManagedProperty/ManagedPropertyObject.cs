@@ -870,7 +870,7 @@ namespace Rafy.ManagedProperty
         /// <summary>
         /// 调试器显示文本
         /// </summary>
-        internal string DebuggerDisplay
+        internal virtual string DebuggerDisplay
         {
             get
             {
