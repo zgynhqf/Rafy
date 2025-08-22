@@ -38,7 +38,7 @@ namespace Rafy.Domain.ORM
         /// 构造一个事务块
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
-        public SingleConnectionTransactionScope(DbSetting dbSetting) : base(dbSetting, IsolationLevel.Serializable) { }
+        public SingleConnectionTransactionScope(DbSetting dbSetting) : base(dbSetting, IsolationLevel.ReadCommitted) { }
 
         /// <summary>
         /// 构造一个事务块
