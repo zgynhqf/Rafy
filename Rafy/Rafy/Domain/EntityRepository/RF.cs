@@ -166,6 +166,17 @@ namespace Rafy.Domain
         /// <summary>
         /// 通过数据库配置名的代理：实体仓库，构造一个 单连接事务块。
         /// </summary>
+        /// <param name="dbDelegate">整个数据库的配置名</param>
+        /// <param name="level">事务的孤立级别</param>
+        /// <returns></returns>
+        public static SingleConnectionTransactionScope TransactionScope(IRepository dbDelegate, IsolationLevel level)
+        {
+            return new SingleConnectionTransactionScope(RdbDataProvider.Get(dbDelegate).DbSetting, level);
+        }
+
+        /// <summary>
+        /// 通过数据库配置，构造一个 单连接事务块。
+        /// </summary>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static SingleConnectionTransactionScope TransactionScope(DbSetting dbSetting)
@@ -174,7 +185,7 @@ namespace Rafy.Domain
         }
 
         /// <summary>
-        /// 通过数据库配置名的代理：实体仓库，构造一个 单连接事务块。
+        /// 通过数据库配置，构造一个 单连接事务块。
         /// </summary>
         /// <param name="dbSetting">整个数据库的配置名</param>
         /// <param name="level">事务的孤立级别</param>
