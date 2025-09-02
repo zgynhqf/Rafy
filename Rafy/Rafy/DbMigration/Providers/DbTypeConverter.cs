@@ -18,13 +18,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rafy.Reflection;
+using Rafy.Data.Providers;
 
 namespace Rafy.DbMigration
 {
     /// <summary>
     /// 数据库字段类型的转换器。
     /// </summary>
-    public abstract class DbTypeConverter
+    public abstract class DbTypeConverter : DbValueConverter
     {
         /// <summary>
         /// 将 DbType 转换为数据库中的列的类型名称。
@@ -75,28 +76,6 @@ namespace Rafy.DbMigration
             }
 
             return DbType.String;
-        }
-
-        /// <summary>
-        /// 将指定的值转换为一个兼容数据库类型的值。
-        /// 该值可用于与下层的 ADO.NET 交互。
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public virtual object ToDbParameterValue(object value)
-        {
-            return value ?? DBNull.Value;
-        }
-
-        /// <summary>
-        /// 将指定的值转换为一个 CLR 类型的值。
-        /// </summary>
-        /// <param name="dbValue">The database value.</param>
-        /// <param name="clrType">Type of the color.</param>
-        /// <returns></returns>
-        public virtual object ToClrValue(object dbValue, Type clrType)
-        {
-            return dbValue == DBNull.Value ? null : dbValue;
         }
 
         /// <summary>

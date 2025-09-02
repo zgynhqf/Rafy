@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Rafy;
 using Rafy.Data;
+using Rafy.Data.Providers;
 using Rafy.DbMigration;
 using Rafy.Domain.ORM.SqlTree;
 
@@ -51,7 +52,7 @@ namespace Rafy.Domain.ORM
         /// <summary>
         /// 数据库字段类型的转换器。
         /// </summary>
-        public DbTypeConverter DbTypeCoverter { get; protected set; }
+        public IDbValueConverter ValueConverter { get; protected set; }
 
         /// <summary>
         /// 数据库标识符的处理器。
@@ -355,7 +356,7 @@ namespace Rafy.Domain.ORM
             var op = node.Operator;
             var value = node.Value;
 
-            value = this.DbTypeCoverter.ToDbParameterValue(value);
+            value = this.ValueConverter.ToDbParameterValue(value);
 
             #region 处理一些特殊的值
 

@@ -22,7 +22,7 @@ namespace Rafy.Data.Providers
     /// <summary>
     /// MySql数据库链接字符串转换器
     /// </summary>
-    public sealed class MySqlServerProvider : ISqlProvider
+    internal class MySqlServerProvider : ISqlProvider
     {
         /// <summary>
         /// 存储过程返回值的参数名称
@@ -37,10 +37,10 @@ namespace Rafy.Data.Providers
         }
 
         /// <summary>
-        /// 返回针对MySql的数据库链接字符串
+        /// 返回针对MySql的参数名称
         /// </summary>
         /// <param name="commonSql"></param>
-        /// <returns>返回针对MySql的数据库链接字符串</returns>
+        /// <returns>返回针对MySql的参数名称</returns>
         public string ConvertToSpecialDbSql(string commonSql)
         {
             return DbConnectorFactory.ReParameterName.Replace(commonSql, "?p${number}");

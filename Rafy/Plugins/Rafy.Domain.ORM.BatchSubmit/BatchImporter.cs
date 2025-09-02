@@ -153,7 +153,7 @@ namespace Rafy.Domain.ORM.BatchSubmit
                 if (batch.Repository.EntityMeta.IsPhantomEnabled)
                 {
                     var isPhantomColumn = batch.Table.FindByPropertyName(EntityConvention.Property_IsPhantom.Name).Name;
-                    var value = this.SqlGenerator.DbTypeCoverter.ToDbParameterValue(BooleanBoxes.True);
+                    var value = this.SqlGenerator.ValueConverter.ToDbParameterValue(BooleanBoxes.True);
 
                     sqlDelete.Append("UPDATE ").Append(batch.Table.Name).Append(" SET ")
                         .Append(isPhantomColumn).Append(" = ").AppendParameter(value)

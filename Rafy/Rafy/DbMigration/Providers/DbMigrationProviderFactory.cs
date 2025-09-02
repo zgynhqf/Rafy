@@ -11,19 +11,20 @@
  * 
 *******************************************************/
 
+using Rafy.Data;
+using Rafy.Data.Providers;
+using Rafy.DbMigration.Model;
+using Rafy.DbMigration.MongoDb;
+using Rafy.DbMigration.MySql;
+using Rafy.DbMigration.Oracle;
+using Rafy.DbMigration.PgSql;
+using Rafy.DbMigration.SQLite;
+using Rafy.DbMigration.SqlServer;
+using Rafy.DbMigration.SqlServerCe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Rafy.DbMigration.Model;
-using Rafy.Data;
-using Rafy.DbMigration.SqlServer;
-using Rafy.Data.Providers;
-using Rafy.DbMigration.SqlServerCe;
-using Rafy.DbMigration.Oracle;
-using Rafy.DbMigration.MySql;
-using Rafy.DbMigration.SQLite;
-using Rafy.DbMigration.MongoDb;
 
 namespace Rafy.DbMigration
 {
@@ -74,6 +75,8 @@ namespace Rafy.DbMigration
                 case DbConnectionSchema.Provider_MySql:
                 case DbConnectionSchema.Provider_SQLite:
                     return MySqlIdentifierQuoter.Instance;
+                case DbConnectionSchema.Provider_Pgsql:
+                    return PgSqlIdentifierQuoter.Instance;
                 case DbConnectionSchema.Provider_MongoDb:
                     return EmptyIdentifierQuoter.Instance;
                 default:
@@ -91,6 +94,8 @@ namespace Rafy.DbMigration
             {
                 case DbConnectionSchema.Provider_SqlClient:
                     return SqlServerDbTypeConverter.Instance;
+                case DbConnectionSchema.Provider_Pgsql:
+                    return PgSqlDbTypeConverter.Instance;
                 case DbConnectionSchema.Provider_SqlCe:
                     return SqlServerCeDbTypeConverter.Instance;
                 case DbConnectionSchema.Provider_MySql:

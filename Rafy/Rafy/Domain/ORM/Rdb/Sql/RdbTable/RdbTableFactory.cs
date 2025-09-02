@@ -28,6 +28,7 @@ using Rafy.Utils;
 using Rafy.Domain.ORM.MySql;
 using Rafy.DbMigration;
 using Rafy.Domain.ORM.SQLite;
+using Rafy.Domain.ORM.PgSql;
 
 namespace Rafy.Domain.ORM
 {
@@ -78,6 +79,8 @@ namespace Rafy.Domain.ORM
                     return new SQLiteTable(repo, dbProvider);
                 case DbSetting.Provider_MySql:
                     return new MySqlTable(repo, dbProvider);
+                case DbSetting.Provider_Pgsql:
+                    return new PgSqlTable(repo, dbProvider);
                 default:
                     if (DbConnectionSchema.IsOracleProvider(dbProvider))
                     {

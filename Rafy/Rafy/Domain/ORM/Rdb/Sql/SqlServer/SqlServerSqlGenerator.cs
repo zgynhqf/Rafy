@@ -28,7 +28,7 @@ namespace Rafy.Domain.ORM
         public SqlServerSqlGenerator()
         {
             this.IdentifierProvider = SqlServerIdentifierQuoter.Instance;
-            this.DbTypeCoverter = SqlServerDbTypeConverter.Instance;
+            this.ValueConverter = SqlServerDbTypeConverter.Instance;
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Rafy.Domain.ORM
             var op = node.Operator;
             var value = node.Value;
             
-            value = this.DbTypeCoverter.ToDbParameterValue(value);
+            value = this.ValueConverter.ToDbParameterValue(value);
 
             #region 处理一些特殊的值
 

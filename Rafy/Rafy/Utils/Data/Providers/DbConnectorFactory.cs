@@ -25,8 +25,8 @@ namespace Rafy.Data.Providers
     /// </summary>
     internal class DbConnectorFactory
     {
-        private static DbProviderFactory _sql, _sqlCe, _sqlite, _oracle,_mySql;
-        private static ISqlProvider _sqlConverter, _oracleConverter, _odbcConverter,_mySqlConverter;
+        private static DbProviderFactory _sql, _sqlCe, _sqlite, _oracle, _mySql, _pgSql;
+        private static ISqlProvider _sqlConverter, _oracleConverter, _odbcConverter, _mySqlConverter, _pgSqlConverter;
 
         /// <summary>   
         /// 以快速键值对照来获取 DbProviderFactory。
@@ -41,7 +41,7 @@ namespace Rafy.Data.Providers
                     if (_sql == null)
                     {
 #if NET45
-                        _sql = DbProviderFactories.GetFactory(DbSetting.Provider_SqlClient);
+                        _sql = DbProviderFactories.GetFactory(provider);
 #endif
 #if NS2
                         _sql = LoadFromAssembly("System.Data.SqlClient.SqlClientFactory, System.Data.SqlClient");
@@ -59,7 +59,7 @@ namespace Rafy.Data.Providers
                     if (_sqlCe == null)
                     {
 #if NET45
-                        _sqlCe = DbProviderFactories.GetFactory(DbSetting.Provider_SqlCe);
+                        _sqlCe = DbProviderFactories.GetFactory(provider);
 #endif
 #if NS2
                         _sqlCe = LoadFromAssembly("System.Data.SqlServerCe.SqlCeProviderFactory, System.Data.SqlServerCe");
@@ -71,7 +71,7 @@ namespace Rafy.Data.Providers
                     if (_mySql == null)
                     {
 #if NET45
-                        _mySql = DbProviderFactories.GetFactory(DbSetting.Provider_MySql);
+                        _mySql = DbProviderFactories.GetFactory(provider);
 #endif
 #if NS2
                         _mySql = LoadFromAssembly("MySql.Data.MySqlClient.MySqlClientFactory, MySql.Data");
@@ -79,6 +79,17 @@ namespace Rafy.Data.Providers
 #endif
                     }
                     return _mySql;
+                case DbSetting.Provider_Pgsql:
+                    if (_pgSql == null)
+                    {
+#if NET45
+                        _pgSql = DbProviderFactories.GetFactory(provider);
+#endif
+#if NS2
+                        _pgSql = LoadFromAssembly("Npgsql.NpgsqlFactory, Npgsql");
+#endif
+                    }
+                    return _pgSql;
                 default:
                     if (DbSetting.IsOracleProvider(provider))
                     {
@@ -123,10 +134,12 @@ namespace Rafy.Data.Providers
                 case DbSetting.Provider_SQLite:
                     if (_sqlConverter == null) _sqlConverter = new SqlServerProvider();
                     return _sqlConverter;
-                //PatrickLiu 增加的有关 MySql 的代码
                 case DbSetting.Provider_MySql:
                     if (_mySqlConverter == null) _mySqlConverter = new MySqlServerProvider();
                     return _mySqlConverter;
+                case DbSetting.Provider_Pgsql:
+                    if (_pgSqlConverter == null) _pgSqlConverter = new OracleProvider();
+                    return _pgSqlConverter;
 
                 default:
                     if (DbSetting.IsOracleProvider(provider))

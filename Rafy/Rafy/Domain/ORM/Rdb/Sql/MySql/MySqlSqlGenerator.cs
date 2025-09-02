@@ -32,7 +32,7 @@ namespace Rafy.Domain.ORM.MySql
         public MySqlSqlGenerator()
         {
             this.IdentifierProvider = MySqlIdentifierQuoter.Instance;
-            this.DbTypeCoverter = MySqlDbTypeConverter.Instance;
+            this.ValueConverter = MySqlDbTypeConverter.Instance;
         }
 
         /// <summary>

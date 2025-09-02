@@ -31,7 +31,7 @@ namespace Rafy.Domain.ORM.Oracle
         public OracleSqlGenerator()
         {
             this.IdentifierProvider = OracleIdentifierQuoter.Instance;
-            this.DbTypeCoverter = OracleDbTypeConverter.Instance;
+            this.ValueConverter = OracleDbTypeConverter.Instance;
         }
 
         protected override SqlColumnConstraint VisitSqlColumnConstraint(SqlColumnConstraint node)
