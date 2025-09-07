@@ -12,9 +12,9 @@ namespace Rafy.Data
         /// </summary>
         /// <param name="databaseName"></param>
         /// <param name="filename">database file path to save.</param>
-        /// <param name="isErase">if exists, whether to delete current file.</param>
+        /// 
         /// <returns></returns>
-        Result BackupDatabase(string databaseName, string filename, bool isErase);
+        Result BackupDatabase(string databaseName, string filename);
 
         /// <summary>
         /// restore a special database from a file

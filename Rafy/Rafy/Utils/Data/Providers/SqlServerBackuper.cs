@@ -34,28 +34,23 @@ namespace Rafy.Data.Providers
         /// </summary>
         /// <param name="databaseName"></param>
         /// <param name="filename">database file path to save.</param>
-        /// <param name="isErase">if exists, whether to delete current file.</param>
+        /// 
         /// <returns></returns>
-        public Result BackupDatabase(string databaseName, string filename, bool isErase)
+        public Result BackupDatabase(string databaseName, string filename)
         {
-            var result = DealFile(filename, isErase);
-            if (result.Success)
+            string strCmd = "BACKUP DATABASE " + databaseName + " TO DISK = @devicename";
+            try
             {
-                string strCmd = "BACKUP DATABASE " + databaseName + " TO DISK = @devicename";
-                try
-                {
-                    _db.RawAccesser.ExecuteText(
-                        strCmd,
-                        _db.RawAccesser.ParameterFactory.CreateParameter("@devicename", filename)
-                        );
-                }
-                catch (Exception ex)
-                {
-                    return new Result(ex.Message);
-                }
-                return new Result(true);
+                _db.RawAccesser.ExecuteText(
+                    strCmd,
+                    _db.RawAccesser.ParameterFactory.CreateParameter("@devicename", filename)
+                    );
             }
-            return result;
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return true;
         }
 
         /// <summary>
@@ -66,11 +61,6 @@ namespace Rafy.Data.Providers
         /// <returns></returns>
         public Result RestoreDatabase(string databaseName, string filename)
         {
-            if (!File.Exists(filename))
-            {
-                return new Result("当前的文件不存在!");
-            }
-
             //在master数据库中还原!!
             string strRestore = "RESTORE DATABASE " + databaseName + " FROM DISK=@deviceName";
             try
@@ -97,50 +87,15 @@ WHERE sysprocesses.{1} = sysdatabases.{1} AND sysdatabases.name = '{0}'", databa
             }
             catch (Exception ex)
             {
-                return new Result(ex.Message);
+                return ex.Message;
             }
             finally
             {
                 this._db.Connection.Close();
             }
-            return new Result(true);
+            return true;
         }
 
         #endregion
-
-        /// <summary>
-        /// 处理文件
-        /// </summary>
-        /// <param name="filename">文件名</param>
-        /// <param name="isErase">是否擦除</param>
-        /// <returns></returns>
-        private static Result DealFile(string filename, bool isErase)
-        {
-            try
-            {
-                if (File.Exists(filename))//文件存在
-                {
-                    if (!isErase)//不擦除
-                    {
-                        return new Result("文件已经存在!");
-                    }
-                    else//擦除
-                    {
-                        File.Delete(filename);
-                    }
-                }
-                string directory = Path.GetDirectoryName(filename);
-                string file = Path.GetFileName(filename);
-                if (!Directory.Exists(directory))//路径不存在,创建
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                return new Result(true);
-            }
-            catch (Exception ex)
-            {
-                return new Result(ex.Message);
-            }
-        }
     }
 }
