@@ -10,7 +10,7 @@
     <AssemblyOriginatorKeyFile>Hxy Key.snk</AssemblyOriginatorKeyFile>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>3.96.4460</Version>
+    <Version>3.96.4465.0</Version>
     <PackageId>Rafy.Domain</PackageId>
     <Authors>Hxy dev group</Authors>
     <Company>Hxy dev group</Company>

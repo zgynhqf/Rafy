@@ -19,9 +19,12 @@ using System.Data;
 
 namespace Rafy.Data
 {
-    public class LongTimeDbAccesser : DbAccesser
+    /// <summary>
+    /// 外部不用使用此类。而是直接修改 ConnectionString 中的 Timeout，那么 DBA 在创建 Command 时会自动使用这个超时时间。
+    /// </summary>
+    internal class LongTimeDbAccesser : DbAccesser
     {
-        public LongTimeDbAccesser(DbSetting setting) : base(setting) { }
+        internal LongTimeDbAccesser(DbSetting setting) : base(setting) { }
 
         protected override IDbCommand PrepareCommand(string strSql, CommandType type, IDbDataParameter[] parameters)
         {
