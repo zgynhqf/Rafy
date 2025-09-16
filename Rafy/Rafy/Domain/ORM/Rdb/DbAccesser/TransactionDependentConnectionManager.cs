@@ -72,26 +72,13 @@ namespace Rafy.Domain.ORM
 
         #region Dispose Pattern
 
-        ~TransactionDependentConnectionManager()
-        {
-            this.Dispose(false);
-        }
-
         public void Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
+            //如果连接不是来自事务，则需要本对象来析构连接。
+            if (_conCreatedByMe && _connection != null)
             {
-                //如果连接不是来自事务，则需要本对象来析构连接。
-                if (_conCreatedByMe)
-                {
-                    _connection.Dispose();
-                }
+                _connection.Dispose();
+                _connection = null;
             }
         }
 

@@ -117,8 +117,7 @@ namespace Rafy
         /// <summary>
         /// 本对象的范围结束。
         /// </summary>
-        /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
+        protected virtual void Dispose()
         {
             if (!_disposed)
             {
@@ -150,15 +149,9 @@ namespace Rafy
 
         #region Dispose Pattern
 
-        ~ContextScope()
-        {
-            this.Dispose(false);
-        }
-
         void IDisposable.Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            this.Dispose();
         }
 
         #endregion

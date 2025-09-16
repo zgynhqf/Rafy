@@ -79,13 +79,13 @@ namespace Rafy.Data
         public LocalTransactionBlock(DbSetting dbSetting, IsolationLevel level)
             : base(ContextItems)
         {
-            this._dbSetting = dbSetting;
-            this._level = level;
+            _dbSetting = dbSetting;
+            _level = level;
 
             var name = ContextWholeScopeKey(_dbSetting.Database);
             this.EnterScope(name);
             _parent = GetCurrentTransactionBlock(dbSetting);
-            SetCurrentTransactionBlock(DbSetting, this);
+            SetCurrentTransactionBlock(_dbSetting, this);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Rafy.Data
         /// </summary>
         public DbSetting DbSetting
         {
-            get { return this._dbSetting; }
+            get { return _dbSetting; }
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Rafy.Data
         /// </summary>
         public IsolationLevel IsolationLevel
         {
-            get { return this._level; }
+            get { return _level; }
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Rafy.Data
         /// </summary>
         public void Complete()
         {
-            this._rollback = false;
+            _rollback = false;
         }
 
         /// <summary>
@@ -138,26 +138,23 @@ namespace Rafy.Data
             _transaction = this.BeginTransaction();
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void Dispose()
         {
-            if (disposing)
-            {
-                //如果本事务没有被提交，则整个事务也需要回滚。
-                var ws = this.WholeScope as LocalTransactionBlock;
-                ws._wholeRoolback |= this._rollback;
-            }
+            //如果本事务没有被提交，则整个事务也需要回滚。
+            var ws = this.WholeScope as LocalTransactionBlock;
+            ws._wholeRoolback |= _rollback;
 
             SetCurrentTransactionBlock(_dbSetting, _parent);
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
 
         protected override sealed void ExitWholeScope()
         {
-            if (this._wholeRoolback)
+            if (_wholeRoolback)
             {
                 _transaction.Rollback();
-                this._wholeRoolback = false;
+                _wholeRoolback = false;
             }
             else
             {

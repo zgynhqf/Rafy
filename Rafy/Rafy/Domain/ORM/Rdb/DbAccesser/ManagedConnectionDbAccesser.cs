@@ -93,28 +93,15 @@ namespace Rafy.Domain.ORM
             return _dba.QueryLiteDataTable(formatSql, parameters);
         }
 
-        #region Dispose Pattern
-
-        ~ManagedConnectionDbAccesser()
-        {
-            this.Dispose(false);
-        }
-
         public void Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
+            if (_connectionManager != null)
             {
                 _connectionManager.Dispose();
                 _dba.Dispose();
+
+                _connectionManager = null;
             }
         }
-
-        #endregion
     }
 }

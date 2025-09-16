@@ -57,16 +57,14 @@ namespace Rafy.Domain.ORM
             return _connection.BeginTransaction(this.IsolationLevel);
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void Dispose()
         {
-            base.Dispose(disposing);
+            base.Dispose();
 
-            if (disposing)
+            if (_connection != null)
             {
-                if (_connection != null)
-                {
-                    _connection.Dispose();
-                }
+                _connection.Dispose();
+                _connection = null;
             }
         }
     }

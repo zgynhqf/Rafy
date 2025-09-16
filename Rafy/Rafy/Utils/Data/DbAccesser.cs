@@ -1157,18 +1157,12 @@ namespace Rafy.Data
 
         #region IDisposable Members
 
-        ~DbAccesser()
-        {
-            this.Dispose(false);
-        }
-
         /// <summary>
         /// dispose this accesser.
         /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -1179,15 +1173,14 @@ namespace Rafy.Data
                 //{
                 //    this._transaction.Dispose();
                 //}
-                if (this._connectionCreatedBySelf && this._connection != null)
+                if (this._connection != null)
                 {
-                    this._connection.Dispose();
+                    if (this._connectionCreatedBySelf)
+                    {
+                        this._connection.Dispose();
+                    }
+                    this._connection = null;
                 }
-                this._connection = null;
-                this._converter = null;
-                this._factory = null;
-
-                //this._transaction = null;
             }
         }
 
