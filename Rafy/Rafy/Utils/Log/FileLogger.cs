@@ -198,7 +198,7 @@ StackTrace：
             var pValues = parameters.Select(p =>
             {
                 var value = p.Value;
-                if (value == null)
+                if (value == null || value == DBNull.Value)
                 {
                     value = "null";
                 }
