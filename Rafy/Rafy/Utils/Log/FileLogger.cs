@@ -12,6 +12,8 @@
  * 
 *******************************************************/
 
+using Rafy;
+using Rafy.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,8 +23,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Rafy;
-using Rafy.Data;
 
 namespace Rafy
 {
@@ -99,7 +99,7 @@ namespace Rafy
             var stackTrace = e.StackTrace;//使用最外层的 Exception，可以获取到最完整的堆栈信息。
             e = e.GetBaseException();
 
-            this.WriteInfo(this.ExceptionLogFileName, 
+            this.WriteInfo(this.ExceptionLogFileName,
 $@"=== {title} ===
 记录时间：{DateTime.Now}
 Thread Id:[ {Thread.CurrentThread.ManagedThreadId} ]
@@ -165,15 +165,19 @@ StackTrace：
 
             content.Append(';');
 
-            if (result is int)
-            {
-                content.AppendLine()
-                    .Append("Rows affected: ").Append(result).Append(";");
-            }
-            else if (result is Exception)
+            if (result is Exception)
             {
                 content.AppendLine()
                     .Append("Exception occurred: ").Append((result as Exception).Message).Append(";");
+            }
+            else if (result is DataSet || result is DataTable || result is DataRow || result is IDataReader) { }//ignore
+            else
+            {
+                string strRes = result.ToString();
+                if (strRes.Length > 100) strRes = strRes.Substring(0, 100);
+
+                content.AppendLine()
+                    .Append("Result: ").Append(strRes).Append(";");
             }
 
             lock (this)

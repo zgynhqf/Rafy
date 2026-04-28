@@ -45,7 +45,7 @@ namespace Rafy
         /// <param name="parameters">The parameters.</param>
         /// <param name="result">
         /// Sql 执行后的结果。
-        /// 如果是查询，可能是：DataSet、DataTable、DataRow、DataReader；
+        /// 如果是查询，可能是：DataSet、DataTable、DataRow、DataReader、Object；
         /// 如果是非查询，返回的是受影响的行数。
         /// 如果发生了异常，返回的是异常对象。
         /// </param>
