@@ -153,12 +153,18 @@ namespace Rafy.Data
         {
             if (_wholeRoolback)
             {
-                _transaction.Rollback();
+                if (_transaction.Connection != null)
+                {
+                    _transaction.Rollback();
+                }
                 _wholeRoolback = false;
             }
             else
             {
-                _transaction.Commit();
+                if (_transaction.Connection != null)
+                {
+                    _transaction.Commit();
+                }
             }
 
             //不论是正常的提交，还是已经被回滚，最外层的事务块都需要把事务进行释放。
