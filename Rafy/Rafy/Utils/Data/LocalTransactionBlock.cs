@@ -182,7 +182,7 @@ namespace Rafy.Data
 
         #region 静态接口
 
-        internal static IDbTransaction GetCurrentTransaction(string database)
+        public static IDbTransaction GetCurrentTransaction(string database)
         {
             var block = GetWholeScope(database);
             if (block != null) return block._transaction;
