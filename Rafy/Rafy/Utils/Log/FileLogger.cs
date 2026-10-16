@@ -173,7 +173,7 @@ StackTrace：
             else if (result is DataSet || result is DataTable || result is DataRow || result is IDataReader) { }//ignore
             else
             {
-                string strRes = result.ToString();
+                string strRes = result != null ? result.ToString() : "[null]";
                 if (strRes.Length > 100) strRes = strRes.Substring(0, 100);
 
                 content.AppendLine()
